@@ -14,7 +14,7 @@
 
 <body class="bg-[radial-gradient(#FFFFFF_18%,_#EAF0FA_44%)] mt-14">
 
-    <header class="sticky top-0 w-3/4 mx-auto">
+    <header class="sticky top-0 z-50 w-3/4 mx-auto">
         <nav
             class="container flex items-center justify-between py-0 mx-auto border rounded-full px-9 font-poppins backdrop-blur-lg bg-white/50 border-white/70">
             <a href="{{ url('/') }}" class="w-[170px]">
