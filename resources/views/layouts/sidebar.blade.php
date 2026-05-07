@@ -113,12 +113,21 @@
 
         {{-- KOLOM 3 --}}
         <div class="flex flex-col gap-2 border border-white bg-white/30 backdrop-blur-3xl w-fit rounded-3xl">
+            {{-- PRIVACY --}}
+            <a href="{{ route('privacy') }}" title="Privacy"
+                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('help')
+                    ? 'bg-[#0E213D] text-[#D5E2F5]'
+                    : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
+                
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M21.406,5.086l-9-4a1,1,0,0,0-.812,0l-9,4A1,1,0,0,0,2,6v.7a18.507,18.507,0,0,0,9.515,16.17,1,1,0,0,0,.97,0A18.507,18.507,0,0,0,22,6.7V6A1,1,0,0,0,21.406,5.086ZM20,6.7a16.507,16.507,0,0,1-8,14.141A16.507,16.507,0,0,1,4,6.7V6.65l8-3.556L20,6.65ZM11,10h2v8H11Zm0-4h2V8H11Z"></path></g></svg>
+            </a>
+
             {{-- HELP --}}
             <a href="{{ route('help') }}" title="Help"
                 class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('help')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
-                <svg class="w-7 h-7" fill="currentColor" height="200px" width="200px" version="1.1"
+                <svg class="w-7 h-7" fill="currentColor" version="1.1"
                     id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 512 512" xml:space="preserve">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -164,8 +173,8 @@
     </nav>
 
     {{-- Notifications Popup --}}
-    <div id="notifications-popup" class="absolute left-full ml-4 top-32 bg-white shadow-lg rounded-lg p-4 hidden w-80 max-h-96 overflow-y-auto">
-        <h3 class="text-lg font-bold mb-2">Notifications</h3>
+    <div id="notifications-popup" class="absolute hidden p-4 ml-4 overflow-y-auto bg-white rounded-lg shadow-lg left-full top-32 w-80 max-h-96">
+        <h3 class="mb-2 text-lg font-bold">Notifications</h3>
         <div id="notifications-list" class="space-y-2">
             <!-- Notifications will be populated here -->
         </div>
