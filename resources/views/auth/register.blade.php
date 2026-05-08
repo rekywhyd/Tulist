@@ -29,7 +29,7 @@
         </a>
 
         <div class="relative min-h-[400px]">
-            <img class="absolute z-50 max-w-[520px] mt-[75px] ml-[64px]"
+            <img class="absolute z-50 hidden sm:block max-w-[520px] mt-[75px] ml-[64px]"
                 src="{{ Vite::asset('resources/images/time-management.png') }}" alt="time management">
 
             <div class="w-[570px] ml-[540px] px-[90px] py-8 my-6 bg-white shadow-2xl rounded-[50px]">
