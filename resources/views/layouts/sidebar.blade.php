@@ -93,8 +93,8 @@
             </button>
 
             {{-- SETTING --}}
-            <a href="{{ route('profile.edit') }}"
-                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('profile.edit')
+            <a href="{{ route('profile.setting') }}"
+                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('profile.setting')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}"
                 title="Setting">
@@ -115,7 +115,7 @@
         <div class="flex flex-col gap-2 border border-white bg-white/30 backdrop-blur-3xl w-fit rounded-3xl">
             {{-- PRIVACY --}}
             <a href="{{ route('privacy') }}" title="Privacy"
-                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('help')
+                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('privacy')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
                 

@@ -64,9 +64,9 @@ Route::get('/privacy', [PageController::class, 'privacy'])
     ->middleware('auth');
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/setting', [ProfileController::class, 'edit'])->name('profile.setting');
+    Route::patch('/setting', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/setting', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('tasks', TaskController::class);
     Route::patch('subtasks/{id}', [TaskController::class, 'updateSubtask'])->name('subtasks.update');
