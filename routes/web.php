@@ -5,6 +5,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Task;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,8 +21,8 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
 Route::get('/home', function () {
     $user = Auth::user();
+    $tasks = Task::where('user_id', $user->id)->get();
 
-    $tasks = $user->tasks()->with('subtasks')->get();
 
     $todayTasks = $tasks->filter(function ($task) {
         return $task->due_date->isToday() && !$task->completed;
@@ -45,9 +47,7 @@ Route::get('/home', function () {
     }
 
     return view('home', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'historyTasks', 'todayCount', 'tomorrowCount', 'upcomingCount', 'user'));
-})
-    ->middleware(['auth', 'verified'])
-    ->name('home');
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/schedule', [App\Http\Controllers\TaskController::class, 'schedule'])
     ->middleware(['auth', 'verified'])
@@ -69,11 +69,11 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/setting', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('tasks', TaskController::class);
-    Route::patch('subtasks/{id}', [TaskController::class, 'updateSubtask'])->name('subtasks.update');
     Route::post('tasks/{id}/duplicate', [TaskController::class, 'duplicate'])->name('tasks.duplicate');
-    Route::post('subtasks', [TaskController::class, 'storeSubtask'])->name('subtasks.store');
+
 
     Route::resource('notifications', NotificationController::class);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 
     Route::post('/clear-alert', function () {
         session()->forget('show_alert');

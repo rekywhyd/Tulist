@@ -234,9 +234,7 @@
                 taskContainers.forEach(container => {
                     const taskTitle = container.querySelector('span.ml-4.flex-1')?.textContent
                         .toLowerCase() || '';
-                    const subtaskTitles = Array.from(container.querySelectorAll(
-                        '.subtask-item span.ml-2')).map(span => span.textContent
-                        .toLowerCase());
+                    const subtaskTitles = [];
                     const matches = taskTitle.includes(query) || subtaskTitles.some(title =>
                         title.includes(query));
                     container.style.display = matches || query === '' ? '' : 'none';
@@ -247,8 +245,7 @@
                 scheduleTasks.forEach(taskDiv => {
                     const taskTitle = taskDiv.querySelector('span.translate-y-\\[\\-2px\\]')
                         ?.textContent.toLowerCase() || '';
-                    const subtaskTitles = Array.from(taskDiv.querySelectorAll(
-                        '.subtask-item span')).map(span => span.textContent.toLowerCase());
+                    const subtaskTitles = [];
                     const matches = taskTitle.includes(query) || subtaskTitles.some(title =>
                         title.includes(query));
                     taskDiv.style.display = matches || query === '' ? '' : 'none';

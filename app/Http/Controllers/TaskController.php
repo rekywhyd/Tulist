@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\Subtask;
 use App\Models\Notification;
+use App\Models\TaskAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+// NOTE: Subtask feature removed.
+
+
 
 class TaskController extends Controller
 {
@@ -18,11 +22,12 @@ class TaskController extends Controller
         $user = Auth::user();
 
         if ($request->has('date')) {
-            $tasks = $user->tasks()->with('subtasks')->where('due_date', $request->date)->get();
+            $tasks = $user->tasks()->where('due_date', $request->date)->get();
             return response()->json($tasks);
         }
 
-        $tasks = $user->tasks()->with('subtasks')->get();
+        $tasks = $user->tasks()->get();
+
 
         $todayTasks = $tasks->filter(function($task) {
             return $task->due_date->isToday() && !$task->completed;
@@ -56,8 +61,8 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'due_date' => 'required|date',
             'priority' => 'required|in:Urgent,High,Normal,Low',
-            'subtasks' => 'nullable|array',
-            'subtasks.*' => 'nullable|string|max:255',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
         ]);
 
         $task = Task::create([
@@ -68,14 +73,34 @@ class TaskController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        if ($request->subtasks) {
-            foreach ($request->subtasks as $subtaskTitle) {
-                if (!empty(trim($subtaskTitle))) {
-                    Subtask::create([
-                        'title' => trim($subtaskTitle),
-                        'task_id' => $task->id,
-                    ]);
+
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $uploadedFile) {
+                if (!$uploadedFile) {
+                    continue;
                 }
+
+                $path = $uploadedFile->store('task_attachments', 'public');
+
+                $type = null;
+                $mime = $uploadedFile->getClientMimeType();
+                if (str_starts_with($mime, 'image/')) {
+                    $type = 'image';
+                } else {
+                    $type = 'document';
+                }
+
+                TaskAttachment::create([
+                    'task_id' => $task->id,
+                    'user_id' => Auth::id(),
+                    'filename' => basename($path),
+                    'original_name' => $uploadedFile->getClientOriginalName(),
+                    'mime_type' => $mime,
+                    'size' => $uploadedFile->getSize(),
+                    'storage_path' => $path,
+                    'type' => $type,
+                ]);
             }
         }
 
@@ -87,9 +112,10 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        $task = Task::with('subtasks')->findOrFail($id);
+        $task = Task::with('attachments')->findOrFail($id);
         return response()->json($task);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -112,34 +138,78 @@ class TaskController extends Controller
             'due_date' => 'sometimes|required|date',
             'priority' => 'sometimes|required|in:Urgent,High,Normal,Low',
             'completed' => 'sometimes|boolean',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
         ]);
 
-        $task->update($request->only(['title', 'description', 'due_date', 'priority', 'completed']));
+        $data = $request->only(['title', 'description', 'due_date', 'priority', 'completed']);
 
-        // If task is marked as completed, move to history
-        if ($request->has('completed') && $request->completed) {
-            // Mark all subtasks as completed too
-            $task->subtasks()->update(['completed' => true]);
+        // Handle completed_at timestamp
+        if ($request->has('completed')) {
+            if ($request->completed && !$task->completed) {
+                $data['completed_at'] = now();
+            } elseif (!$request->completed && $task->completed) {
+                $data['completed_at'] = null;
+            }
         }
 
-        return response()->json(['success' => true]);
+        $task->update($data);
+
+        // Handle attachment removals on edit (from remove_attachments[])
+        if ($request->has('remove_attachments')) {
+            $removeIds = $request->input('remove_attachments', []);
+            if (!is_array($removeIds)) {
+                $removeIds = [$removeIds];
+            }
+
+            $attachmentsToRemove = TaskAttachment::where('task_id', $task->id)
+                ->where('user_id', Auth::id())
+                ->whereIn('id', $removeIds)
+                ->get();
+
+            foreach ($attachmentsToRemove as $att) {
+                // delete file from storage if exists
+                if (!empty($att->storage_path)) {
+                    \Storage::disk('public')->delete($att->storage_path);
+                }
+                $att->delete();
+            }
+        }
+
+        // Handle file uploads on edit (append new attachments)
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $uploadedFile) {
+                if (!$uploadedFile) continue;
+
+                $path = $uploadedFile->store('task_attachments', 'public');
+                $mime = $uploadedFile->getClientMimeType();
+                $type = str_starts_with($mime, 'image/') ? 'image' : 'document';
+
+                TaskAttachment::create([
+                    'task_id' => $task->id,
+                    'user_id' => Auth::id(),
+                    'filename' => basename($path),
+                    'original_name' => $uploadedFile->getClientOriginalName(),
+                    'mime_type' => $mime,
+                    'size' => $uploadedFile->getSize(),
+                    'storage_path' => $path,
+                    'type' => $type,
+                ]);
+            }
+        }
+
+
+        return response()->json(['success' => true, 'task' => $task->load('attachments')]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(string $id)
     {
         $task = Task::findOrFail($id);
         $task->delete();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function updateSubtask(Request $request, $id)
-    {
-        $subtask = Subtask::findOrFail($id);
-        $subtask->update(['completed' => $request->completed]);
 
         return response()->json(['success' => true]);
     }
@@ -151,29 +221,9 @@ class TaskController extends Controller
         $newTask->title = $task->title . ' (Copy)';
         $newTask->save();
 
-        foreach ($task->subtasks as $subtask) {
-            $newSubtask = $subtask->replicate();
-            $newSubtask->task_id = $newTask->id;
-            $newSubtask->save();
-        }
-
         return response()->json(['success' => true]);
     }
 
-    public function storeSubtask(Request $request)
-    {
-        $request->validate([
-            'task_id' => 'required|exists:tasks,id',
-            'title' => 'required|string|max:255',
-        ]);
-
-        Subtask::create([
-            'task_id' => $request->task_id,
-            'title' => $request->title,
-        ]);
-
-        return response()->json(['success' => true]);
-    }
 
     /**
      * Display the schedule view with calendar and tasks.
@@ -187,30 +237,30 @@ class TaskController extends Controller
         $startOfMonth = \Carbon\Carbon::create($year, $month, 1)->startOfMonth();
         $endOfMonth = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
 
-        $tasks = $user->tasks()->with('subtasks')->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
+        $tasks = $user->tasks()->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
 
         $tasksByDate = $tasks->groupBy(function($task) {
             return $task->due_date->format('Y-m-d');
         });
 
         // Separate queries for better performance - exclude completed tasks from allTasks
-        $allTasks = $user->tasks()->with('subtasks')
+        $allTasks = $user->tasks()
             ->where('completed', false)
             ->orderBy('due_date', 'asc')
             ->orderByRaw("CASE priority WHEN 'Urgent' THEN 1 WHEN 'High' THEN 2 WHEN 'Normal' THEN 3 WHEN 'Low' THEN 4 END")
             ->get();
 
-        $todayTasks = $user->tasks()->with('subtasks')
+        $todayTasks = $user->tasks()
             ->where('due_date', now()->toDateString())
             ->where('completed', false)
             ->get();
 
-        $upcomingTasks = $user->tasks()->with('subtasks')
+        $upcomingTasks = $user->tasks()
             ->where('due_date', '>', now()->toDateString())
             ->where('completed', false)
             ->get();
 
-        $completedTasks = $user->tasks()->with('subtasks')
+        $completedTasks = $user->tasks()
             ->where('completed', true)
             ->get();
 

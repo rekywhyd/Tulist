@@ -5,20 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Subtask extends Model
+class TaskAttachment extends Model
 {
     protected $fillable = [
-        'title',
-        'completed',
         'task_id',
-    ];
-
-    protected $casts = [
-        'completed' => 'boolean',
+        'user_id',
+        'filename',
+        'original_name',
+        'mime_type',
+        'size',
+        'storage_path',
+        'type',
     ];
 
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+
