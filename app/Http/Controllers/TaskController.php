@@ -38,9 +38,12 @@ class TaskController extends Controller
         $upcomingTasks = $tasks->filter(function($task) {
             return $task->due_date->gt(now()->addDay()) && !$task->completed;
         });
+        $overdueTasks = $tasks->filter(function($task) {
+            return $task->due_date->lt(now()->startOfDay()) && !$task->completed;
+        });
         $historyTasks = $tasks->where('completed', true);
 
-        return view('view', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'historyTasks'));
+        return view('view', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks'));
     }
 
     /**
@@ -220,6 +223,26 @@ class TaskController extends Controller
         $newTask = $task->replicate();
         $newTask->title = $task->title . ' (Copy)';
         $newTask->save();
+
+        // Duplicate attachments
+        $attachments = \App\Models\TaskAttachment::where('task_id', $task->id)->get();
+        foreach ($attachments as $attachment) {
+            $newAttachment = $attachment->replicate();
+            $newAttachment->task_id = $newTask->id;
+            
+            // Physically copy the file to avoid shared references
+            if (!empty($attachment->storage_path) && \Storage::disk('public')->exists($attachment->storage_path)) {
+                $fileExtension = pathinfo($attachment->storage_path, PATHINFO_EXTENSION);
+                $newFileName = \Illuminate\Support\Str::random(40) . ($fileExtension ? '.' . $fileExtension : '');
+                $newPath = 'task_attachments/' . $newFileName;
+                
+                \Storage::disk('public')->copy($attachment->storage_path, $newPath);
+                $newAttachment->storage_path = $newPath;
+                $newAttachment->filename = $newFileName;
+            }
+            
+            $newAttachment->save();
+        }
 
         return response()->json(['success' => true]);
     }
