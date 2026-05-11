@@ -1,17 +1,15 @@
 <x-app-layout>
     <div class="min-h-full items-center mr-8 ml-20 border-white shadow-md bg-white/50 rounded-[40px] mt-20">
         <div class="px-12 font-poppins">
-            <div class="flex items-center justify-between pt-6">
+            <div class="flex items-center justify-between pt-10">
                 {{-- Avatar and Name --}}
-                <div class="flex items-center gap-16">
-                    <svg class="w-44 h-44 transition-all text-black hover:text-[#0E213D] duration-200 hover:hover:scale-110"
-                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M12.12 12.78C12.05 12.77 11.96 12.77 11.88 12.78C10.12 12.72 8.71997 11.28 8.71997 9.50998C8.71997 7.69998 10.18 6.22998 12 6.22998C13.81 6.22998 15.28 7.69998 15.28 9.50998C15.27 11.28 13.88 12.72 12.12 12.78Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M18.74 19.3801C16.96 21.0101 14.6 22.0001 12 22.0001C9.40001 22.0001 7.04001 21.0101 5.26001 19.3801C5.36001 18.4401 5.96001 17.5201 7.03001 16.8001C9.77001 14.9801 14.25 14.9801 16.97 16.8001C18.04 17.5201 18.64 18.4401 18.74 19.3801Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </g>
-                    </svg>
+                <div class="flex items-center gap-14">
+                    @if (Auth::user()->profile_photo_path)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="Profile Photo"
+                            class="object-cover rounded-full w-44 h-44 ">
+                    @else
+                        <svg class="w-44 h-44" viewBox="3 3 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z" fill="#C0C0C0" fill-opacity="0.24"></path> <circle cx="12" cy="10" r="4" fill="#A9A9A9"></circle> <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2209 18.2462C18.2791 18.3426 18.2613 18.466 18.1795 18.5432C16.5674 20.0662 14.3928 21 12 21C9.60728 21 7.43264 20.0663 5.82057 18.5433C5.73877 18.466 5.72101 18.3427 5.77918 18.2463C6.94337 16.318 9.29215 15 12.0001 15C14.7079 15 17.0567 16.3179 18.2209 18.2462Z" fill="#A9A9A9"></path> </g></svg>
+                    @endif
                     <div class="flex flex-col gap-2">
                         <p class="text-4xl font-bold">{{ Auth::user()->name }}</p>
                         <p class="text-gray-500">{{ Auth::user()->email }}</p>
@@ -23,9 +21,43 @@
             <div class="flex pt-4 pb-6" id="edit-button-container">
                 <button id="edit-profile-btn"
                     class="flex items-center gap-4 px-6 py-2 text-xl font-bold text-black transition-transform duration-200 bg-white shadow-xl hover:scale-110 rounded-2xl">
-                    <svg class="w-6 h-6" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>edit_cover [#1481]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-419.000000, -359.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M384,209.210475 L384,219 L363,219 L363,199.42095 L373.5,199.42095 L373.5,201.378855 L365.1,201.378855 L365.1,217.042095 L381.9,217.042095 L381.9,209.210475 L384,209.210475 Z M370.35,209.51395 L378.7731,201.64513 L380.4048,203.643172 L371.88195,212.147332 L370.35,212.147332 L370.35,209.51395 Z M368.25,214.105237 L372.7818,214.105237 L383.18415,203.64513 L378.8298,199 L368.25,208.687714 L368.25,214.105237 Z" id="edit_cover-[#1481]"> </path> </g> </g> </g> </g></svg>
+                    <svg class="w-6 h-6" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <title>edit_cover [#1481]</title>
+                            <desc>Created with Sketch.</desc>
+                            <defs> </defs>
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Dribbble-Light-Preview" transform="translate(-419.000000, -359.000000)"
+                                    fill="#000000">
+                                    <g id="icons" transform="translate(56.000000, 160.000000)">
+                                        <path
+                                            d="M384,209.210475 L384,219 L363,219 L363,199.42095 L373.5,199.42095 L373.5,201.378855 L365.1,201.378855 L365.1,217.042095 L381.9,217.042095 L381.9,209.210475 L384,209.210475 Z M370.35,209.51395 L378.7731,201.64513 L380.4048,203.643172 L371.88195,212.147332 L370.35,212.147332 L370.35,209.51395 Z M368.25,214.105237 L372.7818,214.105237 L383.18415,203.64513 L378.8298,199 L368.25,208.687714 L368.25,214.105237 Z"
+                                            id="edit_cover-[#1481]"> </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
                     Edit
                 </button>
+                <div class="flex gap-4 mt-4">
+                    <form id="photo-upload-form" action="{{ route('profile.photo.upload') }}" method="POST"
+                        enctype="multipart/form-data" class="flex items-center gap-2">
+                        @csrf
+                        <input type="file" id="photo-input" name="photo" accept="image/*" class="p-1 border rounded" />
+                    </form>
+                    <form id="photo-delete-form" action="{{ route('profile.photo.delete') }}" method="POST"
+                        class="flex items-center">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="px-4 py-2 text-white transition bg-red-600 rounded hover:bg-red-700">Delete
+                            Photo</button>
+                    </form>
+                </div>
             </div>
 
             {{-- Profile Edit Mode --}}
@@ -64,6 +96,22 @@
 
             if (editProfileBtn) {
                 editProfileBtn.addEventListener('click', () => toggleEditMode(true));
+            }
+
+            // Photo upload auto-submit
+            const photoInput = document.getElementById('photo-input');
+            const photoForm = document.getElementById('photo-upload-form');
+
+            if (photoInput && photoForm) {
+                photoInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        if (confirm('Are you sure you want to upload a profile photo?')) {
+                            photoForm.submit();
+                        } else {
+                            this.value = ''; // Reset input if cancelled
+                        }
+                    }
+                });
             }
 
             document.addEventListener('click', function(e) {

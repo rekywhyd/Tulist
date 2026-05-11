@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -67,4 +68,41 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Upload a new profile photo.
+     */
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|max:2048', // max 2MB
+        ]);
+
+        $user = $request->user();
+        // Store the file in the public disk
+        $path = $request->file('photo')->store('profile-photos', 'public');
+        // If user already has a photo, delete old one
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+        }
+        $user->profile_photo_path = $path;
+        $user->save();
+
+        return Redirect::back()->with('status', 'profile-photo-updated');
+    }
+
+    /**
+     * Delete the user's profile photo.
+     */
+    public function deletePhoto(Request $request)
+    {
+        $user = $request->user();
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+            $user->profile_photo_path = null;
+            $user->save();
+        }
+        return Redirect::back()->with('status', 'profile-photo-deleted');
+    }
+
 }

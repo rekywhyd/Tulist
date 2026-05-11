@@ -71,6 +71,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/setting', [ProfileController::class, 'edit'])->name('profile.setting');
     Route::patch('/setting', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/setting', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Profile photo upload
+    Route::post('/profile/photo/upload', [ProfileController::class, 'uploadPhoto'])->name('profile.photo.upload');
+    // Profile photo delete
+    Route::delete('/profile/photo/delete', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 
     Route::resource('tasks', TaskController::class);
     Route::post('tasks/{id}/duplicate', [TaskController::class, 'duplicate'])->name('tasks.duplicate');
