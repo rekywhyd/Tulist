@@ -52,7 +52,9 @@
                         @php
                             $startOfMonth = \Carbon\Carbon::create($year, $month, 1);
                             $endOfMonth = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
-                            $startDate = $startOfMonth->copy()->startOfWeek();
+                            $startDate = $startOfMonth->copy()->startOfWeek(
+                                \Carbon\Carbon::SUNDAY
+                            );
                             $endDate = $endOfMonth->copy()->endOfWeek();
                         @endphp
 
@@ -69,10 +71,10 @@
                                 $lowCount = $incompleteTasksOnDate->where('priority', 'Low')->count();
                                 $totalTasks = $incompleteTasksOnDate->count();
                             @endphp
-                            <div class="min-h-[100px] border rounded-lg p-2 {{ $isCurrentMonth ? 'bg-white' : 'bg-gray-50' }} {{ $isToday ? 'ring-2 ring-blue-500' : '' }} cursor-pointer hover:bg-gray-50 transition-colors date-cell"
+                            <div class="min-h-[100px] border rounded-lg p-2 {{ $isCurrentMonth ? 'bg-white' : 'bg-gray-50' }} {{ $isToday ? 'bg-blue-100' : '' }} {{ $isToday ? 'ring-2 ring-blue-500' : '' }} cursor-pointer hover:bg-gray-50 transition-colors date-cell"
                                 data-date="{{ $dateKey }}">
                                 <div
-                                    class="text-sm font-medium {{ $isCurrentMonth ? 'text-gray-900' : 'text-gray-400' }}">
+                                    class="text-sm font-medium {{ $isToday ? 'text-blue-600 text-lg' : ($date->isSunday() ? 'text-red-500' : ($isCurrentMonth ? 'text-gray-900' : 'text-gray-400')) }}">
                                     {{ $date->day }}
                                 </div>
                                 @if ($totalTasks > 0)
@@ -97,53 +99,17 @@
                     </div>
                 </div>
 
-                <!-- List View (Hidden by default) -->
-                <div id="list-view" class="hidden w-[60%] p-6 bg-white shadow-xl rounded-xl">
-                    <h2 class="mb-4 text-2xl font-bold text-[#1C427A]">All Tasks</h2>
-                    <div class="space-y-3">
-                        @foreach ($allTasks as $task)
-                            <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50">
-                                <input type="checkbox" class="w-5 h-5 mr-3 rounded-full task-checkbox accent-blue-500"
-                                    data-id="{{ $task->id }}" {{ $task->completed ? 'checked' : '' }}>
-                                <div class="flex-1">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-3 h-3 rounded-full mr-2 {{ $task->priority == 'Urgent' ? 'bg-red-500' : ($task->priority == 'High' ? 'bg-yellow-500' : ($task->priority == 'Normal' ? 'bg-blue-500' : 'bg-green-500')) }}">
-                                        </div>
-                                        <span
-                                            class="{{ $task->completed ? 'line-through text-gray-500' : '' }}">{{ $task->title }}</span>
-                                    </div>
-                                    @if ($task->due_date)
-                                        <div class="text-sm text-gray-500">{{ $task->due_date->format('M d, Y') }}
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
                 <!-- Task List Panel -->
                 <div class="w-[37%] p-6 bg-white shadow-xl rounded-xl">
                     <div class="mb-4">
-                        <h2 class="mb-4 text-2xl font-bold text-[#1C427A]">Tasks</h2>
-                        <div class="flex mb-4 space-x-2">
-                            <button
-                                class="px-3 py-1 text-sm font-medium text-blue-800 transition-transform duration-200 bg-blue-100 rounded-full hover:hover:scale-110 task-filter"
-                                data-filter="all">All Tasks</button>
-                            <button
-                                class="px-3 py-1 text-sm font-medium text-gray-800 transition-transform duration-200 bg-gray-100 rounded-full hover:hover:scale-110 task-filter"
-                                data-filter="today">Today</button>
-                            <button
-                                class="px-3 py-1 text-sm font-medium text-gray-800 transition-transform duration-200 bg-gray-100 rounded-full hover:hover:scale-110 task-filter"
-                                data-filter="upcoming">Upcoming</button>
-                            <button
-                                class="px-3 py-1 text-sm font-medium text-gray-800 transition-transform duration-200 bg-gray-100 rounded-full hover:hover:scale-110 task-filter"
-                                data-filter="completed">Completed</button>
-                        </div>
+                        <h2 id="task-in-date-title" class="mb-4 text-2xl font-bold text-[#1C427A]">
+                            Task in <span id="task-in-date-pill" class="px-3 py-1 border border-[#1C427A]/30 rounded-full bg-white">{{ date('d M Y') }}</span>
+                        </h2>
+
                     </div>
 
-                    <div id="task-list" class="space-y-3 overflow-y-auto max-h-96 text-[#132C51]">
+
+                    <div id="task-list" class="space-y-3 overflow-y-auto text-[#132C51]">
                         <!-- Tasks will be loaded here via JavaScript -->
                     </div>
                 </div>
@@ -158,7 +124,7 @@
             class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-[#132C51] shadow-xl rounded-xl w-[600px]">
             <div class="mt-3">
                 <h3 class="mb-8 text-2xl font-semibold text-white">New Task</h3>
-                <form action="{{ route('tasks.store') }}" method="POST">
+                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-5">
                         <input placeholder="Title Name" type="text" name="title"
@@ -308,12 +274,14 @@
                     </div>
 
 
-                    {{-- Add Task --}}
+                    {{-- Add File --}}
                     <div class="mb-5">
-                        <div id="subtasks-container"></div>
-                        <button type="button" id="add-subtask-btn"
-                            class="text-white transition-transform duration-200 border border-gray-600 rounded-lg bg-[#0C1F3B] w-full hover:hover:scale-105 py-1 px-3">+
-                            Add Subtask</button>
+                        <label class="flex items-center justify-center w-full gap-2 px-3 py-2 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-105">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <span id="file-label">Add File</span>
+                            <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                        </label>
+                        <div id="file-list" class="mt-2 space-y-1 text-sm text-gray-300"></div>
                     </div>
                     <div class="flex justify-center gap-6 mt-8 font-medium">
                         <button type="button" id="close-modal"
@@ -367,30 +335,8 @@
         </div>
     </div>
 
-    <div id="add-subtask-modal"
-        class="fixed inset-0 z-50 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50 font-poppins">
-        <div
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 mx-auto bg-[#132C51] rounded-xl shadow-xl w-[400px]">
-            <div class="mt-3">
-                <h3 class="mb-4 text-lg font-semibold text-white">Add Subtask</h3>
-                <form id="add-subtask-form">
-                    @csrf
-                    <input type="hidden" id="add-subtask-task-id">
-                    <div class="mb-4">
-                        <input type="text" id="subtask-title"
-                            class="w-full px-3 py-2 text-white border border-gray-600 rounded-xl mb-2 bg-[#0C1F3B]"
-                            required>
-                    </div>
-                    <div class="flex justify-center gap-6 mt-4 font-medium">
-                        <button type="button" id="close-add-subtask-modal"
-                            class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-95 rounded-3xl">Cancel</button>
-                        <button type="submit"
-                            class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Add</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
+
 
     <div id="delete-confirm-modal"
         class="fixed inset-0 z-50 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
@@ -434,11 +380,7 @@
                     <label class="block font-semibold text-gray-100">Status</label>
                     <p id="details-completed" class="text-gray-200"></p>
                 </div>
-                <div class="mb-4">
-                    <label class="block font-semibold text-gray-100">Subtasks</label>
-                    <div id="details-subtasks" class="text-gray-200">
-                    </div>
-                </div>
+
                 <div class="flex justify-center mt-6 font-medium">
                     <button type="button" id="close-details-modal"
                         class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-110 rounded-3xl">Close</button>
@@ -451,7 +393,7 @@
         let currentMonth = {{ $month }};
         let currentYear = {{ $year }};
         let selectedDate = null;
-        let currentFilter = 'all';
+
 
         // Priority colors
         const priorityColors = {
@@ -473,55 +415,53 @@
         console.log('Upcoming Tasks:', upcomingTasks);
         console.log('Completed Tasks:', completedTasks);
 
-        // Load tasks for selected date or filter
-        function loadTasks(date = null, filter = 'all') {
-            console.log('loadTasks called with date:', date, 'filter:', filter);
+        // Load tasks for selected date (tanpa filter sidebar)
+        function loadTasks(date = null) {
+            console.log('loadTasks called with date:', date);
             const taskList = document.getElementById('task-list');
-            let tasks = [];
-            let showSubtasks = false;
+            const targetDate = date || new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-            if (date) {
-                // Load tasks for specific date with error handling
-                fetch(`/tasks?date=${date}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Fetched tasks for date', date, ':', data);
-                        displayTasks(data, taskList, true);
-                    })
-                    .catch(error => {
-                        console.error('Error loading tasks for date', date, ':', error);
-                        taskList.innerHTML =
-                            '<div class="p-3 text-[#132C51] text-center">Tidak ada tugas pada tanggal ini.</div>';
-                    });
-            } else {
-                // Load tasks based on filter
-                switch (filter) {
-                    case 'today':
-                        tasks = Object.values(todayTasks);
-                        showSubtasks = true;
-                        break;
-                    case 'upcoming':
-                        tasks = Object.values(upcomingTasks);
-                        showSubtasks = true;
-                        break;
-                    case 'completed':
-                        tasks = Object.values(completedTasks);
-                        showSubtasks = false;
-                        break;
-                    default:
-                        // All Tasks
-                        tasks = Object.values(allTasks);
-                        showSubtasks = false;
-                }
-                console.log('Displaying tasks for filter', filter, ':', tasks);
-                displayTasks(tasks, taskList, showSubtasks);
-            }
+            fetch(`/tasks?date=${targetDate}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Fetched tasks for date', targetDate, ':', data);
+                    displayTasks(data, taskList);
+
+                        // Update title "Task in (Date)" (isi pill)
+                    const pillEl = document.getElementById('task-in-date-pill');
+                    if (pillEl) {
+                        const pretty = new Date(targetDate).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit'
+                        });
+                        pillEl.textContent = `${pretty}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading tasks for date', targetDate, ':', error);
+                    taskList.innerHTML =
+                        '<div class="p-3 text-[#132C51] text-center">Tidak ada tugas pada tanggal ini.</div>';
+
+                    const pillEl = document.getElementById('task-in-date-pill');
+                    if (pillEl) {
+                        const pretty = new Date(targetDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit'
+                        });
+                        pillEl.textContent = `${pretty}`;
+                    }
+                });
+
         }
+
 
         // Update task arrays when task status changes
         function updateTaskArrays(taskId, completed) {
@@ -599,8 +539,8 @@
             updateCategoryCount('completed');
         }
 
-        function displayTasks(tasks, container, showSubtasks = false) {
-            console.log('displayTasks called with tasks:', tasks, 'showSubtasks:', showSubtasks);
+        function displayTasks(tasks, container) {
+            console.log('displayTasks called with tasks:', tasks);
             container.innerHTML = '';
 
             if (tasks.length === 0) {
@@ -641,18 +581,8 @@
                     'p-3 border rounded-lg hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md';
                 taskDiv.setAttribute('data-task-id', task.id);
 
-                let subtasksHtml = '';
-                if (showSubtasks && task.subtasks && task.subtasks.length > 0) {
-                    subtasksHtml =
-                        '<div class="mt-2 ml-5 subtasks-container"><ul class="space-y-1 text-sm text-gray-600">';
-                    task.subtasks.forEach(subtask => {
-                        subtasksHtml += `<li class="subtask-item flex items-center ${subtask.completed ? 'opacity-50' : ''}">
-                        <input type="checkbox" class="w-5 h-5 mr-2 rounded-full subtask-checkbox accent-blue-500" data-id="${subtask.id}" ${subtask.completed ? 'checked' : ''}>
-                        <span class="${subtask.completed ? 'line-through text-gray-400' : ''}">${subtask.title}</span>
-                    </li>`;
-                    });
-                    subtasksHtml += '</ul></div>';
-                }
+
+
 
                 taskDiv.innerHTML = `
                 <div class="flex items-center justify-between">
@@ -661,7 +591,7 @@
                         <div class="flex-1">
                             <div class="flex items-center">
                                 <div class="w-3 h-3 mr-2 rounded-full" style="background-color: ${priorityColors[task.priority]}"></div>
-                                <span class="${task.completed ? 'line-through text-gray-500' : 'text-[#132C51]'} text-lg translate-y-[-2px]">${task.title}</span>
+                                <span class="${task.completed ? 'line-through text-gray-500' : 'text-[#132C51]'} text-lg translate-y-[-2px] break-words whitespace-normal break-all">${task.title}</span>
                             </div>
                             ${task.due_date ? `<div class="text-sm text-gray-500">${new Date(task.due_date).toLocaleDateString()}</div>` : ''}
                         </div>
@@ -682,6 +612,7 @@
                                 Details
                             </button>
 
+                            ${!task.completed ? `
                             <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 rename-btn" data-task="${task.id}">
                                 <svg class="w-6 h-6" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11.75 2C11.3358 2 11 2.33579 11 2.75C11 3.16421 11.3358 3.5 11.75 3.5H13.25V24.5H11.75C11.3358 24.5 11 24.8358 11 25.25C11 25.6642 11.3358 26 11.75 26H16.25C16.6642 26 17 25.6642 17 25.25C17 24.8358 16.6642 24.5 16.25 24.5H14.75V3.5H16.25C16.6642 3.5 17 3.16421 17 2.75C17 2.33579 16.6642 2 16.25 2H11.75Z" fill="#FFFFFF"></path>
@@ -690,6 +621,7 @@
                                 </svg>
                                 Rename
                             </button>
+                            ` : ''}
 
                             <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 duplicate-btn" data-task="${task.id}">
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(-1, 0, 0, 1, 0, 0)">
@@ -700,13 +632,8 @@
                                 Duplicate
                             </button>
 
-                            <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 add-subtask-btn" data-task="${task.id}">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" stroke="#FFFFFF" stroke-width="1.5"></path>
-                                    <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"></path>
-                                </svg>
-                                Add Subtask
-                            </button>
+
+
 
                             <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="${task.id}">
                                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -717,7 +644,8 @@
                         </div>
                     </div>
                 </div>
-                ${subtasksHtml}
+
+
             `;
                 container.appendChild(taskDiv);
             });
@@ -750,29 +678,16 @@
         document.querySelectorAll('.date-cell').forEach(cell => {
             cell.addEventListener('click', () => {
                 selectedDate = cell.dataset.date;
-                document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('bg-blue-100'));
-                cell.classList.add('bg-blue-100');
+                document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('bg-blue-100','border-blue-500','ring-2','ring-blue-500'));
+                cell.classList.add('bg-blue-100','border-blue-500','ring-2','ring-blue-500');
                 loadTasks(selectedDate);
             });
         });
 
-        // Task filters
-        document.querySelectorAll('.task-filter').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.task-filter').forEach(b => {
-                    b.classList.remove('bg-blue-100', 'text-blue-800');
-                    b.classList.add('bg-gray-100', 'text-gray-800');
-                });
-                button.classList.remove('bg-gray-100', 'text-gray-800');
-                button.classList.add('bg-blue-100', 'text-blue-800');
-                currentFilter = button.dataset.filter;
-                // Menghapus pilihan tanggal saat filter diklik
-                selectedDate = null;
-                document.querySelectorAll('.date-cell').forEach(c => c.classList.remove('bg-blue-100'));
 
-                loadTasks(null, currentFilter);
-            });
-        });
+        // Tidak ada task filter (All/Today/Upcoming/Completed) di panel kanan.
+        // Saat user memilih tanggal di calendar, daftar tasks akan dimuat untuk tanggal tersebut.
+
 
         // Toggle view
         document.getElementById('toggle-view').addEventListener('click', () => {
@@ -798,7 +713,8 @@
 
         // Initialize
         console.log('Initializing schedule page');
-        loadTasks(null, 'all');
+        loadTasks(null);
+
 
         const addTaskModal = document.getElementById('add-task-modal');
         const closeModal = document.getElementById('close-modal');
@@ -811,7 +727,8 @@
             addTaskModal.classList.add('hidden');
             // Reset form saat ditutup
             document.querySelector('#add-task-modal form').reset();
-            document.getElementById('subtasks-container').innerHTML = '';
+            document.getElementById('file-list').innerHTML = '';
+            document.getElementById('file-label').textContent = 'Add File';
             // Reset Alpine.js priority selection
             const prioritySelect = document.querySelector('#add-task-modal select[name="priority"]');
             if (prioritySelect) {
@@ -823,19 +740,25 @@
             }
         });
 
-        // 2. Perbaikan Add Subtask (di dalam modal Add Task)
-        const addSubtaskBtnModal = document.getElementById('add-subtask-btn');
-        const subtasksContainer = document.getElementById('subtasks-container');
-
-        addSubtaskBtnModal.addEventListener('click', () => {
-            const subtaskInput = document.createElement('input');
-            subtaskInput.type = 'text';
-            subtaskInput.name = 'subtasks[]';
-            subtaskInput.className =
-                'w-full px-3 py-2 border rounded-lg mb-2 text-white border-gray-600 bg-[#0C1F3B] focus:ring-blue-500 focus:border-blue-500';
-            subtaskInput.placeholder = 'Subtask ' + (subtasksContainer.children.length + 1);
-            subtasksContainer.appendChild(subtaskInput);
-        });
+        // File upload preview
+        const fileInput = document.getElementById('task-file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                const fileList = document.getElementById('file-list');
+                const label = document.getElementById('file-label');
+                fileList.innerHTML = '';
+                if (this.files.length > 0) {
+                    label.textContent = this.files.length + ' file(s) selected';
+                    Array.from(this.files).forEach(f => {
+                        const div = document.createElement('div');
+                        div.textContent = '📎 ' + f.name;
+                        fileList.appendChild(div);
+                    });
+                } else {
+                    label.textContent = 'Add File';
+                }
+            });
+        }
 
         // Handle form submission for adding new task
         document.querySelector('#add-task-modal form').addEventListener('submit', function(e) {
@@ -858,7 +781,8 @@
                         addTaskModal.classList.add('hidden');
                         // Reset form
                         this.reset();
-                        document.getElementById('subtasks-container').innerHTML = '';
+                        document.getElementById('file-list').innerHTML = '';
+                        document.getElementById('file-label').textContent = 'Add File';
                         // Reset Alpine.js priority selection
                         const prioritySelect = document.querySelector(
                             '#add-task-modal select[name="priority"]');
@@ -904,19 +828,10 @@
                 })
             }).then(() => {
                 updateTaskArrays(taskId, true);
-                // Switch to completed filter and update UI
-                currentFilter = 'completed';
-                document.querySelectorAll('.task-filter').forEach(b => {
-                    b.classList.remove('bg-blue-100', 'text-blue-800');
-                    b.classList.add('bg-gray-100', 'text-gray-800');
-                });
-                document.querySelector('.task-filter[data-filter="completed"]').classList.remove(
-                    'bg-gray-100', 'text-gray-800');
-                document.querySelector('.task-filter[data-filter="completed"]').classList.add('bg-blue-100',
-                    'text-blue-800');
                 // Muat ulang daftar tugas untuk mencerminkan perubahan
-                loadTasks(selectedDate, currentFilter);
+                loadTasks(selectedDate);
                 confirmModal.classList.add('hidden');
+
             });
         });
 
@@ -929,36 +844,8 @@
             }
         });
 
-        // Subtask checkbox functionality
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('subtask-checkbox')) {
-                const subtaskId = e.target.dataset.id;
-                const isChecked = e.target.checked;
 
-                fetch(`/subtasks/${subtaskId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        completed: isChecked
-                    })
-                }).then(() => {
-                    const subtaskDiv = e.target.closest('.subtask-item');
-                    const spanElement = e.target.nextElementSibling;
-                    if (isChecked) {
-                        subtaskDiv.classList.add('opacity-50');
-                        spanElement.classList.add('line-through', 'text-gray-400');
-                        spanElement.classList.remove('text-[#132C51]');
-                    } else {
-                        subtaskDiv.classList.remove('opacity-50');
-                        spanElement.classList.remove('line-through', 'text-gray-400');
-                        spanElement.classList.add('text-[#132C51]');
-                    }
-                });
-            }
-        });
+
 
         // 3. Perbaikan Task menu functionality (Titik Tiga)
         document.addEventListener('click', function(e) {
@@ -1022,18 +909,8 @@
             }
         });
 
-        // Add subtask button functionality (from menu)
-        document.addEventListener('click', function(e) {
-            const addSubtaskBtn = e.target.closest('.add-subtask-btn');
-            if (addSubtaskBtn) {
-                hideMenus();
-                const taskId = addSubtaskBtn.dataset.task;
-                document.getElementById('add-subtask-task-id').value = taskId;
-                // Clear previous subtask title
-                document.getElementById('subtask-title').value = '';
-                document.getElementById('add-subtask-modal').classList.remove('hidden');
-            }
-        });
+
+
 
         // Delete button functionality
         document.addEventListener('click', function(e) {
@@ -1080,20 +957,8 @@
                         document.getElementById('details-completed').textContent = data.completed ?
                             'Completed' : 'Not Completed';
 
-                        // Populate subtasks
-                        const subtasksContainer = document.getElementById('details-subtasks');
-                        subtasksContainer.innerHTML = '';
-                        if (data.subtasks && data.subtasks.length > 0) {
-                            data.subtasks.forEach(subtask => {
-                                const subtaskDiv = document.createElement('div');
-                                subtaskDiv.className = 'mb-1';
-                                subtaskDiv.innerHTML =
-                                    `<span class="${subtask.completed ? 'line-through text-gray-500' : ''}">${subtask.title}</span>`;
-                                subtasksContainer.appendChild(subtaskDiv);
-                            });
-                        } else {
-                            subtasksContainer.innerHTML = '<p>No subtasks</p>';
-                        }
+
+
 
                         document.getElementById('task-details-modal').classList.remove('hidden');
                     });
@@ -1135,32 +1000,8 @@
             document.getElementById('rename-modal').classList.add('hidden');
         });
 
-        // Add subtask form submission
-        document.getElementById('add-subtask-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const taskId = document.getElementById('add-subtask-task-id').value;
-            const subtaskTitle = document.getElementById('subtask-title').value;
-            fetch('/subtasks', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    task_id: taskId,
-                    title: subtaskTitle
-                })
-            }).then(() => {
-                // Reload tasks to show new subtask
-                loadTasks(selectedDate, currentFilter);
-                document.getElementById('add-subtask-modal').classList.add('hidden');
-            });
-        });
 
-        // Close add subtask modal
-        document.getElementById('close-add-subtask-modal').addEventListener('click', () => {
-            document.getElementById('add-subtask-modal').classList.add('hidden');
-        });
+
 
         // Delete confirmation
         document.getElementById('delete-yes').addEventListener('click', () => {
