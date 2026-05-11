@@ -12,9 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/view', [App\Http\Controllers\TaskController::class, 'index'])
+Route::get('/employees', [App\Http\Controllers\TaskController::class, 'index'])
     ->middleware(['auth', 'verified'])
-    ->name('view');
+    ->name('employees');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');

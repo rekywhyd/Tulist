@@ -56,10 +56,10 @@ class PageController extends Controller
     }
 
     /**
-     * Menampilkan halaman 'View'.
+     * Menampilkan halaman 'Employees'.
      */
-    public function view()
+    public function employees()
     {
-        return view('view');
+        return view('employees');
     }
 }

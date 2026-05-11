@@ -43,7 +43,7 @@ class TaskController extends Controller
         });
         $historyTasks = $tasks->where('completed', true);
 
-        return view('view', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks'));
+        return view('employees', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks'));
     }
 
     /**
