@@ -53,7 +53,7 @@
                     </svg>
                 </div>
 
-                <a href="{{ route('profile.setting') }}" title="Profile">
+                <a href="{{ route('profile.edit') }}" title="Profile">
                     @if (Auth::user()->profile_photo_path)
                         <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="Profile Photo"
                             class="object-cover w-12 h-12 transition-all duration-200 rounded-full cursor-pointer hover:hover:scale-110">

@@ -18,7 +18,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.setting', [
+        return view('profile.profile', [
             'user' => $request->user(),
         ]);
     }
@@ -45,7 +45,7 @@ class ProfileController extends Controller
         $user->save();
 
         // Pastikan route name sesuai, jika sebelumnya 'profile.setting' gunakan itu
-        return Redirect::route('profile.setting')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**

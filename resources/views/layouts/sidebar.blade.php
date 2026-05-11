@@ -78,11 +78,11 @@
             </button>
 
             {{-- SETTING --}}
-            <a href="{{ route('profile.setting') }}"
-                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('profile.setting')
+            <a href="{{ route('profile.edit') }}"
+                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('profile.edit')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}"
-                title="Setting">
+                title="Profile">
                 <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                     data-name="Layer 1">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

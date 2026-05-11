@@ -68,9 +68,9 @@ Route::get('/privacy', [PageController::class, 'privacy'])
     ->middleware('auth');
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::get('/setting', [ProfileController::class, 'edit'])->name('profile.setting');
-    Route::patch('/setting', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/setting', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Profile photo upload
     Route::post('/profile/photo/upload', [ProfileController::class, 'uploadPhoto'])->name('profile.photo.upload');
     // Profile photo delete
