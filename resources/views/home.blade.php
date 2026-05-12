@@ -281,53 +281,83 @@
                 <div class="grid grid-cols-12 gap-y-2 gap-x-6">
                     <!-- Row 1: Title -->
                     <div class="col-span-12">
-                        <label class="block font-semibold text-gray-100">Title</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <label class="font-semibold text-gray-100">Title</label>
+                        </div>
                         <p id="details-title" class="text-gray-200 break-words"></p>
                     </div>
 
                     <!-- Row 2: Description -->
                     <div class="col-span-12">
-                        <label class="block font-semibold text-gray-100">Description</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                            <label class="font-semibold text-gray-100">Description</label>
+                        </div>
                         <p id="details-description" class="text-gray-200 break-words"></p>
                     </div>
 
                     <!-- Row 3: Due Date, Created Date, Completed Date -->
                     <div class="col-span-4">
-                        <label class="block font-semibold text-gray-100">Due Date</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <label class="font-semibold text-gray-100">Due Date</label>
+                        </div>
                         <p id="details-due-date" class="text-gray-200"></p>
                     </div>
                     <div class="col-span-4">
-                        <label class="block font-semibold text-gray-100">Created Date</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-indigo-400 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <label class="font-semibold text-gray-100">Created Date</label>
+                        </div>
                         <p id="details-created-date" class="text-gray-200"></p>
                     </div>
                     <div class="col-span-4">
-                        <label class="block font-semibold text-gray-100">Completed Date</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-4 h-4 text-purple-400 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <label class="font-semibold text-gray-100">Completed Date</label>
+                        </div>
                         <p id="details-completed-at" class="text-gray-200"></p>
                     </div>
 
                     <!-- Row 3.5: Start Time, End Time -->
                     <div class="col-span-6">
-                        <label class="block font-semibold text-gray-100">Start Time</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <label class="font-semibold text-gray-100">Start Time</label>
+                        </div>
                         <p id="details-start-time" class="text-gray-200"></p>
                     </div>
                     <div class="col-span-6">
-                        <label class="block font-semibold text-gray-100">End Time</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <label class="font-semibold text-gray-100">End Time</label>
+                        </div>
                         <p id="details-end-time" class="text-gray-200"></p>
                     </div>
 
                     <!-- Row 4: Priority, Status -->
                     <div class="col-span-6">
-                        <label class="block font-semibold text-gray-100">Priority</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
+                            <label class="font-semibold text-gray-100">Priority</label>
+                        </div>
                         <p id="details-priority" class="font-semibold text-gray-200"></p>
                     </div>
                     <div class="col-span-6">
-                        <label class="block font-semibold text-gray-100">Status</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <label class="font-semibold text-gray-100">Status</label>
+                        </div>
                         <p id="details-completed" class="text-gray-200"></p>
                     </div>
 
                     <!-- Row 5: Attachments -->
                     <div class="col-span-12">
-                        <label class="block mb-1 font-semibold text-gray-100">Attachments</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <label class="font-semibold text-gray-100">Attachments</label>
+                        </div>
                         <div id="details-attachments" class="grid grid-cols-2 gap-4 text-sm text-gray-200">
                             <p class="col-span-2 text-gray-400">No attachments</p>
                         </div>
@@ -361,7 +391,10 @@
 
                     <!-- Row 1: Title -->
                     <div class="col-span-12">
-                        <label class="block mb-1 font-semibold text-gray-100">Title</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <label class="font-semibold text-gray-100">Title</label>
+                        </div>
                         <input id="edit-title" placeholder="Title Name" type="text" name="title"
                             class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
                             required>
@@ -369,33 +402,49 @@
 
                     <!-- Row 2: Description -->
                     <div class="col-span-12">
-                        <label class="block mb-1 font-semibold text-gray-100">Description</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                            <label class="font-semibold text-gray-100">Description</label>
+                        </div>
                         <textarea id="edit-description" placeholder="Add Description" name="description"
                             class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
                     </div>
-                    <!-- Row 3: Due Date, Priority -->
-                    <div class="flex flex-wrap col-span-12 gap-6 md:flex-nowrap">
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Due Date</label>
+
+                    <!-- Row 3: Due Date, Times, Priority -->
+                    <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <label class="font-semibold text-gray-100">Due Date</label>
+                            </div>
                             <input id="edit-due-date" type="date" name="due_date"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
                                 required>
                         </div>
 
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Start Time</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">Start Time</label>
+                            </div>
                             <input id="edit-start-time" type="time" name="start_time"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
                         </div>
 
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">End Time</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">End Time</label>
+                            </div>
                             <input id="edit-end-time" type="time" name="end_time"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
                         </div>
 
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Priority</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
+                                <label class="font-semibold text-gray-100">Priority</label>
+                            </div>
                             <div x-data="{ open: false, selected: null }" class="relative w-full">
                                 <button @click="open = !open" type="button"
                                     class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
@@ -453,7 +502,10 @@
 
                     <!-- Row 5: Attachments -->
                     <div class="col-span-12">
-                        <label class="block mt-2 mb-1 font-semibold text-gray-100">Attachments</label>
+                        <div class="flex items-center gap-2 mt-2 mb-1">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <label class="font-semibold text-gray-100">Attachments</label>
+                        </div>
                         <div id="edit-existing-attachments-wrap" class="hidden mb-4">
                             <div id="edit-existing-attachments" class="grid grid-cols-2 gap-4"></div>
                         </div>
@@ -519,7 +571,10 @@
                     
                     <!-- Row 1: Title -->
                     <div class="col-span-12">
-                        <label class="block mb-1 font-semibold text-gray-100">Title</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <label class="font-semibold text-gray-100">Title</label>
+                        </div>
                         <input placeholder="Title Name" type="text" name="title"
                             class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
                             required>
@@ -527,35 +582,50 @@
 
                     <!-- Row 2: Description -->
                     <div class="col-span-12">
-                        <label class="block mb-1 font-semibold text-gray-100">Description</label>
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                            <label class="font-semibold text-gray-100">Description</label>
+                        </div>
                         <textarea placeholder="Add Description" name="description"
                             class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
                     </div>
 
-                    <!-- Row 3: Due Date, Times -->
-                    <div class="flex flex-wrap col-span-12 gap-6 md:flex-nowrap">
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Due Date</label>
+                    <!-- Row 3: Due Date, Times, Priority -->
+                    <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <label class="font-semibold text-gray-100">Due Date</label>
+                            </div>
                             <input type="date" name="due_date"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
                                 required value="{{ date('Y-m-d') }}">
                         </div>
 
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Start Time</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">Start Time</label>
+                            </div>
                             <input type="time" name="start_time"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
                         </div>
 
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">End Time</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">End Time</label>
+                            </div>
                             <input type="time" name="end_time"
                                 class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
                         </div>
 
                         <!-- Priority Selection -->
-                        <div class="flex flex-col justify-end flex-1">
-                            <label class="block mb-1 font-semibold text-gray-100">Priority</label>
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
+                                <label class="font-semibold text-gray-100">Priority</label>
+                            </div>
                             <div x-data="{ open: false, selected: null }" class="relative w-full">
                                 <button @click="open = !open" type="button"
                                     class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
@@ -617,7 +687,10 @@
 
                     <!-- Row 4: Attachments -->
                     <div class="col-span-12">
-                        <label class="block mt-2 mb-1 font-semibold text-gray-100">Attachments</label>
+                        <div class="flex items-center gap-2 mt-2 mb-1">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <label class="font-semibold text-gray-100">Attachments</label>
+                        </div>
                         <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                             <span id="file-label">Add File</span>
@@ -637,6 +710,19 @@
     </div>
 
     <script>
+        const formatDateTime = (dateStr) => {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const hh = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            const ss = String(date.getSeconds()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}, ${hh}:${min}:${ss}`;
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             window.newTaskFiles = new DataTransfer();
             window.editTaskFiles = new DataTransfer();
@@ -849,18 +935,21 @@
                                     existingContainer.innerHTML = existingAttachments.map(att => {
                                         const originalName = att.original_name || att.filename || 'Attachment';
                                         const id = att.id;
+                                        const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
                                         
                                         const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                        const imgHtml = isImage ? `<img src="/storage/${att.storage_path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                        const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                ${imgHtml}
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                </div>
-                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
+                                                <a href="${path}" target="_blank" class="flex items-center flex-1 gap-4 min-w-0 hover:opacity-80 transition-opacity">
+                                                    ${imgHtml}
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
+                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                    </div>
+                                                </a>
+                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600 ml-2" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
                                                     const input = document.createElement('input');
@@ -950,12 +1039,12 @@
                              if (detailsTitle) detailsTitle.textContent = task.title ?? '';
                              if (detailsDescription) detailsDescription.textContent = task.description ?? '';
                              if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? '';
-                             if (detailsCreatedDate) detailsCreatedDate.textContent = task.created_at ?? '';
+                             if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(task.created_at);
                              if (detailsStartTime) detailsStartTime.textContent = task.start_time ? task.start_time.substring(0, 5) : '-';
                              if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task.end_time.substring(0, 5) : '-';
-                            if (detailsCompletedAt) detailsCompletedAt.textContent = task.completed_at ?? '';
-                            if (detailsCompletedAt && (task.completed_at ?? '') === '' && (task.complated_at ?? '')) {
-                                detailsCompletedAt.textContent = task.complated_at ?? '';
+                            if (detailsCompletedAt) {
+                                let completedDate = task.completed_at || task.complated_at || '';
+                                detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
                             }
                             if (detailsPriority) {
                                 const pr = task.priority ?? '';
@@ -992,39 +1081,23 @@
                                 if (!attachments.length) {
                                     detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
                                 } else {
-                                    detailsAttachments.innerHTML = '';
-                                    attachments.forEach(att => {
+                                    detailsAttachments.innerHTML = attachments.map(att => {
                                         const originalName = att.original_name || att.filename || 'Attachment';
-
-                                        const row = document.createElement('div');
-                                        row.className = 'flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm';
-
-                                        const content = document.createElement('div');
-                                        content.className = 'flex-1 min-w-0';
-
-                                        const nameEl = document.createElement('div');
-                                        nameEl.className = 'font-medium text-gray-200 truncate';
-                                        nameEl.textContent = originalName;
-                                        nameEl.title = originalName;
-
-                                        const typeEl = document.createElement('div');
-                                        typeEl.className = 'text-gray-400 text-xs mt-1';
-                                        typeEl.textContent = att.type ? `Type: ${att.type}` : (att.mime_type ? att.mime_type : '');
-
-                                        content.appendChild(nameEl);
-                                        if (typeEl.textContent) content.appendChild(typeEl);
-
-                                        // If it's an image, show a small thumbnail
-                                        if (att.mime_type && att.mime_type.startsWith('image/') && att.storage_path) {
-                                            const img = document.createElement('img');
-                                            img.className = 'w-12 h-12 object-cover rounded-md flex-shrink-0';
-                                            img.src = `/storage/${att.storage_path}`;
-                                            row.appendChild(img);
-                                        }
-
-                                        row.appendChild(content);
-                                        detailsAttachments.appendChild(row);
-                                    });
+                                        const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
+                                        const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
+                                        const imgHtml = isImage ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
+                                        const typeText = att.type ? `Type: ${att.type}` : (att.mime_type ? att.mime_type : '');
+                                        
+                                        return `
+                                            <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
+                                                ${imgHtml}
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
+                                                    <div class="text-gray-400 text-xs mt-1">${typeText}</div>
+                                                </div>
+                                            </a>
+                                        `;
+                                    }).join('');
                                 }
                             }
 
@@ -1119,18 +1192,21 @@
                                     existingContainer.innerHTML = existingAttachments.map(att => {
                                         const originalName = att.original_name || att.filename || 'Attachment';
                                         const id = att.id;
+                                        const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
                                         
                                         const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                        const imgHtml = isImage ? `<img src="/storage/${att.storage_path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                        const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                ${imgHtml}
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                </div>
-                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
+                                                <a href="${path}" target="_blank" class="flex items-center flex-1 gap-4 min-w-0 hover:opacity-80 transition-opacity">
+                                                    ${imgHtml}
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
+                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                    </div>
+                                                </a>
+                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600 ml-2" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
                                                     const input = document.createElement('input');
