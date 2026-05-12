@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 
 Route::get('/employees', [App\Http\Controllers\TaskController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'role:admin'])
     ->name('employees');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');

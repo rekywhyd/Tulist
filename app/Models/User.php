@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'google_id',
         'profile_photo_path',
+        'role',
     ];
 
     /**
@@ -52,5 +53,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
     }
 }

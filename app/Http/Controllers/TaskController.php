@@ -115,7 +115,7 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        $task = Task::with('attachments')->findOrFail($id);
+        $task = Auth::user()->tasks()->with('attachments')->findOrFail($id);
         return response()->json($task);
     }
 
@@ -133,7 +133,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $task = Task::findOrFail($id);
+        $task = Auth::user()->tasks()->findOrFail($id);
 
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -211,7 +211,7 @@ class TaskController extends Controller
 
     public function destroy(string $id)
     {
-        $task = Task::findOrFail($id);
+        $task = Auth::user()->tasks()->findOrFail($id);
         $task->delete();
 
         return response()->json(['success' => true]);
@@ -219,7 +219,7 @@ class TaskController extends Controller
 
     public function duplicate($id)
     {
-        $task = Task::findOrFail($id);
+        $task = Auth::user()->tasks()->findOrFail($id);
         $newTask = $task->replicate();
         $newTask->title = $task->title . ' (Copy)';
         $newTask->save();
