@@ -18,7 +18,7 @@
                         <!-- Search Bar -->
                         <div class="relative">
                             <input type="text" placeholder="Search..."
-                                class="py-2 pl-10 pr-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="py-2 pl-10 pr-4 border border-gray-300 rounded-xl focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

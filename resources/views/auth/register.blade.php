@@ -125,7 +125,7 @@
                     <div
                         class="flex justify-center mb-5 transition-transform duration-200 font-poppins hover:hover:scale-105">
                         <x-primary-button
-                            class="flex justify-center px-12 py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700">
+                            class="flex justify-center px-12 py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none">
                             {{ __('Create account') }}
                         </x-primary-button>
                     </div>

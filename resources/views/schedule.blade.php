@@ -140,8 +140,16 @@
 
                         {{-- DATE --}}
                         <input type="date" name="due_date"
-                            class="w-[49%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
                             required value="{{ date('Y-m-d') }}">
+
+                        {{-- START TIME --}}
+                        <input type="time" name="start_time"
+                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+
+                        {{-- END TIME --}}
+                        <input type="time" name="end_time"
+                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
 
                         {{-- PRIORITY --}}
                         <div x-data="{ open: false, selected: null }" class="relative w-[49%]">
@@ -310,25 +318,36 @@
         </div>
     </div>
 
-    <div id="rename-modal"
+    <div id="edit-modal"
         class="fixed inset-0 z-50 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50 font-poppins">
         <div
             class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 mx-auto rounded-xl shadow-xl w-96 bg-[#132C51]">
             <div class="mt-3">
-                <h3 class="mb-4 text-lg font-semibold text-white">Rename Task</h3>
-                <form id="rename-form">
+                <h3 class="mb-4 text-lg font-semibold text-white">Edit Task</h3>
+                <form id="edit-form">
                     @csrf
-                    <input type="hidden" id="rename-task-id">
+                    <input type="hidden" id="edit-task-id">
                     <div class="mb-4">
-                        <input type="text" id="rename-title"
+                        <label class="block mb-1 font-semibold text-gray-100">Title</label>
+                        <input type="text" id="edit-title" name="title"
                             class="w-full px-3 py-2 text-white border border-gray-600 rounded-xl mb-2 bg-[#0C1F3B]"
                             required>
                     </div>
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold text-gray-100">Start Time</label>
+                        <input type="time" id="edit-start-time" name="start_time"
+                            class="w-full px-3 py-2 text-white border border-gray-600 rounded-xl mb-2 bg-[#0C1F3B]">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold text-gray-100">End Time</label>
+                        <input type="time" id="edit-end-time" name="end_time"
+                            class="w-full px-3 py-2 text-white border border-gray-600 rounded-xl mb-2 bg-[#0C1F3B]">
+                    </div>
                     <div class="flex justify-center gap-6 mt-6 font-medium">
-                        <button type="button" id="close-rename-modal"
+                        <button type="button" id="close-edit-modal"
                             class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-95 rounded-3xl">Cancel</button>
                         <button type="submit"
-                            class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Rename</button>
+                            class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
                     </div>
                 </form>
             </div>
@@ -371,6 +390,14 @@
                 <div class="mb-4">
                     <label class="block font-semibold text-gray-100">Due Date</label>
                     <p id="details-due-date" class="text-gray-200"></p>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-semibold text-gray-100">Start Time</label>
+                    <p id="details-start-time" class="text-gray-200"></p>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-semibold text-gray-100">End Time</label>
+                    <p id="details-end-time" class="text-gray-200"></p>
                 </div>
                 <div class="mb-4">
                     <label class="block font-semibold text-gray-100">Priority</label>
@@ -590,8 +617,21 @@
                         <input type="checkbox" class="w-5 h-5 mr-3 rounded-full accent-blue-500 task-checkbox" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
                         <div class="flex-1">
                             <div class="flex items-center">
-                                <div class="w-3 h-3 mr-2 rounded-full" style="background-color: ${priorityColors[task.priority]}"></div>
-                                <span class="${task.completed ? 'line-through text-gray-500' : 'text-[#132C51]'} text-lg translate-y-[-2px] break-words whitespace-normal break-all">${task.title}</span>
+                                <div class="w-3 h-3 mr-2 rounded-full flex-shrink-0" style="background-color: ${priorityColors[task.priority]}"></div>
+                                <span class="${task.completed ? 'line-through text-gray-500' : 'text-[#132C51]'} text-lg translate-y-[-2px] break-words whitespace-normal break-all">
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center">
+                                            ${task.title}
+                                        </div>
+                                        ${task.start_time || task.end_time ? `
+                                            <div class="text-xs text-gray-400 mt-0.5 no-line-through">
+                                                ${task.start_time ? task.start_time.substring(0, 5) : ''}
+                                                ${task.start_time && task.end_time ? '-' : ''}
+                                                ${task.end_time ? task.end_time.substring(0, 5) : ''}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </span>
                             </div>
                             ${task.due_date ? `<div class="text-sm text-gray-500">${new Date(task.due_date).toLocaleDateString()}</div>` : ''}
                         </div>
@@ -612,16 +652,16 @@
                                 Details
                             </button>
 
-                            ${!task.completed ? `
-                            <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 rename-btn" data-task="${task.id}">
-                                <svg class="w-6 h-6" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.75 2C11.3358 2 11 2.33579 11 2.75C11 3.16421 11.3358 3.5 11.75 3.5H13.25V24.5H11.75C11.3358 24.5 11 24.8358 11 25.25C11 25.6642 11.3358 26 11.75 26H16.25C16.6642 26 17 25.6642 17 25.25C17 24.8358 16.6642 24.5 16.25 24.5H14.75V3.5H16.25C16.6642 3.5 17 3.16421 17 2.75C17 2.33579 16.6642 2 16.25 2H11.75Z" fill="#FFFFFF"></path>
-                                    <path d="M6.25 6.01958H12.25V7.51958H6.25C5.2835 7.51958 4.5 8.30308 4.5 9.26958V18.7696C4.5 19.7361 5.2835 20.5196 6.25 20.5196H12.25V22.0196H6.25C4.45507 22.0196 3 20.5645 3 18.7696V9.26958C3 7.47465 4.45507 6.01958 6.25 6.01958Z" fill="#FFFFFF"></path>
-                                    <path d="M21.75 20.5196H15.75V22.0196H21.75C23.5449 22.0196 25 20.5645 25 18.7696V9.26958C25 7.47465 23.5449 6.01958 21.75 6.01958H15.75V7.51958H21.75C22.7165 7.51958 23.5 8.30308 23.5 9.26958V18.7696C23.5 19.7361 22.7165 20.5196 21.75 20.5196Z" fill="#FFFFFF"></path>
-                                </svg>
-                                Rename
-                            </button>
-                            ` : ''}
+                             ${!task.completed ? `
+                             <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 edit-btn" data-task="${task.id}">
+                                 <svg class="w-6 h-6" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                     <path d="M11.75 2C11.3358 2 11 2.33579 11 2.75C11 3.16421 11.3358 3.5 11.75 3.5H13.25V24.5H11.75C11.3358 24.5 11 24.8358 11 25.25C11 25.6642 11.3358 26 11.75 26H16.25C16.6642 26 17 25.6642 17 25.25C17 24.8358 16.6642 24.5 16.25 24.5H14.75V3.5H16.25C16.6642 3.5 17 3.16421 17 2.75C17 2.33579 16.6642 2 16.25 2H11.75Z" fill="#FFFFFF"></path>
+                                     <path d="M6.25 6.01958H12.25V7.51958H6.25C5.2835 7.51958 4.5 8.30308 4.5 9.26958V18.7696C4.5 19.7361 5.2835 20.5196 6.25 20.5196H12.25V22.0196H6.25C4.45507 22.0196 3 20.5645 3 18.7696V9.26958C3 7.47465 4.45507 6.01958 6.25 6.01958Z" fill="#FFFFFF"></path>
+                                     <path d="M21.75 20.5196H15.75V22.0196H21.75C23.5449 22.0196 25 20.5645 25 18.7696V9.26958C25 7.47465 23.5449 6.01958 21.75 6.01958H15.75V7.51958H21.75C22.7165 7.51958 23.5 8.30308 23.5 9.26958V18.7696C23.5 19.7361 22.7165 20.5196 21.75 20.5196Z" fill="#FFFFFF"></path>
+                                 </svg>
+                                 Edit
+                             </button>
+                             ` : ''}
 
                             <button class="flex items-center w-full gap-3 px-3 py-2 text-sm font-medium text-left text-white hover:bg-gray-600 duplicate-btn" data-task="${task.id}">
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(-1, 0, 0, 1, 0, 0)">
@@ -878,15 +918,20 @@
             document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
         };
 
-        // Rename button functionality
+        // Edit button functionality
         document.addEventListener('click', function(e) {
-            const renameBtn = e.target.closest('.rename-btn');
-            if (renameBtn) {
-                const taskId = renameBtn.dataset.task;
-                document.getElementById('rename-task-id').value = taskId;
-                document.getElementById('rename-title').value = document.querySelector(
-                    `.task-checkbox[data-id="${taskId}"]`).nextElementSibling.textContent;
-                document.getElementById('rename-modal').classList.remove('hidden');
+            const editBtn = e.target.closest('.edit-btn');
+            if (editBtn) {
+                const taskId = editBtn.dataset.task;
+                fetch(`/tasks/${taskId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('edit-task-id').value = data.id;
+                        document.getElementById('edit-title').value = data.title || '';
+                        document.getElementById('edit-start-time').value = data.start_time ? data.start_time.substring(0, 5) : '';
+                        document.getElementById('edit-end-time').value = data.end_time ? data.end_time.substring(0, 5) : '';
+                        document.getElementById('edit-modal').classList.remove('hidden');
+                    });
                 // Hide the task menu
                 document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
             }
@@ -935,6 +980,8 @@
                         document.getElementById('details-title').textContent = data.title || 'N/A';
                         document.getElementById('details-description').textContent = data.description || 'N/A';
                         document.getElementById('details-due-date').textContent = data.due_date || 'N/A';
+                        document.getElementById('details-start-time').textContent = data.start_time ? data.start_time.substring(0, 5) : 'N/A';
+                        document.getElementById('details-end-time').textContent = data.end_time ? data.end_time.substring(0, 5) : 'N/A';
 
                         const priorityEl = document.getElementById('details-priority');
                         const priority = data.priority || 'N/A';
@@ -970,11 +1017,13 @@
             document.getElementById('task-details-modal').classList.add('hidden');
         });
 
-        // Rename form submission
-        document.getElementById('rename-form').addEventListener('submit', function(e) {
+        // Edit form submission
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const taskId = document.getElementById('rename-task-id').value;
-            const newTitle = document.getElementById('rename-title').value;
+            const taskId = document.getElementById('edit-task-id').value;
+            const newTitle = document.getElementById('edit-title').value;
+            const startTime = document.getElementById('edit-start-time').value;
+            const endTime = document.getElementById('edit-end-time').value;
             fetch(`/tasks/${taskId}`, {
                 method: 'PATCH',
                 headers: {
@@ -982,7 +1031,9 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
-                    title: newTitle
+                    title: newTitle,
+                    start_time: startTime,
+                    end_time: endTime
                 })
             }).then(() => {
                 // Update UI
@@ -991,13 +1042,13 @@
                     const span = taskDiv.querySelector('span');
                     if (span) span.textContent = newTitle;
                 }
-                document.getElementById('rename-modal').classList.add('hidden');
+                document.getElementById('edit-modal').classList.add('hidden');
             });
         });
 
-        // Close rename modal
-        document.getElementById('close-rename-modal').addEventListener('click', () => {
-            document.getElementById('rename-modal').classList.add('hidden');
+        // Close edit modal
+        document.getElementById('close-edit-modal').addEventListener('click', () => {
+            document.getElementById('edit-modal').classList.add('hidden');
         });
 
 

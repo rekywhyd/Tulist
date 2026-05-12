@@ -19,7 +19,7 @@
             <div
                 class="flex justify-center mt-6 mb-5 transition-transform duration-200 font-poppins hover:hover:scale-105">
                 <x-primary-button
-                    class="flex justify-center px-[30px] py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700">
+                    class="flex justify-center px-[30px] py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none">
                     {{ __('Resend Verification Email') }}
                 </x-primary-button>
             </div>
@@ -29,7 +29,7 @@
             @csrf
 
             <button type="submit"
-                class="mt-4 font-semibold text-[#6AA6FF] hover:underline font-poppins text-sm underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                class="mt-4 font-semibold text-[#6AA6FF] hover:underline font-poppins text-sm underline rounded-md hover:text-gray-900 focus:outline-none">
                 {{ __('Log Out') }}
             </button>
         </form>

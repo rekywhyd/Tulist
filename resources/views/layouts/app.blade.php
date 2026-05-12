@@ -40,7 +40,7 @@
             <div class="flex items-center gap-8 pt-4 mr-8">
                 <div class="relative transition-transform duration-200 hover:hover:scale-105">
                     <input type="text" id="search-input" placeholder="Search"
-                        class="w-[180px] py-2 pl-16 pr-4 border-white bg-white rounded-3xl focus:outline-none focus:ring-2 focus:ring-[#0E213D]">
+                        class="w-[180px] py-2 pl-16 pr-4 border-white bg-white rounded-3xl focus:outline-none">
                     <svg class="absolute w-6 h-6 text-gray-400 -translate-y-1/2 left-3 top-1/2" viewBox="0 0 24 24"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

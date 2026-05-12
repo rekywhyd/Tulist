@@ -295,4 +295,18 @@ class TaskController extends Controller
 
         return view('schedule', compact('tasksByDate', 'month', 'year', 'todayTasks', 'upcomingTasks', 'completedTasks', 'allTasks'));
     }
+
+    /**
+     * Generate a report of completed tasks (History).
+     */
+    public function historyReport()
+    {
+        $user = Auth::user();
+        $historyTasks = $user->tasks()
+            ->where('completed', true)
+            ->orderBy('completed_at', 'desc')
+            ->get();
+
+        return view('reports.history', compact('historyTasks', 'user'));
+    }
 }

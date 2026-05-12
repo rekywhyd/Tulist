@@ -55,7 +55,7 @@
         <div class="flex items-center justify-between mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="text-black border-gray-500 transition-transform ml-4 duration-200 hover:hover:scale-110 rounded shadow-sm focus:ring-[#6AA6FF]"
+                    class="text-black border-gray-500 transition-transform ml-4 duration-200 hover:hover:scale-110 rounded shadow-sm"
                     name="remember">
                 <span class="pl-2 text-sm text-black font-poppins ms-2">{{ __('Remember me') }}</span>
             </label>
@@ -71,7 +71,7 @@
         <!-- Tombol Login -->
         <div class="flex justify-center mt-4 mb-5 transition-transform duration-200 font-poppins hover:hover:scale-105">
             <x-primary-button
-                class="flex justify-center px-[100px] py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700">
+                class="flex justify-center px-[100px] py-[16px] text-xs font-medium text-white bg-[#163769] border border-transparent shadow-sm rounded-2xl hover:bg-[#132C51] focus:outline-none">
                 {{ __('Login') }}
             </x-primary-button>
         </div>
