@@ -10,8 +10,8 @@
                 <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl text-[#1C427A] font-bold">All My Task</h3>
-                        <button id="add-task-btn"
-                            class="add-task-btn px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:hover:scale-110">
+                        <button type="button" id="add-task-btn"
+                            class="add-task-btn px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
                         + New Task
                         </button>
                     </div>
@@ -370,6 +370,7 @@
                         <label class="block mb-1 font-semibold text-gray-100">Description</label>
                         <textarea id="edit-description" placeholder="Add Description" name="description"
                             class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
+                    </div>
                     <!-- Row 3: Due Date, Priority -->
                     <div class="flex flex-wrap col-span-12 gap-6 md:flex-nowrap">
                         <div class="flex flex-col justify-end flex-1">
@@ -505,109 +506,128 @@
 
             </div>
         </div>
-    </div>
-
+    </div>    
     <!-- Add Task Modal -->
     <div id="add-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 shadow-xl rounded-xl w-[600px] bg-[#132C51]">
-            <div class="mt-3">
-                <h3 class="mb-8 text-2xl font-semibold text-white">New Task</h3>
-                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51]">
+            <div>
+                <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
+                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-12 gap-y-2 gap-x-6">
                     @csrf
-                    <div class="mb-5">
+                    
+                    <!-- Row 1: Title -->
+                    <div class="col-span-12">
+                        <label class="block mb-1 font-semibold text-gray-100">Title</label>
                         <input placeholder="Title Name" type="text" name="title"
                             class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
                             required>
                     </div>
-                    <div class="mb-4">
+
+                    <!-- Row 2: Description -->
+                    <div class="col-span-12">
+                        <label class="block mb-1 font-semibold text-gray-100">Description</label>
                         <textarea placeholder="Add Description" name="description"
                             class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-2 mb-5">
-                        <input type="date" name="due_date"
-                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
-                            required value="{{ date('Y-m-d') }}">
+                    <!-- Row 3: Due Date, Times -->
+                    <div class="flex flex-wrap col-span-12 gap-6 md:flex-nowrap">
+                        <div class="flex flex-col justify-end flex-1">
+                            <label class="block mb-1 font-semibold text-gray-100">Due Date</label>
+                            <input type="date" name="due_date"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                required value="{{ date('Y-m-d') }}">
+                        </div>
 
-                        <input type="time" name="start_time" placeholder="Start Time"
-                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        <div class="flex flex-col justify-end flex-1">
+                            <label class="block mb-1 font-semibold text-gray-100">Start Time</label>
+                            <input type="time" name="start_time"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        </div>
 
-                        <input type="time" name="end_time" placeholder="End Time"
-                            class="w-[32%] text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        <div class="flex flex-col justify-end flex-1">
+                            <label class="block mb-1 font-semibold text-gray-100">End Time</label>
+                            <input type="time" name="end_time"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        </div>
 
-                        <div x-data="{ open: false, selected: null }" class="relative w-[49%]">
-                            <button @click="open = !open" type="button"
-                                class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
-                                :class="{
-                                    'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
-                                    'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
-                                    'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
-                                    'bg-green-50 border-green-300 text-green-700': selected === 'Low',
-                                    'text-white border-gray-600': selected === null
-                                }">
-                                <svg class="w-5 h-5"
+                        <!-- Priority Selection -->
+                        <div class="flex flex-col justify-end flex-1">
+                            <label class="block mb-1 font-semibold text-gray-100">Priority</label>
+                            <div x-data="{ open: false, selected: null }" class="relative w-full">
+                                <button @click="open = !open" type="button"
+                                    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
                                     :class="{
-                                        'text-red-500': selected === 'Urgent',
-                                        'text-yellow-500': selected === 'High',
-                                        'text-blue-500': selected === 'Normal',
-                                        'text-green-500': selected === 'Low',
-                                        'text-gray-400': selected === null
-                                    }"
-                                    fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
-                                </svg>
-                                <span x-text="selected || 'Priority'" class="flex-1"></span>
-                            </button>
+                                        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+                                        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+                                        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+                                        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+                                        'text-white border-gray-600': selected === null
+                                    }">
+                                    <svg class="w-5 h-5"
+                                        :class="{
+                                            'text-red-500': selected === 'Urgent',
+                                            'text-yellow-500': selected === 'High',
+                                            'text-blue-500': selected === 'Normal',
+                                            'text-green-500': selected === 'Low',
+                                            'text-gray-400': selected === null
+                                        }"
+                                        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                    </svg>
+                                    <span x-text="selected || 'Priority'" class="flex-1"></span>
+                                </button>
 
-                            <div x-show="open" @click.outside="open = false" x-transition
-                                class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
-                                <div @click="selected = 'Urgent'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                    <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="font-semibold text-black">Urgent</span>
+                                <div x-show="open" @click.outside="open = false" x-transition
+                                    class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
+                                    <div @click="selected = 'Urgent'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">Urgent</span>
+                                    </div>
+                                    <div @click="selected = 'High'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">High</span>
+                                    </div>
+                                    <div @click="selected = 'Normal'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">Normal</span>
+                                    </div>
+                                    <div @click="selected = 'Low'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-gray-800">Low</span>
+                                    </div>
+                                    <div @click="selected = null; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">Clear</span>
+                                    </div>
                                 </div>
-                                <div @click="selected = 'High'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="font-semibold text-black">High</span>
-                                </div>
-                                <div @click="selected = 'Normal'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="font-semibold text-black">Normal</span>
-                                </div>
-                                <div @click="selected = 'Low'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="font-semibold text-gray-800">Low</span>
-                                </div>
-                                <div @click="selected = null; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="font-semibold text-black">Clear</span>
-                                </div>
+
+                                <select name="priority" x-model="selected" class="hidden">
+                                    <option value="">Priority</option>
+                                    <option value="Urgent">Urgent</option>
+                                    <option value="High">High</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Low">Low</option>
+                                </select>
                             </div>
-
-                            <select name="priority" x-model="selected" class="hidden">
-                                <option value="">Priority</option>
-                                <option value="Urgent">Urgent</option>
-                                <option value="High">High</option>
-                                <option value="Normal">Normal</option>
-                                <option value="Low">Low</option>
-                            </select>
                         </div>
                     </div>
 
-                    {{-- Add File --}}
-                    <div class="mb-5">
-                        <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-105">
+                    <!-- Row 4: Attachments -->
+                    <div class="col-span-12">
+                        <label class="block mt-2 mb-1 font-semibold text-gray-100">Attachments</label>
+                        <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                             <span id="file-label">Add File</span>
                             <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                         </label>
-                        <div id="file-list" class="mt-2 space-y-1 text-sm text-gray-300"></div>
+                        <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
                     </div>
 
-                    <div class="flex justify-center gap-6 mt-8 font-medium">
-                        <button type="button" id="close-modal"
-                            class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:hover:scale-95">Cancel</button>
-                        <button type="submit"
-                            class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                    <!-- Row 5: Buttons -->
+                    <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
+                        <button type="submit" class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                        <button type="button" id="close-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -638,36 +658,6 @@
 
             const addTaskBtns = document.querySelectorAll('.add-task-btn');
             const addTaskModal = document.getElementById('add-task-modal');
-
-                // Pastikan tombol + New Task selalu membuka modal
-            // (pasang juga event langsung untuk id="add-task-btn" agar tidak bergantung pada urutan/handler lain)
-            const addTaskBtn = document.getElementById('add-task-btn');
-            if (addTaskBtn && addTaskModal) {
-                addTaskBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Tutup modal lain yang mungkin sedang tampil
-                    const detailsModalEl = document.getElementById('task-details-modal');
-                    const editModalEl = document.getElementById('edit-task-modal');
-                    if (editModalEl) editModalEl.classList.add('hidden');
-                    if (detailsModalEl) detailsModalEl.classList.add('hidden');
-
-                    addTaskModal.classList.remove('hidden');
-
-                    // reset state file input
-                    window.newTaskFiles = new DataTransfer();
-                    const fileInput = document.getElementById('task-file-input');
-                    const fileList = document.getElementById('file-list');
-                    const label = document.getElementById('file-label');
-                    if (fileInput) fileInput.value = '';
-                    if (fileList) fileList.innerHTML = '';
-                    if (label) label.textContent = 'Add File';
-                });
-            }
-
-
-
             const editTaskModal = document.getElementById('edit-task-modal');
             const taskDetailsModal = document.getElementById('task-details-modal');
             const editTaskForm = document.getElementById('edit-task-form');
@@ -681,8 +671,7 @@
             if (addTaskBtns.length > 0 && addTaskModal) {
                 addTaskBtns.forEach(btn => {
                     btn.addEventListener('click', (e) => {
-                        // Jangan override logic id="add-task-btn"
-                        if (btn.id === 'add-task-btn') return;
+                        // Show the modal and reset form
                         addTaskModal.classList.remove('hidden');
                         window.newTaskFiles = new DataTransfer();
                         const fileInput = document.getElementById('task-file-input');
