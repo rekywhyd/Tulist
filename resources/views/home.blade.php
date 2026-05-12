@@ -458,7 +458,7 @@
 
                         <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="edit-file-label">Add New File</span>
+                            <span id="edit-file-label" class="truncate min-w-0">Add New File</span>
                             <input type="file" name="attachments[]" multiple class="hidden" id="edit-task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                         </label>
                         <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
@@ -618,7 +618,7 @@
                         <label class="block mt-2 mb-1 font-semibold text-gray-100">Attachments</label>
                         <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="file-label">Add File</span>
+                            <span id="file-label" class="truncate min-w-0">Add File</span>
                             <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                         </label>
                         <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
@@ -853,11 +853,13 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                ${imgHtml}
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                </div>
+                                                <a href="/storage/${att.storage_path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 group">
+                                                    ${imgHtml}
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors" title="${originalName}">${originalName}</div>
+                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                    </div>
+                                                </a>
                                                 <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
@@ -994,14 +996,16 @@
                                     attachments.forEach(att => {
                                         const originalName = att.original_name || att.filename || 'Attachment';
 
-                                        const row = document.createElement('div');
-                                        row.className = 'flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm';
+                                        const link = document.createElement('a');
+                                        link.href = `/storage/${att.storage_path}`;
+                                        link.target = '_blank';
+                                        link.className = 'flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#1f3f6d] transition-all group';
 
                                         const content = document.createElement('div');
                                         content.className = 'flex-1 min-w-0';
 
                                         const nameEl = document.createElement('div');
-                                        nameEl.className = 'font-medium text-gray-200 truncate';
+                                        nameEl.className = 'font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors';
                                         nameEl.textContent = originalName;
                                         nameEl.title = originalName;
 
@@ -1017,11 +1021,11 @@
                                             const img = document.createElement('img');
                                             img.className = 'w-12 h-12 object-cover rounded-md flex-shrink-0';
                                             img.src = `/storage/${att.storage_path}`;
-                                            row.appendChild(img);
+                                            link.appendChild(img);
                                         }
 
-                                        row.appendChild(content);
-                                        detailsAttachments.appendChild(row);
+                                        link.appendChild(content);
+                                        detailsAttachments.appendChild(link);
                                     });
                                 }
                             }
@@ -1123,11 +1127,13 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                ${imgHtml}
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                </div>
+                                                <a href="/storage/${att.storage_path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 group">
+                                                    ${imgHtml}
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors" title="${originalName}">${originalName}</div>
+                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                    </div>
+                                                </a>
                                                 <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
@@ -1194,13 +1200,22 @@
                     
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
-                        label.textContent = this.files.length + ' file(s) selected';
+                        if (this.files.length === 1) {
+                            label.textContent = this.files[0].name;
+                            label.title = this.files[0].name;
+                        } else {
+                            label.textContent = this.files.length + ' file(s) selected';
+                            label.title = '';
+                        }
+
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
-                            div.className = 'flex justify-between items-center text-sm mt-1';
+                            div.className = 'flex justify-between items-center text-sm mt-1 gap-2 min-w-0';
                             
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
+                            nameSpan.className = 'truncate flex-1';
+                            nameSpan.title = f.name;
                             
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
@@ -1242,13 +1257,22 @@
                     
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
-                        label.textContent = this.files.length + ' file(s) selected';
+                        if (this.files.length === 1) {
+                            label.textContent = this.files[0].name;
+                            label.title = this.files[0].name;
+                        } else {
+                            label.textContent = this.files.length + ' file(s) selected';
+                            label.title = '';
+                        }
+
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
-                            div.className = 'flex justify-between items-center text-sm mt-1';
+                            div.className = 'flex justify-between items-center text-sm mt-1 gap-2 min-w-0';
                             
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
+                            nameSpan.className = 'truncate flex-1';
+                            nameSpan.title = f.name;
                             
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
