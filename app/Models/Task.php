@@ -14,6 +14,8 @@ class Task extends Model
         'title',
         'description',
         'due_date',
+        'start_time',
+        'end_time',
         'priority',
         'completed',
         'completed_at',
@@ -22,6 +24,8 @@ class Task extends Model
 
     protected $casts = [
         'due_date' => 'date:Y-m-d',
+        'start_time' => 'datetime:H:i',
+        'end_time' => 'datetime:H:i',
         'completed' => 'boolean',
         'completed_at' => 'datetime',
     ];

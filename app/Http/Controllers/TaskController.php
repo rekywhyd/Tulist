@@ -63,6 +63,8 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'required|date',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
             'priority' => 'required|in:Urgent,High,Normal,Low',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
@@ -72,6 +74,8 @@ class TaskController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'due_date' => $request->due_date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
             'priority' => $request->priority,
             'user_id' => Auth::id(),
         ]);
@@ -139,13 +143,15 @@ class TaskController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'sometimes|required|date',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
             'priority' => 'sometimes|required|in:Urgent,High,Normal,Low',
             'completed' => 'sometimes|boolean',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
         ]);
 
-        $data = $request->only(['title', 'description', 'due_date', 'priority', 'completed']);
+        $data = $request->only(['title', 'description', 'due_date', 'start_time', 'end_time', 'priority', 'completed']);
 
         // Handle completed_at timestamp
         if ($request->has('completed')) {
