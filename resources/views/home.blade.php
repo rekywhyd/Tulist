@@ -11,8 +11,9 @@
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl text-[#1C427A] font-bold">All My Task</h3>
                         <button type="button" id="add-task-btn"
-                            class="add-task-btn px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
-                        + New Task
+                            class="add-task-btn flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#ffffff" fill-rule="evenodd" d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z"></path> </g></svg>
+                            <span>New Task</span>
                         </button>
                     </div>
 
@@ -224,8 +225,9 @@
                 <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl font-bold text-[#132C51]">History</h3>
-                        <a href="{{ route('history.report') }}" target="_blank" class="px-4 py-2 text-sm font-bold text-white bg-[#2F6ECB] rounded-3xl hover:bg-[#1C427A] transition-colors shadow-sm">
-                            Generate Report
+                        <a href="{{ route('history.report') }}" target="_blank" class="flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                            <svg fill="#ffffff" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;}</style></defs><title>report--alt</title><rect x="10" y="18" width="8" height="2"></rect><rect x="10" y="13" width="12" height="2"></rect><rect x="10" y="23" width="5" height="2"></rect><path d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z"></path><rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"></rect></g></svg>
+                            <span>Generate Report</span>
                         </a>
                     </div>
                     @foreach ($historyTasks as $task)
@@ -458,7 +460,7 @@
 
                         <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="edit-file-label" class="truncate min-w-0">Add New File</span>
+                            <span id="edit-file-label">Add New File</span>
                             <input type="file" name="attachments[]" multiple class="hidden" id="edit-task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                         </label>
                         <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
@@ -618,7 +620,7 @@
                         <label class="block mt-2 mb-1 font-semibold text-gray-100">Attachments</label>
                         <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="file-label" class="truncate min-w-0">Add File</span>
+                            <span id="file-label">Add File</span>
                             <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                         </label>
                         <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
@@ -853,13 +855,11 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                <a href="/storage/${att.storage_path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 group">
-                                                    ${imgHtml}
-                                                    <div class="flex-1 min-w-0">
-                                                        <div class="font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors" title="${originalName}">${originalName}</div>
-                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                    </div>
-                                                </a>
+                                                ${imgHtml}
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
+                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                </div>
                                                 <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
@@ -996,16 +996,14 @@
                                     attachments.forEach(att => {
                                         const originalName = att.original_name || att.filename || 'Attachment';
 
-                                        const link = document.createElement('a');
-                                        link.href = `/storage/${att.storage_path}`;
-                                        link.target = '_blank';
-                                        link.className = 'flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#1f3f6d] transition-all group';
+                                        const row = document.createElement('div');
+                                        row.className = 'flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm';
 
                                         const content = document.createElement('div');
                                         content.className = 'flex-1 min-w-0';
 
                                         const nameEl = document.createElement('div');
-                                        nameEl.className = 'font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors';
+                                        nameEl.className = 'font-medium text-gray-200 truncate';
                                         nameEl.textContent = originalName;
                                         nameEl.title = originalName;
 
@@ -1021,11 +1019,11 @@
                                             const img = document.createElement('img');
                                             img.className = 'w-12 h-12 object-cover rounded-md flex-shrink-0';
                                             img.src = `/storage/${att.storage_path}`;
-                                            link.appendChild(img);
+                                            row.appendChild(img);
                                         }
 
-                                        link.appendChild(content);
-                                        detailsAttachments.appendChild(link);
+                                        row.appendChild(content);
+                                        detailsAttachments.appendChild(row);
                                     });
                                 }
                             }
@@ -1127,13 +1125,11 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                <a href="/storage/${att.storage_path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 group">
-                                                    ${imgHtml}
-                                                    <div class="flex-1 min-w-0">
-                                                        <div class="font-medium text-gray-200 truncate group-hover:text-blue-400 transition-colors" title="${originalName}">${originalName}</div>
-                                                        <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                                    </div>
-                                                </a>
+                                                ${imgHtml}
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
+                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                                </div>
                                                 <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
@@ -1200,22 +1196,13 @@
                     
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
-                        if (this.files.length === 1) {
-                            label.textContent = this.files[0].name;
-                            label.title = this.files[0].name;
-                        } else {
-                            label.textContent = this.files.length + ' file(s) selected';
-                            label.title = '';
-                        }
-
+                        label.textContent = this.files.length + ' file(s) selected';
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
-                            div.className = 'flex justify-between items-center text-sm mt-1 gap-2 min-w-0';
+                            div.className = 'flex justify-between items-center text-sm mt-1';
                             
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
-                            nameSpan.className = 'truncate flex-1';
-                            nameSpan.title = f.name;
                             
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
@@ -1257,22 +1244,13 @@
                     
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
-                        if (this.files.length === 1) {
-                            label.textContent = this.files[0].name;
-                            label.title = this.files[0].name;
-                        } else {
-                            label.textContent = this.files.length + ' file(s) selected';
-                            label.title = '';
-                        }
-
+                        label.textContent = this.files.length + ' file(s) selected';
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
-                            div.className = 'flex justify-between items-center text-sm mt-1 gap-2 min-w-0';
+                            div.className = 'flex justify-between items-center text-sm mt-1';
                             
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
-                            nameSpan.className = 'truncate flex-1';
-                            nameSpan.title = f.name;
                             
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';

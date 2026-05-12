@@ -1,4 +1,4 @@
-<aside class="fixed z-10 flex flex-col items-center h-screen pb-2 pl-6 pt-28 w-fit">
+<aside class="fixed z-10 flex flex-col items-center h-screen pt-24 pb-2 pl-6 w-fit">
 
     <nav class="flex flex-col items-center justify-between h-full">
 

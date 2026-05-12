@@ -22,9 +22,9 @@
 <body class="antialiased bg-[#E8EEF9]">
 
     <div class="flex flex-col min-h-screen">
-        <header class="flex font-poppins items-center fixed justify-between w-full bg-[#E8EEF9] pb-3 z-50">
+        <header class="flex font-poppins items-center fixed justify-between w-full bg-[#E8EEF9] z-50">
 
-            <div class="flex items-center gap-8 pt-2">
+            <div class="flex items-center gap-8">
                 <a href="{{ url('/home') }}">
                     <img class="w-[110px]" src="{{ Vite::asset('resources/images/logo-favicon.png') }}" alt="Logo">
                 </a>
@@ -96,7 +96,7 @@
                     </header>
                 @endisset
 
-                <main class="flex-1 pt-6 pl-6 pr-6">
+                <main class="flex-1 pt-3 pl-6 pr-6">
                     {{ $slot }}
                 </main>
 
