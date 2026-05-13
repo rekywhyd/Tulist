@@ -1276,103 +1276,114 @@
             }
         });
 
+        // Reusable function to show task details
+        window.showTaskDetails = function(taskId) {
+            if (!taskId) return;
+            hideMenus();
+            
+            fetch(`/tasks/${taskId}`)
+                .then(response => response.json())
+                .then(task => {
+                    const detailsTitle = document.getElementById('details-title');
+                    const detailsDescription = document.getElementById('details-description');
+                    const detailsDueDate = document.getElementById('details-due-date');
+                    const detailsCreatedDate = document.getElementById('details-created-date');
+                    const detailsCompletedAt = document.getElementById('details-completed-at');
+                    const detailsPriority = document.getElementById('details-priority');
+                    const detailsCompleted = document.getElementById('details-completed');
+                    const detailsStartTime = document.getElementById('details-start-time');
+                    const detailsEndTime = document.getElementById('details-end-time');
+                    const editDetailsBtn = document.getElementById('edit-details-btn');
+
+                    if (detailsTitle) detailsTitle.textContent = task.title ?? '';
+                    if (detailsDescription) detailsDescription.textContent = task.description ?? 'No description provided';
+                    if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? 'N/A';
+                    if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(task.created_at);
+                    if (detailsStartTime) detailsStartTime.textContent = task.start_time ? task.start_time.substring(0, 5) : '-';
+                    if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task.end_time.substring(0, 5) : '-';
+                    
+                    if (detailsCompletedAt) {
+                        let completedDate = task.completed_at || task.complated_at || '';
+                        detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
+                    }
+
+                    if (detailsPriority) {
+                        const pr = task.priority ?? '';
+                        let textClass = 'text-gray-400';
+                        if (pr === 'Urgent') textClass = 'text-red-500';
+                        else if (pr === 'High') textClass = 'text-yellow-500';
+                        else if (pr === 'Normal') textClass = 'text-blue-500';
+                        else if (pr === 'Low') textClass = 'text-green-500';
+
+                        if (pr) {
+                            detailsPriority.innerHTML = `
+                                <div class="flex items-center gap-1.5">
+                                    <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                    <span class="${textClass} font-semibold">${pr}</span>
+                                </div>
+                            `;
+                        } else {
+                            detailsPriority.textContent = '-';
+                        }
+                    }
+                    if (detailsCompleted) {
+                        detailsCompleted.innerHTML = task.completed ? 
+                            '<span class="text-green-500 font-bold">Completed</span>' : 
+                            '<span class="text-red-500 font-bold">Not Completed</span>';
+                    }
+
+                    // Attachments
+                    const detailsAttachments = document.getElementById('details-attachments');
+                    if (detailsAttachments) {
+                        const attachments = Array.isArray(task.attachments) ? task.attachments : [];
+                        if (!attachments.length) {
+                            detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
+                        } else {
+                            detailsAttachments.innerHTML = attachments.map(att => {
+                                const originalName = att.original_name || att.filename || 'Attachment';
+                                const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
+                                const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
+                                const imgHtml = isImage ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
+                                return `
+                                    <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
+                                        ${imgHtml}
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
+                                            <div class="text-gray-400 text-xs mt-1">${att.mime_type || att.type || ''}</div>
+                                        </div>
+                                    </a>
+                                `;
+                            }).join('');
+                        }
+                    }
+
+                    document.getElementById('task-details-modal').classList.remove('hidden');
+                    if (editDetailsBtn) {
+                        editDetailsBtn.dataset.task = String(taskId);
+                        task.completed ? editDetailsBtn.classList.add('hidden') : editDetailsBtn.classList.remove('hidden');
+                    }
+                });
+        };
+
+        // Global listener for search details
+        window.addEventListener('open-task-details', (e) => {
+            window.showTaskDetails(e.detail.taskId);
+        });
+
+        // Handle URL param open_task
+        const urlParams = new URLSearchParams(window.location.search);
+        const openTaskId = urlParams.get('open_task');
+        if (openTaskId) {
+            window.showTaskDetails(openTaskId);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
         // Details button functionality (Read-Only) - and Title click
         document.addEventListener('click', function(e) {
             const detailsBtn = e.target.closest('.details-btn') || e.target.closest('[data-task-title]');
             if (detailsBtn) {
-                hideMenus();
                 const taskId = detailsBtn.dataset.task || detailsBtn.dataset.taskTitle;
-                if (!taskId) return;
-                fetch(`/tasks/${taskId}`)
-                    .then(response => response.json())
-                    .then(task => {
-                        const detailsTitle = document.getElementById('details-title');
-                        const detailsDescription = document.getElementById('details-description');
-                        const detailsDueDate = document.getElementById('details-due-date');
-                        const detailsCreatedDate = document.getElementById('details-created-date');
-                        const detailsCompletedAt = document.getElementById('details-completed-at');
-                        const detailsPriority = document.getElementById('details-priority');
-                        const detailsCompleted = document.getElementById('details-completed');
-                        const detailsStartTime = document.getElementById('details-start-time');
-                        const detailsEndTime = document.getElementById('details-end-time');
-                        const editDetailsBtn = document.getElementById('edit-details-btn');
-
-                        if (detailsTitle) detailsTitle.textContent = task.title ?? '';
-                        if (detailsDescription) detailsDescription.textContent = task.description ?? 'No description provided';
-                        if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? 'N/A';
-                        if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(task.created_at);
-                        if (detailsStartTime) detailsStartTime.textContent = task.start_time ? task.start_time.substring(0, 5) : '-';
-                        if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task.end_time.substring(0, 5) : '-';
-                        
-                        if (detailsCompletedAt) {
-                            let completedDate = task.completed_at || task.complated_at || '';
-                            detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
-                        }
-
-                        if (detailsPriority) {
-                            const pr = task.priority ?? '';
-                            let textClass = 'text-gray-400';
-                            if (pr === 'Urgent') textClass = 'text-red-500';
-                            else if (pr === 'High') textClass = 'text-yellow-500';
-                            else if (pr === 'Normal') textClass = 'text-blue-500';
-                            else if (pr === 'Low') textClass = 'text-green-500';
-
-                            if (pr) {
-                                detailsPriority.innerHTML = `
-                                    <div class="flex items-center gap-1.5">
-                                        <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="${textClass} font-semibold">${pr}</span>
-                                    </div>
-                                `;
-                            } else {
-                                detailsPriority.textContent = '-';
-                            }
-                        }
-                        if (detailsCompleted) {
-                            if (task.completed) {
-                                detailsCompleted.innerHTML = '<span class="text-green-500">Completed</span>';
-                            } else {
-                                detailsCompleted.innerHTML = '<span class="text-red-500">Not Completed</span>';
-                            }
-                        }
-
-                        // Attachments
-                        const detailsAttachments = document.getElementById('details-attachments');
-                        if (detailsAttachments) {
-                            const attachments = Array.isArray(task.attachments) ? task.attachments : [];
-                            if (!attachments.length) {
-                                detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
-                            } else {
-                                detailsAttachments.innerHTML = attachments.map(att => {
-                                    const originalName = att.original_name || att.filename || 'Attachment';
-                                    const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                    const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                    const imgHtml = isImage ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
-                                    const typeText = att.type ? `Type: ${att.type}` : (att.mime_type ? att.mime_type : '');
-                                    
-                                    return `
-                                        <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
-                                            ${imgHtml}
-                                            <div class="flex-1 min-w-0">
-                                                <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
-                                                <div class="text-gray-400 text-xs mt-1">${typeText}</div>
-                                            </div>
-                                        </a>
-                                    `;
-                                }).join('');
-                            }
-                        }
-
-                        document.getElementById('task-details-modal').classList.remove('hidden');
-                        if (editDetailsBtn) {
-                            editDetailsBtn.dataset.task = taskId;
-                            if (task.completed) {
-                                editDetailsBtn.classList.add('hidden');
-                            } else {
-                                editDetailsBtn.classList.remove('hidden');
-                            }
-                        }
-                    });
+                window.showTaskDetails(taskId);
             }
         });
 

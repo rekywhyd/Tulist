@@ -309,4 +309,22 @@ class TaskController extends Controller
 
         return view('reports.history', compact('historyTasks', 'user'));
     }
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+        
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        $tasks = Auth::user()->tasks()
+            ->where(function($q) use ($query) {
+                $q->where('title', 'LIKE', "%{$query}%")
+                  ->orWhere('description', 'LIKE', "%{$query}%");
+            })
+            ->limit(8)
+            ->get();
+
+        return response()->json($tasks);
+    }
 }

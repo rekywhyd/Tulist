@@ -76,6 +76,7 @@ Route::middleware('auth', 'verified')->group(function () {
     // Profile photo delete
     Route::delete('/profile/photo/delete', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 
+    Route::get('/tasks/search', [TaskController::class, 'search'])->name('tasks.search');
     Route::resource('tasks', TaskController::class);
     Route::post('tasks/{id}/duplicate', [TaskController::class, 'duplicate'])->name('tasks.duplicate');
 
