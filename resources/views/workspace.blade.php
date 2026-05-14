@@ -62,7 +62,7 @@
                 <div class="flex-[2] min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     @if($selectedWorkspace)
                         {{-- Header --}}
-                        <div class="flex items-center justify-between mb-8 gap-4">
+                        <div class="flex items-center justify-between gap-4 mb-4">
                             <div class="min-w-0">
                                 <h3 class="text-3xl text-[#1C427A] font-bold break-words max-w-2xl">{{ $selectedWorkspace->name }}</h3>
 
@@ -83,7 +83,7 @@
                                          x-transition:leave="transition ease-in duration-75"
                                          x-transition:leave-start="transform opacity-100 scale-100"
                                          x-transition:leave-end="transform opacity-0 scale-95"
-                                         class="absolute right-0 z-50 w-48 mt-2 origin-top-right bg-white border border-gray-100 shadow-xl rounded-2xl py-2 font-poppins" 
+                                         class="absolute right-0 z-50 w-48 py-2 mt-2 origin-top-right bg-white border border-gray-100 shadow-xl rounded-2xl font-poppins" 
                                          style="display: none;">
                                         
                                         <button type="button" @click="open = false; showWorkspaceDetails({{ $selectedWorkspace->id }})" class="flex items-center w-full px-4 py-2.5 text-sm text-[#132C51] hover:bg-[#E8EEF9] transition-colors gap-3">
@@ -125,17 +125,23 @@
                         {{-- Workspace Tasks Section --}}
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
-                                <h4 class="text-lg font-bold text-[#132C51]">Tasks</h4>
-                                <button type="button" 
-                                    @click="$dispatch('open-add-task-modal', { workspace_id: {{ $selectedWorkspace->id }} })"
-                                    class="text-xs font-bold text-[#1C427A] hover:underline">
-                                    + Add Task
-                                </button>
+                                <h4 class="text-xl font-bold text-[#132C51]">Tasks</h4>
+                                <div class="flex items-center gap-3">
+                                    <a href="{{ route('history.report') }}" target="_blank" class="flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                                        <svg fill="#ffffff" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;}</style></defs><title>report--alt</title><rect x="10" y="18" width="8" height="2"></rect><rect x="10" y="13" width="12" height="2"></rect><rect x="10" y="23" width="5" height="2"></rect><path d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z"></path><rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"></rect></g></svg>
+                                        <span>Generate Report</span>
+                                    </a>
+                                    <button type="button" id="add-task-btn"
+                                        class="add-task-btn flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                                        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#ffffff" fill-rule="evenodd" d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z"></path> </g></svg>
+                                        <span>New Task</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="grid gap-3">
                                 @forelse($tasks as $task)
-                                    <div class="flex items-center justify-between p-4 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200 transition-colors">
+                                    <div class="flex items-center justify-between p-4 transition-colors bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
                                         <div class="flex items-center gap-4">
                                             <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" {{ $task->completed ? 'checked' : '' }}>
                                             <div class="flex-1 min-w-0">
@@ -165,7 +171,7 @@
                                             </div>
                                         </div>
                                         <div class="relative ml-2">
-                                            <button class="text-gray-500 task-menu-btn hover:text-gray-700 font-bold text-xl" data-task="{{ $task->id }}">⋯</button>
+                                            <button class="text-xl font-bold text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
                                             <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
                                                 <button class="flex items-center w-full gap-2 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">Edit</button>
                                                 <button class="flex items-center w-full gap-2 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">Duplicate</button>
@@ -174,7 +180,7 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <div class="py-12 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-100">
+                                    <div class="py-12 text-center border-2 border-gray-100 border-dashed bg-gray-50/50 rounded-3xl">
                                         <svg class="w-12 h-12 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                         <p class="text-sm text-gray-400">No tasks in this workspace yet</p>
                                     </div>
@@ -195,7 +201,7 @@
     </div>
 
     {{-- Create Workspace Modal --}}
-    <div id="create-workspace-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="create-workspace-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-6 shadow-xl rounded-xl w-[480px] bg-[#132C51] max-w-full my-8">
             <h3 class="mb-4 text-2xl font-semibold text-white">Create Workspace</h3>
@@ -213,7 +219,7 @@
                 </div>
                 <div class="flex justify-center gap-4">
                     <button type="submit" class="px-6 py-2 text-white bg-[#1C427A] rounded-3xl transition-transform duration-200 hover:scale-105 font-semibold">Create</button>
-                    <button type="button" id="close-create-modal" class="px-6 py-2 text-white bg-gray-500 rounded-3xl transition-transform duration-200 hover:scale-95">Cancel</button>
+                    <button type="button" id="close-create-modal" class="px-6 py-2 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
                 </div>
             </form>
             </div>
@@ -221,7 +227,7 @@
     </div>
 
     {{-- Edit Workspace Modal --}}
-    <div id="edit-workspace-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="edit-workspace-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-6 shadow-xl rounded-xl w-[480px] bg-[#132C51] max-w-full my-8">
             <h3 class="mb-4 text-2xl font-semibold text-white">Edit Workspace</h3>
@@ -240,8 +246,8 @@
                         class="w-full px-4 py-2.5 text-white bg-[#0C1F3B] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" rows="3">{{ $selectedWorkspace->description }}</textarea>
                 </div>
                 <div class="flex justify-center gap-4">
-                    <button type="submit" class="px-6 py-2 text-white bg-blue-600 rounded-3xl transition-transform duration-200 hover:scale-105 font-semibold">Save Changes</button>
-                    <button type="button" onclick="document.getElementById('edit-workspace-modal').classList.add('hidden')" class="px-6 py-2 text-white bg-gray-500 rounded-3xl transition-transform duration-200 hover:scale-95">Cancel</button>
+                    <button type="submit" class="px-6 py-2 font-semibold text-white transition-transform duration-200 bg-blue-600 rounded-3xl hover:scale-105">Save Changes</button>
+                    <button type="button" onclick="document.getElementById('edit-workspace-modal').classList.add('hidden')" class="px-6 py-2 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
                 </div>
             </form>
             @endif
@@ -250,7 +256,7 @@
     </div>
 
     {{-- Workspace Details Modal --}}
-    <div id="workspace-details-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="workspace-details-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative shadow-2xl rounded-3xl w-[480px] bg-white overflow-hidden max-w-full my-8">
             <div class="p-6 bg-[#E8EEF9] flex justify-between items-center">
@@ -261,35 +267,35 @@
             </div>
             <div class="p-8 space-y-6">
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Workspace Name</label>
+                    <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Workspace Name</label>
                     <p id="detail-name" class="text-lg font-bold text-[#132C51] mt-1 break-words"></p>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Description</label>
-                    <p id="detail-description" class="text-sm text-gray-600 mt-1 whitespace-pre-line break-words"></p>
+                    <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Description</label>
+                    <p id="detail-description" class="mt-1 text-sm text-gray-600 break-words whitespace-pre-line"></p>
                 </div>
                 <div class="grid grid-cols-2 gap-6 pt-4 border-t border-gray-100">
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Owner</label>
+                        <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Owner</label>
                         <p id="detail-owner" class="text-sm font-semibold text-[#132C51] mt-1"></p>
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Created At</label>
+                        <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Created At</label>
                         <p id="detail-date" class="text-sm font-semibold text-[#132C51] mt-1"></p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-6 pt-4 border-t border-gray-100">
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Members</label>
+                        <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Total Members</label>
                         <p id="detail-members" class="text-sm font-semibold text-[#132C51] mt-1"></p>
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Tasks</label>
+                        <label class="text-xs font-bold tracking-wider text-gray-400 uppercase">Total Tasks</label>
                         <p id="detail-tasks" class="text-sm font-semibold text-[#132C51] mt-1"></p>
                     </div>
                 </div>
             </div>
-            <div class="p-6 bg-gray-50 flex justify-center">
+            <div class="flex justify-center p-6 bg-gray-50">
                 <button type="button" onclick="document.getElementById('workspace-details-modal').classList.add('hidden')" class="px-8 py-2 text-white bg-[#0E213D] rounded-3xl font-semibold transition-all hover:scale-105">Close</button>
             </div>
             </div>
@@ -297,7 +303,7 @@
     </div>
 
     {{-- Member List Modal --}}
-    <div id="member-list-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="member-list-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative shadow-2xl rounded-3xl w-[700px] bg-white overflow-hidden max-w-full my-8">
             <div class="flex items-center justify-between p-6 bg-[#E8EEF9]">
@@ -311,7 +317,7 @@
                         </button>
                     @endif
                 </div>
-                <button type="button" id="close-members-modal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <button type="button" id="close-members-modal" class="text-gray-400 transition-colors hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -319,7 +325,7 @@
             <div class="p-6 pb-0">
                 <div class="relative mb-6">
                     <input type="text" id="member-search" placeholder="Search members by name or email..."
-                        class="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all">
+                        class="w-full py-2 pl-10 pr-4 text-sm transition-all border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100">
                     <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </div>
@@ -342,7 +348,7 @@
                                 <td class="py-4">
                                     <div class="flex items-center gap-3">
                                         @if($member->profile_photo_path)
-                                            <img src="{{ asset('storage/' . $member->profile_photo_path) }}" class="object-cover w-9 h-9 rounded-full" alt="">
+                                            <img src="{{ asset('storage/' . $member->profile_photo_path) }}" class="object-cover rounded-full w-9 h-9" alt="">
                                         @else
                                             <div class="flex items-center justify-center w-9 h-9 rounded-full bg-[#E8EEF9] text-[#1C427A] font-bold text-sm">
                                                 {{ strtoupper(substr($member->name, 0, 1)) }}
@@ -395,7 +401,7 @@
     </div>
 
     {{-- Invite Member Modal --}}
-    <div id="invite-member-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="invite-member-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-6 shadow-xl rounded-xl w-[480px] bg-[#132C51] max-w-full my-8">
             <h3 class="mb-2 text-2xl font-semibold text-white">Invite Member</h3>
@@ -411,7 +417,7 @@
                     <span id="invite-btn-text">Send Invitation</span>
                     <span id="invite-btn-loading" class="hidden">Sending...</span>
                 </button>
-                <button type="button" id="close-invite-modal" class="px-6 py-2 text-white bg-gray-500 rounded-3xl transition-transform duration-200 hover:scale-95">Cancel</button>
+                <button type="button" id="close-invite-modal" class="px-6 py-2 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
             </div>
             </div>
         </div>
@@ -420,6 +426,141 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        window.newTaskFiles = new DataTransfer();
+        window.editTaskFiles = new DataTransfer();
+
+        // Add Task Modal Toggle
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const addTaskModal = document.getElementById('add-task-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        if (addTaskBtn && addTaskModal) {
+            addTaskBtn.addEventListener('click', () => {
+                addTaskModal.classList.remove('hidden');
+                window.newTaskFiles = new DataTransfer();
+                const fileInput = document.getElementById('task-file-input');
+                const fileList = document.getElementById('file-list');
+                const label = document.getElementById('file-label');
+                if (fileInput) fileInput.value = '';
+                if (fileList) fileList.innerHTML = '';
+                if (label) label.textContent = 'Add File';
+
+                // Pre-select current workspace
+                @if($selectedWorkspace)
+                    const currentWsId = "{{ $selectedWorkspace->id }}";
+                    const checkboxes = document.querySelectorAll('#add-task-modal .workspace-checkbox');
+                    checkboxes.forEach(cb => {
+                        if (cb.value === currentWsId) cb.checked = true;
+                    });
+                @endif
+            });
+        }
+
+        if (closeModal && addTaskModal) {
+            closeModal.addEventListener('click', () => addTaskModal.classList.add('hidden'));
+        }
+
+        if (addTaskModal) {
+            addTaskModal.addEventListener('click', (e) => {
+                if (e.target === addTaskModal) addTaskModal.classList.add('hidden');
+            });
+        }
+
+        // File upload preview for Add Task
+        const fileInput = document.getElementById('task-file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                const fileList = document.getElementById('file-list');
+                const label = document.getElementById('file-label');
+                
+                Array.from(this.files).forEach(file => {
+                    window.newTaskFiles.items.add(file);
+                });
+                this.files = window.newTaskFiles.files;
+                
+                fileList.innerHTML = '';
+                if (this.files.length > 0) {
+                    label.textContent = this.files.length + ' file(s) selected';
+                    Array.from(this.files).forEach((f, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'flex justify-between items-center text-sm mt-1';
+                        
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = '📎 ' + f.name;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.className = 'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
+                        removeBtn.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const dt = new DataTransfer();
+                            Array.from(window.newTaskFiles.files).forEach((file, i) => {
+                                if (i !== index) dt.items.add(file);
+                            });
+                            window.newTaskFiles = dt;
+                            fileInput.files = window.newTaskFiles.files;
+                            fileInput.dispatchEvent(new Event('change'));
+                        };
+                        
+                        div.appendChild(nameSpan);
+                        div.appendChild(removeBtn);
+                        fileList.appendChild(div);
+                    });
+                } else {
+                    label.textContent = 'Add File';
+                }
+            });
+        }
+
+        // Edit Task File upload preview
+        const editFileInputEl = document.getElementById('edit-task-file-input');
+        if (editFileInputEl) {
+            editFileInputEl.addEventListener('change', function() {
+                const fileList = document.getElementById('edit-file-list');
+                const label = document.getElementById('edit-file-label');
+                
+                Array.from(this.files).forEach(file => {
+                    window.editTaskFiles.items.add(file);
+                });
+                this.files = window.editTaskFiles.files;
+                
+                fileList.innerHTML = '';
+                if (this.files.length > 0) {
+                    label.textContent = this.files.length + ' file(s) selected';
+                    Array.from(this.files).forEach((f, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'flex justify-between items-center text-sm mt-1';
+                        
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = '📎 ' + f.name;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.className = 'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
+                        removeBtn.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const dt = new DataTransfer();
+                            Array.from(window.editTaskFiles.files).forEach((file, i) => {
+                                if (i !== index) dt.items.add(file);
+                            });
+                            window.editTaskFiles = dt;
+                            editFileInputEl.files = window.editTaskFiles.files;
+                            editFileInputEl.dispatchEvent(new Event('change'));
+                        };
+                        
+                        div.appendChild(nameSpan);
+                        div.appendChild(removeBtn);
+                        fileList.appendChild(div);
+                    });
+                } else {
+                    label.textContent = 'Add File';
+                }
+            });
+        }
 
         // Flash message auto-hide
         ['flash-success', 'flash-error'].forEach(id => {
@@ -684,7 +825,7 @@
                             detailsPriority.textContent = '-';
                         }
                         
-                        document.getElementById('details-completed').innerHTML = task.completed ? '<span class="text-green-500 font-bold">Completed</span>' : '<span class="text-red-500 font-bold">Not Completed</span>';
+                        document.getElementById('details-completed').innerHTML = task.completed ? '<span class="font-bold text-green-500">Completed</span>' : '<span class="font-bold text-red-500">Not Completed</span>';
 
                         const detailsAttachments = document.getElementById('details-attachments');
                         const attachments = Array.isArray(task.attachments) ? task.attachments : [];
@@ -695,8 +836,8 @@
                                 const originalName = att.original_name || att.filename || 'Attachment';
                                 const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
                                 const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                const imgHtml = isImage ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
-                                return `<a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 hover:bg-[#254A7A] transition-colors group">${imgHtml}<div class="flex-1 min-w-0"><div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div><div class="text-gray-400 text-xs mt-1">${att.mime_type || ''}</div></div></a>`;
+                                const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                return `<a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 hover:bg-[#254A7A] transition-colors group">${imgHtml}<div class="flex-1 min-w-0"><div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div><div class="mt-1 text-xs text-gray-400">${att.mime_type || ''}</div></div></a>`;
                             }).join('');
                         }
 
@@ -754,8 +895,8 @@
                             existingContainer.innerHTML = data.attachments.map(att => {
                                 const name = att.original_name || att.filename || 'Attachment';
                                 const path = `/storage/${att.storage_path}`;
-                                const img = att.mime_type?.startsWith('image/') ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
-                                return `<div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl"><a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 hover:opacity-80">${img}<div class="flex-1 min-w-0"><div class="font-medium text-gray-200 truncate">${name}</div></div></a><button type="button" class="text-red-400 hover:text-red-600 text-xl font-bold" onclick="this.closest('div').style.display='none'; const inp=document.createElement('input'); inp.type='hidden'; inp.name='remove_attachments[]'; inp.value='${att.id}'; this.parentNode.appendChild(inp);">&times;</button></div>`;
+                                const img = att.mime_type?.startsWith('image/') ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                return `<div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl"><a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 hover:opacity-80">${img}<div class="flex-1 min-w-0"><div class="font-medium text-gray-200 truncate">${name}</div></div></a><button type="button" class="text-xl font-bold text-red-400 hover:text-red-600" onclick="this.closest('div').style.display='none'; const inp=document.createElement('input'); inp.type='hidden'; inp.name='remove_attachments[]'; inp.value='${att.id}'; this.parentNode.appendChild(inp);">&times;</button></div>`;
                             }).join('');
                         } else {
                             existingWrap.classList.add('hidden');
@@ -851,8 +992,175 @@
 
     });
     </script>
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
+            <div>
+                <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
+                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-12 gap-y-2 gap-x-6">
+                    @csrf
+                    
+                    <!-- Row 1: Title -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <label class="font-semibold text-gray-100">Title</label>
+                        </div>
+                        <input placeholder="Title Name" type="text" name="title"
+                            class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
+                            required>
+                    </div>
+
+                    <!-- Row 2: Description -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                            <label class="font-semibold text-gray-100">Description</label>
+                        </div>
+                        <textarea placeholder="Add Description" name="description"
+                            class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
+                    </div>
+
+                    <!-- Row 3: Due Date, Times, Priority -->
+                    <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <label class="font-semibold text-gray-100">Due Date</label>
+                            </div>
+                            <input type="date" name="due_date"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                required value="{{ date('Y-m-d') }}">
+                        </div>
+
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">Start Time</label>
+                            </div>
+                            <input type="time" name="start_time"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        </div>
+
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <label class="font-semibold text-gray-100">End Time</label>
+                            </div>
+                            <input type="time" name="end_time"
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                        </div>
+
+                        <!-- Priority Selection -->
+                        <div class="flex flex-col justify-end">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
+                                <label class="font-semibold text-gray-100">Priority</label>
+                            </div>
+                            <div x-data="{ open: false, selected: null }" class="relative w-full">
+                                <button @click="open = !open" type="button"
+                                    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
+                                    :class="{
+                                        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+                                        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+                                        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+                                        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+                                        'text-white border-gray-600': selected === null
+                                    }">
+                                    <svg class="w-5 h-5"
+                                        :class="{
+                                            'text-red-500': selected === 'Urgent',
+                                            'text-yellow-500': selected === 'High',
+                                            'text-blue-500': selected === 'Normal',
+                                            'text-green-500': selected === 'Low',
+                                            'text-gray-400': selected === null
+                                        }"
+                                        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                    </svg>
+                                    <span x-text="selected || 'Priority'" class="flex-1"></span>
+                                </button>
+
+                                <div x-show="open" @click.outside="open = false" x-transition
+                                    class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
+                                    <div @click="selected = 'Urgent'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">Urgent</span>
+                                    </div>
+                                    <div @click="selected = 'High'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">High</span>
+                                    </div>
+                                    <div @click="selected = 'Normal'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-black">Normal</span>
+                                    </div>
+                                    <div @click="selected = 'Low'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="font-semibold text-gray-800">Low</span>
+                                    </div>
+                                </div>
+
+
+                                <select name="priority" x-model="selected" class="hidden">
+                                    <option value="">Priority</option>
+                                    <option value="Urgent">Urgent</option>
+                                    <option value="High">High</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Workspace Selection (Multiple) -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
+                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
+                            @foreach($workspaces as $workspace)
+                                <label class="flex items-start gap-2 cursor-pointer group">
+                                    <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 workspace-checkbox">
+                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
+                                </label>
+                            @endforeach
+                            @if($workspaces->isEmpty())
+                                <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create one first.</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Attachments -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mt-2 mb-1">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <label class="font-semibold text-gray-100">Attachments</label>
+                        </div>
+                        <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <span id="file-label">Add File</span>
+                            <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                        </label>
+                        <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
+                    </div>
+
+                    <!-- Row 5: Buttons -->
+                    <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
+                        <button type="submit" class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                        <button type="button" id="close-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Task Details Modal (view only) -->
-    <div id="task-details-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+
+    <div id="task-details-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 bg-[#132C51] shadow-xl rounded-xl w-[850px] max-w-full my-8">
             <div>
@@ -958,7 +1266,7 @@
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
             <div>
@@ -1068,7 +1376,7 @@
                             @foreach($workspaces as $workspace)
                                 <label class="flex items-start gap-2 cursor-pointer group">
                                     <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 edit-workspace-checkbox">
-                                    <span class="text-sm text-gray-300 group-hover:text-white break-all whitespace-normal">{{ $workspace->name }}</span>
+                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
                                 </label>
                             @endforeach
                         </div>
@@ -1101,7 +1409,7 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="delete-task-confirm-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="delete-task-confirm-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-8 bg-[#132C51] shadow-xl rounded-2xl w-[450px] max-w-full">
                 <div class="text-center">
@@ -1111,8 +1419,8 @@
                     <h3 class="mb-2 text-2xl font-bold text-white">Delete Task?</h3>
                     <p class="mb-8 text-gray-300">This action cannot be undone. Are you sure you want to delete this task?</p>
                     <div class="flex justify-center gap-4">
-                        <button id="confirm-delete-task-btn" class="px-8 py-2 text-white bg-red-600 rounded-3xl hover:bg-red-700 transition-colors font-semibold">Delete</button>
-                        <button id="cancel-delete-task-btn" class="px-8 py-2 text-white bg-gray-500 rounded-3xl hover:bg-gray-600 transition-colors font-semibold">Cancel</button>
+                        <button id="confirm-delete-task-btn" class="px-8 py-2 font-semibold text-white transition-colors bg-red-600 rounded-3xl hover:bg-red-700">Delete</button>
+                        <button id="cancel-delete-task-btn" class="px-8 py-2 font-semibold text-white transition-colors bg-gray-500 rounded-3xl hover:bg-gray-600">Cancel</button>
                     </div>
                 </div>
             </div>
