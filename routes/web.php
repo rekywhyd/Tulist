@@ -57,15 +57,17 @@ Route::get('/home', function () {
 
     $todayCount = $todayTasks->count();
     $tomorrowCount = $tomorrowTasks->count();
-    $upcomingCount = $upcomingTasks->count();
-    $overdueCount = $overdueTasks->count();
-
     // Set session alert if there are tasks due today
     if ($todayCount > 0) {
         session(['show_alert' => true]);
     }
 
-    return view('home', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks', 'todayCount', 'tomorrowCount', 'upcomingCount', 'overdueCount', 'user'));
+    $upcomingCount = $upcomingTasks->count();
+    $overdueCount = $overdueTasks->count();
+
+    $workspaces = $user->workspaces()->get();
+
+    return view('home', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks', 'todayCount', 'tomorrowCount', 'upcomingCount', 'overdueCount', 'user', 'workspaces'));
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/schedule', [App\Http\Controllers\TaskController::class, 'schedule'])

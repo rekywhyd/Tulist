@@ -28,8 +28,6 @@ class WorkspaceController extends Controller
 
         if ($request->has('workspace_id')) {
             $selectedWorkspace = $user->workspaces()->where('workspaces.id', $request->workspace_id)->first();
-        } elseif ($workspaces->count() > 0) {
-            $selectedWorkspace = $workspaces->first();
         }
 
         $tasks = collect();
@@ -37,7 +35,7 @@ class WorkspaceController extends Controller
         if ($selectedWorkspace) {
             $members = $selectedWorkspace->members()->orderBy('name')->get();
             $userRole = $user->workspaceRole($selectedWorkspace->id);
-            $tasks = $selectedWorkspace->tasks()->orderBy('created_at', 'desc')->get();
+            $tasks = $selectedWorkspace->tasks()->orderBy('tasks.created_at', 'desc')->get();
 
             // Update last_viewed_at for the current user in this workspace
             $selectedWorkspace->members()->updateExistingPivot($user->id, ['last_viewed_at' => now()]);
@@ -49,7 +47,7 @@ class WorkspaceController extends Controller
             $unreadQuery = $ws->tasks()->where('completed', false);
             
             if ($lastViewedAt) {
-                $unreadQuery->where('created_at', '>', $lastViewedAt);
+                $unreadQuery->where('tasks.created_at', '>', $lastViewedAt);
             }
             
             $ws->unread_tasks_count = $unreadQuery->count();

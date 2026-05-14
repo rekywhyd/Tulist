@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\TaskAttachment;
 
@@ -20,7 +21,6 @@ class Task extends Model
         'completed',
         'completed_at',
         'user_id',
-        'workspace_id',
     ];
 
     protected $casts = [
@@ -36,9 +36,9 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function workspace(): BelongsTo
+    public function workspaces(): BelongsToMany
     {
-        return $this->belongsTo(Workspace::class);
+        return $this->belongsToMany(Workspace::class, 'task_workspace')->withTimestamps();
     }
 
 

@@ -52,8 +52,8 @@ class Workspace extends Model
     /**
      * Get tasks for this workspace.
      */
-    public function tasks(): HasMany
+    public function tasks(): BelongsToMany
     {
-        return $this->hasMany(Task::class);
+        return $this->belongsToMany(Task::class, 'task_workspace')->withTimestamps();
     }
 }

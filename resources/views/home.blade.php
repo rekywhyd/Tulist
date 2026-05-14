@@ -273,8 +273,9 @@
     <!-- (Potongan modal Anda yang lain tetap di sini, pastikan tidak ada tag yang bocor) -->
 
     <!-- Task Details Modal (view only) -->
-    <div id="task-details-modal" class="fixed inset-0 z-50 hidden w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50 font-poppins">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-[#132C51] shadow-xl rounded-xl w-[850px]">
+    <div id="task-details-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative p-5 bg-[#132C51] shadow-xl rounded-xl w-[850px] max-w-full my-8">
             <div>
                 <h3 class="mb-3 text-2xl font-semibold text-white">Task Details</h3>
 
@@ -352,7 +353,18 @@
                         <p id="details-completed" class="text-gray-200"></p>
                     </div>
 
-                    <!-- Row 5: Attachments -->
+                    <!-- Row 5: Workspaces -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
+                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        </div>
+                        <div id="details-workspaces" class="flex flex-wrap gap-2 text-sm text-gray-200">
+                            <p class="text-gray-400">No workspaces assigned</p>
+                        </div>
+                    </div>
+
+                    <!-- Row 6: Attachments -->
                     <div class="col-span-12">
                         <div class="flex items-center gap-2 mb-1">
                             <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
@@ -374,12 +386,14 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51]">
+    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
             <div>
                 <h3 class="mb-3 text-2xl font-semibold text-white">Edit Task</h3>
 
@@ -500,6 +514,25 @@
                         </div>
                     </div>
 
+                    <!-- Workspace Selection (Multiple) -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
+                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        </div>
+                        <div id="edit-workspaces-container" class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
+                            @foreach($workspaces as $workspace)
+                                <label class="flex items-start gap-2 cursor-pointer group">
+                                    <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 edit-workspace-checkbox">
+                                    <span class="text-sm text-gray-300 group-hover:text-white break-all whitespace-normal">{{ $workspace->name }}</span>
+                                </label>
+                            @endforeach
+                            @if($workspaces->isEmpty())
+                                <p class="col-span-2 text-xs text-gray-500 italic">No workspaces available. Create one first.</p>
+                            @endif
+                        </div>
+                    </div>
+
                     <!-- Row 5: Attachments -->
                     <div class="col-span-12">
                         <div class="flex items-center gap-2 mt-2 mb-1">
@@ -559,11 +592,13 @@
                     </script>
 
             </div>
+            </div>
         </div>
     </div>    
     <!-- Add Task Modal -->
-    <div id="add-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51]">
+    <div id="add-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
             <div>
                 <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
                 <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-12 gap-y-2 gap-x-6">
@@ -682,7 +717,26 @@
                         </div>
                     </div>
 
-                    <!-- Row 4: Attachments -->
+                    <!-- Row 4: Workspace Selection (Multiple) -->
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mb-1">
+                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
+                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
+                            @foreach($workspaces as $workspace)
+                                <label class="flex items-start gap-2 cursor-pointer group">
+                                    <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600">
+                                    <span class="text-sm text-gray-300 group-hover:text-white break-all whitespace-normal">{{ $workspace->name }}</span>
+                                </label>
+                            @endforeach
+                            @if($workspaces->isEmpty())
+                                <p class="col-span-2 text-xs text-gray-500 italic">No workspaces available. Create one first.</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Attachments -->
                     <div class="col-span-12">
                         <div class="flex items-center gap-2 mt-2 mb-1">
                             <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
@@ -702,6 +756,7 @@
                         <button type="button" id="close-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
     </div>
@@ -963,6 +1018,16 @@
                                     existingContainer.innerHTML = '';
                                 }
                             }
+
+                            // Workspaces: check corresponding checkboxes
+                            const workspaceCheckboxes = document.querySelectorAll('.edit-workspace-checkbox');
+                            workspaceCheckboxes.forEach(cb => cb.checked = false);
+                            if (task.workspaces && Array.isArray(task.workspaces)) {
+                                task.workspaces.forEach(ws => {
+                                    const cb = document.querySelector(`.edit-workspace-checkbox[value="${ws.id}"]`);
+                                    if (cb) cb.checked = true;
+                                });
+                            }
                         })
                         .catch(() => alert('Failed to load task details'));
 
@@ -1036,6 +1101,18 @@
                         if (detailsCompletedAt) {
                             let completedDate = task.completed_at || task.complated_at || '';
                             detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
+                        }
+
+                        // Workspaces display
+                        const detailsWorkspaces = document.getElementById('details-workspaces');
+                        if (detailsWorkspaces) {
+                            if (task.workspaces && task.workspaces.length > 0) {
+                                detailsWorkspaces.innerHTML = task.workspaces.map(ws => 
+                                    `<span class="px-2 py-0.5 bg-teal-900/50 text-teal-300 border border-teal-500/30 rounded-full text-xs break-all whitespace-normal">${ws.name}</span>`
+                                ).join('');
+                            } else {
+                                detailsWorkspaces.innerHTML = '<p class="text-gray-400">No workspaces assigned</p>';
+                            }
                         }
                         
                         if (detailsPriority) {

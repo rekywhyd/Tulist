@@ -22,11 +22,11 @@ class TaskController extends Controller
         $user = Auth::user();
 
         if ($request->has('date')) {
-            $tasks = $user->tasks()->where('due_date', $request->date)->get();
+            $tasks = $user->tasks()->with('workspaces')->where('due_date', $request->date)->get();
             return response()->json($tasks);
         }
 
-        $tasks = $user->tasks()->get();
+        $tasks = $user->tasks()->with('workspaces')->get();
 
         return response()->json($tasks);
     }
@@ -51,6 +51,8 @@ class TaskController extends Controller
             'start_time' => 'nullable|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i',
             'priority' => 'required|in:Urgent,High,Normal,Low',
+            'workspace_ids' => 'nullable|array',
+            'workspace_ids.*' => 'exists:workspaces,id',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
         ]);
@@ -63,8 +65,11 @@ class TaskController extends Controller
             'end_time' => $request->end_time,
             'priority' => $request->priority,
             'user_id' => Auth::id(),
-            'workspace_id' => $request->workspace_id,
         ]);
+
+        if ($request->has('workspace_ids')) {
+            $task->workspaces()->sync($request->workspace_ids);
+        }
 
 
 
@@ -97,6 +102,16 @@ class TaskController extends Controller
             }
         }
 
+        $task->load(['workspaces', 'attachments']);
+        
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Task created successfully',
+                'task' => $task
+            ]);
+        }
+
         return redirect()->route('home');
     }
 
@@ -105,7 +120,7 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        $task = Auth::user()->tasks()->with('attachments')->findOrFail($id);
+        $task = Auth::user()->tasks()->with(['attachments', 'workspaces'])->findOrFail($id);
         return response()->json($task);
     }
 
@@ -133,11 +148,17 @@ class TaskController extends Controller
             'end_time' => 'nullable|date_format:H:i',
             'priority' => 'sometimes|required|in:Urgent,High,Normal,Low',
             'completed' => 'sometimes|boolean',
+            'workspace_ids' => 'nullable|array',
+            'workspace_ids.*' => 'exists:workspaces,id',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,ppt,pptx',
         ]);
 
         $data = $request->only(['title', 'description', 'due_date', 'start_time', 'end_time', 'priority', 'completed']);
+
+        if ($request->has('workspace_ids')) {
+            $task->workspaces()->sync($request->workspace_ids);
+        }
 
         // Handle completed_at timestamp
         if ($request->has('completed')) {
@@ -194,7 +215,7 @@ class TaskController extends Controller
         }
 
 
-        return response()->json(['success' => true, 'task' => $task->load('attachments')]);
+        return response()->json(['success' => true, 'task' => $task->load(['attachments', 'workspaces'])]);
     }
 
     /**
@@ -279,7 +300,8 @@ class TaskController extends Controller
             ->where('completed', true)
             ->get();
 
-        return view('schedule', compact('tasksByDate', 'month', 'year', 'todayTasks', 'upcomingTasks', 'completedTasks', 'allTasks'));
+        $workspaces = $user->workspaces()->get();
+        return view('schedule', compact('tasksByDate', 'month', 'year', 'todayTasks', 'upcomingTasks', 'completedTasks', 'allTasks', 'workspaces'));
     }
 
     /**
