@@ -36,7 +36,7 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
 Route::get('/home', function () {
     $user = Auth::user();
-    $tasks = Task::where('user_id', $user->id)->get();
+    $tasks = Task::with('workspaces')->where('user_id', $user->id)->get();
 
 
     $todayTasks = $tasks->filter(function ($task) {

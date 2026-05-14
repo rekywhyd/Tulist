@@ -273,7 +273,7 @@ class TaskController extends Controller
         $startOfMonth = \Carbon\Carbon::create($year, $month, 1)->startOfMonth();
         $endOfMonth = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
 
-        $tasks = $user->tasks()->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
+        $tasks = $user->tasks()->with('workspaces')->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
 
         $tasksByDate = $tasks->groupBy(function($task) {
             return $task->due_date->format('Y-m-d');
@@ -281,22 +281,26 @@ class TaskController extends Controller
 
         // Separate queries for better performance - exclude completed tasks from allTasks
         $allTasks = $user->tasks()
+            ->with('workspaces')
             ->where('completed', false)
             ->orderBy('due_date', 'asc')
             ->orderByRaw("CASE priority WHEN 'Urgent' THEN 1 WHEN 'High' THEN 2 WHEN 'Normal' THEN 3 WHEN 'Low' THEN 4 END")
             ->get();
 
         $todayTasks = $user->tasks()
+            ->with('workspaces')
             ->where('due_date', now()->toDateString())
             ->where('completed', false)
             ->get();
 
         $upcomingTasks = $user->tasks()
+            ->with('workspaces')
             ->where('due_date', '>', now()->toDateString())
             ->where('completed', false)
             ->get();
 
         $completedTasks = $user->tasks()
+            ->with('workspaces')
             ->where('completed', true)
             ->get();
 
@@ -311,6 +315,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
         $historyTasks = $user->tasks()
+            ->with('workspaces')
             ->where('completed', true)
             ->orderBy('completed_at', 'desc')
             ->get();
@@ -326,6 +331,7 @@ class TaskController extends Controller
         }
 
         $tasks = Auth::user()->tasks()
+            ->with('workspaces')
             ->where(function($q) use ($query) {
                 $q->where('title', 'LIKE', "%{$query}%")
                   ->orWhere('description', 'LIKE', "%{$query}%");
