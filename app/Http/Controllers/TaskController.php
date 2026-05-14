@@ -28,22 +28,7 @@ class TaskController extends Controller
 
         $tasks = $user->tasks()->get();
 
-
-        $todayTasks = $tasks->filter(function($task) {
-            return $task->due_date->isToday() && !$task->completed;
-        });
-        $tomorrowTasks = $tasks->filter(function($task) {
-            return $task->due_date->isTomorrow() && !$task->completed;
-        });
-        $upcomingTasks = $tasks->filter(function($task) {
-            return $task->due_date->gt(now()->addDay()) && !$task->completed;
-        });
-        $overdueTasks = $tasks->filter(function($task) {
-            return $task->due_date->lt(now()->startOfDay()) && !$task->completed;
-        });
-        $historyTasks = $tasks->where('completed', true);
-
-        return view('employees', compact('todayTasks', 'tomorrowTasks', 'upcomingTasks', 'overdueTasks', 'historyTasks'));
+        return response()->json($tasks);
     }
 
     /**
@@ -78,6 +63,7 @@ class TaskController extends Controller
             'end_time' => $request->end_time,
             'priority' => $request->priority,
             'user_id' => Auth::id(),
+            'workspace_id' => $request->workspace_id,
         ]);
 
 

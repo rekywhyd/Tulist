@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Task;
@@ -12,9 +13,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/employees', [App\Http\Controllers\TaskController::class, 'index'])
-    ->middleware(['auth', 'verified', 'role:admin'])
-    ->name('employees');
+// Workspace routes (accessible to all authenticated users)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/workspace', [WorkspaceController::class, 'index'])->name('workspace');
+    Route::post('/workspace', [WorkspaceController::class, 'store'])->name('workspace.store');
+    Route::get('/workspace/{workspaceId}', [WorkspaceController::class, 'show'])->name('workspace.show');
+    Route::put('/workspace/{workspaceId}', [WorkspaceController::class, 'update'])->name('workspace.update');
+    Route::delete('/workspace/{workspaceId}', [WorkspaceController::class, 'destroy'])->name('workspace.destroy');
+    Route::post('/workspace/{workspaceId}/invite', [WorkspaceController::class, 'invite'])->name('workspace.invite');
+    Route::put('/workspace/{workspaceId}/member/{userId}/role', [WorkspaceController::class, 'updateRole'])->name('workspace.updateRole');
+    Route::delete('/workspace/{workspaceId}/member/{userId}', [WorkspaceController::class, 'removeMember'])->name('workspace.removeMember');
+    Route::post('/workspace/{workspaceId}/leave', [WorkspaceController::class, 'leave'])->name('workspace.leave');
+});
+
+// Accept invitation (works for both authenticated and guest users)
+Route::get('/workspace/invitation/{token}/accept', [WorkspaceController::class, 'acceptInvitation'])
+    ->middleware(['auth', 'verified'])
+    ->name('workspace.acceptInvitation');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');

@@ -20,6 +20,7 @@ class Task extends Model
         'completed',
         'completed_at',
         'user_id',
+        'workspace_id',
     ];
 
     protected $casts = [
@@ -33,6 +34,11 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
     }
 
 
