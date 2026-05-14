@@ -111,7 +111,7 @@
                     <div class="mb-4">
                         <h2 id="task-in-date-title" class="mb-4 text-xl font-bold text-[#1C427A]">
                             Task in <span id="task-in-date-pill"
-                                class="px-3 py-1 text-white border border-[#1C427A] rounded-full bg-[#1C427A]">{{ date('d M Y') }}</span>
+                                class="px-3 py-1 text-white border border-[#0E213D] rounded-full bg-[#0E213D]">{{ date('d M Y') }}</span>
                         </h2>
                     </div>
 
@@ -987,26 +987,10 @@
             }
 
             // Reload tasks to reflect changes
-            loadTasks(selectedDate, currentFilter);
+            loadTasks(selectedDate);
         }
 
-        // Function to update category counts
-        function updateCategoryCount(category) {
-            const contentDiv = document.getElementById(`${category}-content`);
-            const taskCount = contentDiv ? contentDiv.children.length : 0;
-            const countSpan = document.querySelector(`[data-category="${category}"] .rounded-full`);
-            if (countSpan) {
-                countSpan.textContent = taskCount;
-            }
-        }
 
-        // Function to update all category counts
-        function updateAllCategoryCounts() {
-            updateCategoryCount('today');
-            updateCategoryCount('tomorrow');
-            updateCategoryCount('upcoming');
-            updateCategoryCount('completed');
-        }
 
         function displayTasks(tasks, container) {
             console.log('displayTasks called with tasks:', tasks);
@@ -1292,10 +1276,16 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         // Add the new task to the UI
