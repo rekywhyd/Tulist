@@ -36,7 +36,16 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
 Route::get('/home', function () {
     $user = Auth::user();
-    $tasks = Task::with('workspaces')->where('user_id', $user->id)->get();
+    $tasks = Task::with('workspaces')
+        ->where(function($query) use ($user) {
+            $query->where('user_id', $user->id)
+                  ->orWhereHas('workspaces', function($q) use ($user) {
+                      $q->whereIn('workspaces.id', $user->workspaces->pluck('id'));
+                  });
+        })
+        ->get()->each(function($t) use ($user) {
+            $t->can_modify = $t->canUserModify($user);
+        });
 
 
     $todayTasks = $tasks->filter(function ($task) {

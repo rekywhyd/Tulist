@@ -1030,56 +1030,52 @@
 
             tasks.forEach(task => {
                 const taskDiv = document.createElement('div');
-                taskDiv.className =
-                    'p-3 border rounded-lg hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md';
+                taskDiv.className = 'p-4 bg-white transition-all duration-200 border shadow-sm rounded-2xl border-gray-100 group hover:border-blue-200';
                 taskDiv.setAttribute('data-task-id', task.id);
-
-
-
 
                 taskDiv.innerHTML = `
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center flex-1 ml-3 mr-8">
+                    <div class="flex items-center flex-1 min-w-0 mr-4">
                         <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
-                        <div class="flex-1 min-w-0 ml-4 cursor-pointer" data-task-title="${task.id}">
-                            <div class="flex flex-wrap items-center">
-                                <span class="${task.completed ? 'line-through text-gray-500' : 'text-[#132C51]'} text-lg translate-y-[-2px] break-words whitespace-normal break-all">
-                                    <div class="flex flex-col">
-                                        <div class="flex flex-wrap items-center">
-                                            ${task.title}
-                                            ${task.priority ? `
-                                                    <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 ${task.priority === 'Urgent' ? 'text-red-500' : (task.priority === 'High' ? 'text-yellow-500' : (task.priority === 'Normal' ? 'text-blue-500' : 'text-green-500'))}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <title>${task.priority}</title>
-                                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
-                                                    </svg>
-                                                ` : ''}
-                                            ${task.workspaces && task.workspaces.length > 0 ? task.workspaces.map(ws => `
-                                                <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="${ws.name}">
-                                                    ${ws.name.substring(0, 2).toUpperCase()}
-                                                </div>
-                                            `).join('') : ''}
-                                        </div>
-                                        ${task.start_time || task.end_time ? `
-                                                <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5 no-line-through">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                    <span>
-                                                        ${task.start_time ? task.start_time.substring(0, 5) : ''}
-                                                        ${task.start_time && task.end_time ? '-' : ''}
-                                                        ${task.end_time ? task.end_time.substring(0, 5) : ''}
-                                                    </span>
-                                                </div>
-                                            ` : ''}
-                                    </div>
+                        <div class="flex-1 min-w-0 ml-3">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-lg font-medium break-all whitespace-normal ${task.completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]'} cursor-pointer hover:text-blue-600 transition-colors" data-task-title="${task.id}">
+                                    ${task.title}
                                 </span>
+                                ${task.priority ? `
+                                    <svg class="flex-shrink-0 w-5 h-5 ${task.priority === 'Urgent' ? 'text-red-500' : (task.priority === 'High' ? 'text-yellow-500' : (task.priority === 'Normal' ? 'text-blue-500' : 'text-green-500'))} ${task.completed ? 'opacity-50' : ''}" fill="currentColor" viewBox="0 0 24 24">
+                                        <title>${task.priority}</title>
+                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                    </svg>
+                                ` : ''}
+                                ${task.workspaces && task.workspaces.length > 0 ? task.workspaces.map(ws => `
+                                    <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 ${task.completed ? 'opacity-50' : ''}" title="${ws.name}">
+                                        ${ws.name.substring(0, 2).toUpperCase()}
+                                    </div>
+                                `).join('') : ''}
                             </div>
-
+                            ${task.start_time || task.end_time ? `
+                                <div class="flex items-center gap-1 text-xs text-gray-400 mt-1 ${task.completed ? 'line-through opacity-50' : ''}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span>
+                                        ${task.start_time ? task.start_time.substring(0, 5) : ''}
+                                        ${task.start_time && task.end_time ? '-' : ''}
+                                        ${task.end_time ? task.end_time.substring(0, 5) : ''}
+                                    </span>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
-                    <div class="relative">
+                    <div class="relative ml-2">
                         <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="${task.id}">⋯</button>
                         <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="${task.id}">
-                            ${!task.completed ? `
-                                     <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="${task.id}">
+                            <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails(${task.id})">
+                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Details
+                            </button>
+                            ${task.can_modify ? `
+                                ${!task.completed ? `
+                                     <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="${task.id}">
                                          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                          Edit
                                      </button>
@@ -1087,16 +1083,12 @@
                                          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
                                          Duplicate
                                      </button>
-                                     <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="${task.id}">
-                                         <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                         Delete
-                                     </button>
-                                ` : `
-                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-xl hover:bg-gray-600 delete-btn" data-task="${task.id}">
-                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                        Delete
-                                    </button>
-                                `}
+                                ` : ''}
+                                <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="${task.id}">
+                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Delete
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -1357,7 +1349,7 @@
                             updateTaskArrays(taskId, isCompleted);
                             loadTasks(selectedDate);
                         } else {
-                            alert('Failed to update task.');
+                            alert('You cannot update this task.');
                             checkbox.checked = !isCompleted;
                         }
                     }).catch(() => {
@@ -1680,8 +1672,10 @@
                     document.getElementById('task-details-modal').classList.remove('hidden');
                     if (editDetailsBtn) {
                         editDetailsBtn.dataset.task = String(taskId);
-                        task.completed ? editDetailsBtn.classList.add('hidden') : editDetailsBtn.classList.remove(
-                            'hidden');
+                        // Only show Edit button if user has permission AND task is not completed
+                        const canModify = task.can_modify === true || task.can_modify === 1;
+                        (canModify && !task.completed) ? editDetailsBtn.classList.remove('hidden'): editDetailsBtn
+                            .classList.add('hidden');
                     }
                 });
         };

@@ -28,55 +28,61 @@
                         <div class="category-content" id="today-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($todayTasks as $task)
-                                    <div class="mb-2" data-original-due-date="{{ optional($task->due_date)->format('Y-m-d') }}">
-                                        <div class="flex items-center ml-3 mr-8">
-                                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" {{ $task->completed ? 'checked' : '' }}>
-                                            <span data-task-title="{{ $task->id }}" class="{{ $task->completed ? 'line-through text-gray-500' : '' }} ml-4 flex-1 min-w-0 break-all cursor-pointer">
-                                                <div class="flex flex-col">
-                                                    <div class="flex flex-wrap items-center">
-                                                        {{ $task->title }}
-                                                        @if($task->priority == 'Urgent')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Urgent</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'High')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>High</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Normal')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Normal</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Low')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Low</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                    <div class="p-4 mb-3 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200 group" data-original-due-date="{{ optional($task->due_date)->format('Y-m-d') }}">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center flex-1 min-w-0 gap-4">
+                                                <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" {{ $task->completed ? 'checked' : '' }}>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex flex-wrap items-center gap-2">
+                                                        <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
+                                                            {{ $task->title }}
+                                                        </span>
+                                                        @if($task->priority)
+                                                            <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                                <title>{{ $task->priority }}</title>
+                                                                <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                            </svg>
                                                         @endif
                                                         @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="{{ $ws->name }}">
+                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
                                                                 {{ strtoupper(substr($ws->name, 0, 2)) }}
                                                             </div>
                                                         @endforeach
                                                     </div>
                                                     @if($task->start_time || $task->end_time)
-                                                        <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
+                                                        <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
                                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                            <span>
-                                                                {{ $task->start_time ? $task->start_time->format('H:i') : '' }}
-                                                                {{ ($task->start_time && $task->end_time) ? '-' : '' }}
-                                                                {{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                                            </span>
+                                                            {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
                                                         </div>
                                                     @endif
                                                 </div>
-                                            </span>
+                                            </div>
                                             <div class="relative ml-2">
                                                 <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
                                                 <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                                        Edit
+                                                    @php $canModify = $task->canUserModify(Auth::user()); @endphp
+                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        Details
                                                     </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                                                        Duplicate
-                                                    </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                        Delete
-                                                    </button>
+
+                                                    @if($canModify && !$task->completed)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                            Edit
+                                                        </button>
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                            Duplicate
+                                                        </button>
+                                                    @endif
+
+                                                    @if($canModify)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                            Delete
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -95,55 +101,59 @@
                         <div class="category-content" id="tomorrow-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($tomorrowTasks as $task)
-                                    <div class="mb-2">
-                                        <div class="flex items-center ml-3 mr-8">
+                                    <div class="mb-3 group">
+                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
                                             <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
-                                            <span data-task-title="{{ $task->id }}" class="flex-1 min-w-0 ml-4 break-all cursor-pointer">
-                                                <div class="flex flex-col">
-                                                    <div class="flex flex-wrap items-center">
+                                            <div class="flex-1 min-w-0 ml-4">
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
                                                         {{ $task->title }}
-                                                        @if($task->priority == 'Urgent')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Urgent</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'High')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>High</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Normal')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Normal</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Low')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Low</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @endif
-                                                        @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="{{ $ws->name }}">
-                                                                {{ strtoupper(substr($ws->name, 0, 2)) }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                    @if($task->start_time || $task->end_time)
-                                                        <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
-                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                            <span>
-                                                                {{ $task->start_time ? $task->start_time->format('H:i') : '' }}
-                                                                {{ ($task->start_time && $task->end_time) ? '-' : '' }}
-                                                                {{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                                            </span>
-                                                        </div>
+                                                    </span>
+                                                    @if($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                            <title>{{ $task->priority }}</title>
+                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                        </svg>
                                                     @endif
+                                                    @foreach($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                            {{ strtoupper(substr($ws->name, 0, 2)) }}
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            </span>
+                                                @if($task->start_time || $task->end_time)
+                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
+                                                    </div>
+                                                @endif
+                                            </div>
                                             <div class="relative ml-2">
                                                 <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
                                                 <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                                        Edit
+                                                    @php $canModify = $task->canUserModify(Auth::user()); @endphp
+                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        Details
                                                     </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                                                        Duplicate
-                                                    </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                        Delete
-                                                    </button>
+
+                                                    @if($canModify && !$task->completed)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                            Edit
+                                                        </button>
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                            Duplicate
+                                                        </button>
+                                                    @endif
+
+                                                    @if($canModify)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                            Delete
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -162,55 +172,59 @@
                         <div class="category-content" id="upcoming-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($upcomingTasks as $task)
-                                    <div class="mb-2">
-                                        <div class="flex items-center ml-3 mr-8">
+                                    <div class="mb-3 group">
+                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
                                             <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
-                                            <span data-task-title="{{ $task->id }}" class="flex-1 min-w-0 ml-4 break-all cursor-pointer">
-                                                <div class="flex flex-col">
-                                                    <div class="flex flex-wrap items-center">
+                                            <div class="flex-1 min-w-0 ml-4">
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
                                                         {{ $task->title }}
-                                                        @if($task->priority == 'Urgent')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Urgent</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'High')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>High</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Normal')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Normal</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Low')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Low</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @endif
-                                                        @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="{{ $ws->name }}">
-                                                                {{ strtoupper(substr($ws->name, 0, 2)) }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                    @if($task->start_time || $task->end_time)
-                                                        <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
-                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                            <span>
-                                                                {{ $task->start_time ? $task->start_time->format('H:i') : '' }}
-                                                                {{ ($task->start_time && $task->end_time) ? '-' : '' }}
-                                                                {{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                                            </span>
-                                                        </div>
+                                                    </span>
+                                                    @if($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                            <title>{{ $task->priority }}</title>
+                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                        </svg>
                                                     @endif
+                                                    @foreach($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                            {{ strtoupper(substr($ws->name, 0, 2)) }}
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            </span>
+                                                @if($task->start_time || $task->end_time)
+                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
+                                                    </div>
+                                                @endif
+                                            </div>
                                             <div class="relative ml-2">
                                                 <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
                                                 <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                                        Edit
+                                                    @php $canModify = $task->canUserModify(Auth::user()); @endphp
+                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        Details
                                                     </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                                                        Duplicate
-                                                    </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                        Delete
-                                                    </button>
+
+                                                    @if($canModify && !$task->completed)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                            Edit
+                                                        </button>
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                            Duplicate
+                                                        </button>
+                                                    @endif
+
+                                                    @if($canModify)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                            Delete
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -229,55 +243,59 @@
                         <div class="category-content" id="overdue-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($overdueTasks as $task)
-                                    <div class="mb-2">
-                                        <div class="flex items-center ml-3 mr-8">
+                                    <div class="mb-3 group">
+                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
                                             <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
-                                            <span data-task-title="{{ $task->id }}" class="flex-1 min-w-0 ml-4 break-all cursor-pointer">
-                                                <div class="flex flex-col">
-                                                    <div class="flex flex-wrap items-center">
+                                            <div class="flex-1 min-w-0 ml-4">
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-red-600' }}">
                                                         {{ $task->title }}
-                                                        @if($task->priority == 'Urgent')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Urgent</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'High')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>High</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Normal')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Normal</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Low')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Low</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @endif
-                                                        @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="{{ $ws->name }}">
-                                                                {{ strtoupper(substr($ws->name, 0, 2)) }}
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                    @if($task->start_time || $task->end_time)
-                                                        <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
-                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                            <span>
-                                                                {{ $task->start_time ? $task->start_time->format('H:i') : '' }}
-                                                                {{ ($task->start_time && $task->end_time) ? '-' : '' }}
-                                                                {{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                                            </span>
-                                                        </div>
+                                                    </span>
+                                                    @if($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                            <title>{{ $task->priority }}</title>
+                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                        </svg>
                                                     @endif
+                                                    @foreach($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                            {{ strtoupper(substr($ws->name, 0, 2)) }}
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            </span>
+                                                @if($task->start_time || $task->end_time)
+                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
+                                                    </div>
+                                                @endif
+                                            </div>
                                             <div class="relative ml-2">
                                                 <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
                                                 <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                                        Edit
+                                                    @php $canModify = $task->canUserModify(Auth::user()); @endphp
+                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        Details
                                                     </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                                                        Duplicate
-                                                    </button>
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                        Delete
-                                                    </button>
+
+                                                    @if($canModify && !$task->completed)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                            Edit
+                                                        </button>
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                            Duplicate
+                                                        </button>
+                                                    @endif
+
+                                                    @if($canModify)
+                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                            Delete
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -299,46 +317,49 @@
                         </a>
                     </div>
                     @foreach ($historyTasks as $task)
-                        <div class="flex items-center mb-2 ml-3 mr-8">
-                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" checked>
-                            <span data-task-title="{{ $task->id }}" class="flex-1 min-w-0 ml-4 text-lg text-gray-500 line-through break-all cursor-pointer">
-                                <div class="flex flex-col">
-                                    <div class="flex flex-wrap items-center">
+                        <div class="mb-3 group">
+                            <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
+                                <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" checked>
+                                            <div class="flex-1 min-w-0 ml-4">
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium text-gray-500 line-through break-all whitespace-normal transition-colors opacity-50 cursor-pointer hover:text-blue-600">
                                                         {{ $task->title }}
-                                                        @if($task->priority == 'Urgent')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Urgent</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'High')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>High</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Normal')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Normal</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @elseif($task->priority == 'Low')
-                                                            <svg class="flex-shrink-0 inline-block w-6 h-6 ml-2 text-green-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Low</title><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                                        @endif
-                                                        @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] ml-1.5 shadow-sm border border-[#1C427A]/10" title="{{ $ws->name }}">
-                                                                {{ strtoupper(substr($ws->name, 0, 2)) }}
-                                                            </div>
-                                                        @endforeach
+                                                    </span>
+                                                    @if($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                                                            <title>{{ $task->priority }}</title>
+                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                        </svg>
+                                                    @endif
+                                                    @foreach($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 opacity-50" title="{{ $ws->name }}">
+                                                            {{ strtoupper(substr($ws->name, 0, 2)) }}
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                @if($task->start_time || $task->end_time)
+                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 line-through opacity-50">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                        {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                <div class="relative ml-2">
+                                    <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
+                                    <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                        @php $canModify = $task->canUserModify(Auth::user()); @endphp
+                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
+                                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            Details
+                                        </button>
+
+                                        @if($canModify)
+                                            <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
+                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                Delete
+                                            </button>
+                                        @endif
                                     </div>
-                                    @if($task->start_time || $task->end_time)
-                                        <div class="flex items-center gap-1 text-xs text-gray-400 mt-0.5 no-line-through">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            <span>
-                                                {{ $task->start_time ? $task->start_time->format('H:i') : '' }}
-                                                {{ ($task->start_time && $task->end_time) ? '-' : '' }}
-                                                {{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                            </span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </span>
-                            <div class="relative ml-2">
-                                <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
-                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                        Delete
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -352,7 +373,7 @@
     <!-- (Potongan modal Anda yang lain tetap di sini, pastikan tidak ada tag yang bocor) -->
 
     <!-- Task Details Modal (view only) -->
-    <div id="task-details-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="task-details-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 bg-[#132C51] shadow-xl rounded-xl w-[850px] max-w-full my-8">
             <div>
@@ -470,7 +491,7 @@
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
             <div>
@@ -538,7 +559,9 @@
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
                                 <label class="font-semibold text-gray-100">Priority</label>
                             </div>
-                            <div x-data="{ open: false, selected: null }" class="relative w-full">
+                            <div x-data="{ open: false, selected: null }" 
+                                 @set-edit-priority.window="selected = $event.detail.priority"
+                                 class="relative w-full">
                                 <button @click="open = !open" type="button"
                                     class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
                                     :class="{
@@ -603,11 +626,11 @@
                             @foreach($workspaces as $workspace)
                                 <label class="flex items-start gap-2 cursor-pointer group">
                                     <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 edit-workspace-checkbox">
-                                    <span class="text-sm text-gray-300 group-hover:text-white break-all whitespace-normal">{{ $workspace->name }}</span>
+                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
                                 </label>
                             @endforeach
                             @if($workspaces->isEmpty())
-                                <p class="col-span-2 text-xs text-gray-500 italic">No workspaces available. Create one first.</p>
+                                <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create one first.</p>
                             @endif
                         </div>
                     </div>
@@ -675,7 +698,7 @@
         </div>
     </div>    
     <!-- Add Task Modal -->
-    <div id="add-task-modal" class="fixed inset-0 z-50 hidden bg-gray-600 bg-opacity-80 font-poppins overflow-y-auto">
+    <div id="add-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
             <div>
@@ -806,11 +829,11 @@
                             @foreach($workspaces as $workspace)
                                 <label class="flex items-start gap-2 cursor-pointer group">
                                     <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600">
-                                    <span class="text-sm text-gray-300 group-hover:text-white break-all whitespace-normal">{{ $workspace->name }}</span>
+                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
                                 </label>
                             @endforeach
                             @if($workspaces->isEmpty())
-                                <p class="col-span-2 text-xs text-gray-500 italic">No workspaces available. Create one first.</p>
+                                <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create one first.</p>
                             @endif
                         </div>
                     </div>
@@ -945,7 +968,7 @@
                         if (data.success) {
                             window.location.reload();
                         } else {
-                            alert('Failed to update task.');
+                            alert('You cannot update this task.');
                             checkbox.checked = !isCompleted;
                         }
                     })
@@ -1026,12 +1049,10 @@
 
                             // Ensure Alpine x-data `selected` is updated as the source of truth
                             // (jika Alpine belum booting atau structure berbeda, lakukan fallback + trigger event)
-                            const alpineRoot = editPrioritySelect?.closest('[x-data]');
-                            if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
-                                alpineRoot.__x.$data.selected = pr || null;
-                                // paksa update tampilan
-                                alpineRoot.__x.$data.$nextTick?.(() => {});
-                            }
+                            // Sync Alpine selected via custom event
+                            window.dispatchEvent(new CustomEvent('set-edit-priority', {
+                                detail: { priority: pr }
+                            }));
 
                             // Fallback: set value select + trigger change (agar x-model mengikuti)
                             if (editPrioritySelect) {
@@ -1073,14 +1094,14 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                <a href="${path}" target="_blank" class="flex items-center flex-1 gap-4 min-w-0 hover:opacity-80 transition-opacity">
+                                                <a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 transition-opacity hover:opacity-80">
                                                     ${imgHtml}
                                                     <div class="flex-1 min-w-0">
                                                         <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
                                                         <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
                                                     </div>
                                                 </a>
-                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600 ml-2" onclick="
+                                                <button type="button" class="flex-shrink-0 ml-2 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
                                                     const input = document.createElement('input');
@@ -1216,8 +1237,8 @@
                         
                         if (detailsCompleted) {
                             detailsCompleted.innerHTML = task.completed ? 
-                                '<span class="text-green-500 font-bold">Completed</span>' : 
-                                '<span class="text-red-500 font-bold">Not Completed</span>';
+                                '<span class="font-bold text-green-500">Completed</span>' : 
+                                '<span class="font-bold text-red-500">Not Completed</span>';
                         }
 
                         const detailsAttachments = document.getElementById('details-attachments');
@@ -1230,13 +1251,13 @@
                                     const originalName = att.original_name || att.filename || 'Attachment';
                                     const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
                                     const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                    const imgHtml = isImage ? `<img src="${path}" class="w-12 h-12 object-cover rounded-md flex-shrink-0">` : '';
+                                    const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
                                     return `
                                         <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
                                             ${imgHtml}
                                             <div class="flex-1 min-w-0">
                                                 <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
-                                                <div class="text-gray-400 text-xs mt-1">${att.mime_type || att.type || ''}</div>
+                                                <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
                                             </div>
                                         </a>
                                     `;
@@ -1246,7 +1267,8 @@
 
                         if (taskDetailsModal) taskDetailsModal.classList.remove('hidden');
                         if (editDetailsBtn) {
-                            task.completed ? editDetailsBtn.classList.add('hidden') : editDetailsBtn.classList.remove('hidden');
+                            const canModify = task.can_modify === true || task.can_modify === 1;
+                            (canModify && !task.completed) ? editDetailsBtn.classList.remove('hidden') : editDetailsBtn.classList.add('hidden');
                         }
                     })
                     .catch(() => alert('Failed to load task details'));
@@ -1312,11 +1334,10 @@
                             const prLabel = document.getElementById('edit-priority-label');
                             const pr = task.priority ?? '';
 
-                            // Sync Alpine selected (source of truth) + fallback trigger events
-                            const alpineRoot2 = prSelect?.closest('[x-data]');
-                            if (alpineRoot2 && alpineRoot2.__x && alpineRoot2.__x.$data) {
-                                alpineRoot2.__x.$data.selected = pr || null;
-                            }
+                            // Sync Alpine selected (source of truth) via custom event
+                            window.dispatchEvent(new CustomEvent('set-edit-priority', {
+                                detail: { priority: pr }
+                            }));
 
                             if (prSelect) {
                                 prSelect.value = pr;
@@ -1353,14 +1374,14 @@
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                                <a href="${path}" target="_blank" class="flex items-center flex-1 gap-4 min-w-0 hover:opacity-80 transition-opacity">
+                                                <a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 transition-opacity hover:opacity-80">
                                                     ${imgHtml}
                                                     <div class="flex-1 min-w-0">
                                                         <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
                                                         <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
                                                     </div>
                                                 </a>
-                                                <button type="button" class="flex-shrink-0 text-xl font-bold leading-none text-red-400 hover:text-red-600 ml-2" onclick="
+                                                <button type="button" class="flex-shrink-0 ml-2 text-xl font-bold leading-none text-red-400 hover:text-red-600" onclick="
                                                     const div = this.closest('.border-gray-600');
                                                     div.style.display = 'none';
                                                     const input = document.createElement('input');

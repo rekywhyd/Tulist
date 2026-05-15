@@ -35,7 +35,10 @@ class WorkspaceController extends Controller
         if ($selectedWorkspace) {
             $members = $selectedWorkspace->members()->orderBy('name')->get();
             $userRole = $user->workspaceRole($selectedWorkspace->id);
-            $tasks = $selectedWorkspace->tasks()->orderBy('tasks.created_at', 'desc')->get();
+            $tasks = $selectedWorkspace->tasks()->orderBy('tasks.created_at', 'desc')->get()->map(function($task) use ($user) {
+                $task->can_modify = $task->canUserModify($user);
+                return $task;
+            });
 
             // Update last_viewed_at for the current user in this workspace
             $selectedWorkspace->members()->updateExistingPivot($user->id, ['last_viewed_at' => now()]);
@@ -87,7 +90,7 @@ class WorkspaceController extends Controller
     public function invite(Request $request, $workspaceId)
     {
         $request->validate([
-            'email' => 'required|email',
+            'emails' => 'required|string',
         ]);
 
         $user = Auth::user();
@@ -98,38 +101,66 @@ class WorkspaceController extends Controller
             return response()->json(['error' => 'Only admins can invite members.'], 403);
         }
 
-        $email = $request->email;
+        // Parse emails from string (supports comma, semicolon, newline, space)
+        $emailList = preg_split('/[\s,;]+/', $request->emails, -1, PREG_SPLIT_NO_EMPTY);
+        $emailList = array_unique(array_map('trim', $emailList));
 
-        // Check if already a member
-        $existingMember = $workspace->members()->where('users.email', $email)->first();
-        if ($existingMember) {
-            return response()->json(['error' => 'This user is already a member of this workspace.'], 422);
+        $invited = [];
+        $errors = [];
+
+        foreach ($emailList as $email) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Invalid email: $email";
+                continue;
+            }
+
+            // Check if already a member
+            $existingMember = $workspace->members()->where('users.email', $email)->first();
+            if ($existingMember) {
+                $errors[] = "$email is already a member.";
+                continue;
+            }
+
+            // Check for pending invitation
+            $existingInvitation = WorkspaceInvitation::where('workspace_id', $workspaceId)
+                ->where('email', $email)
+                ->where('status', 'pending')
+                ->first();
+
+            if ($existingInvitation) {
+                $errors[] = "Invitation already pending for $email.";
+                continue;
+            }
+
+            // Create invitation
+            $invitation = WorkspaceInvitation::create([
+                'workspace_id' => $workspaceId,
+                'invited_by' => $user->id,
+                'email' => $email,
+                'token' => Str::random(64),
+                'status' => 'pending',
+                'expires_at' => now()->addDays(7),
+            ]);
+
+            // Send invitation email
+            try {
+                Mail::to($email)->send(new WorkspaceInvitationMail($workspace, $invitation));
+                $invited[] = $email;
+            } catch (\Exception $e) {
+                $errors[] = "Failed to send email to $email.";
+            }
         }
 
-        // Check for pending invitation
-        $existingInvitation = WorkspaceInvitation::where('workspace_id', $workspaceId)
-            ->where('email', $email)
-            ->where('status', 'pending')
-            ->first();
-
-        if ($existingInvitation) {
-            return response()->json(['error' => 'An invitation has already been sent to this email.'], 422);
+        if (empty($invited)) {
+            return response()->json(['error' => implode(' ', $errors)], 422);
         }
 
-        // Create invitation
-        $invitation = WorkspaceInvitation::create([
-            'workspace_id' => $workspaceId,
-            'invited_by' => $user->id,
-            'email' => $email,
-            'token' => Str::random(64),
-            'status' => 'pending',
-            'expires_at' => now()->addDays(7),
-        ]);
+        $successMessage = count($invited) . " invitation(s) sent successfully.";
+        if (!empty($errors)) {
+            $successMessage .= " Note: " . implode(' ', $errors);
+        }
 
-        // Send invitation email
-        Mail::to($email)->send(new WorkspaceInvitationMail($workspace, $invitation));
-
-        return response()->json(['success' => 'Invitation sent successfully!']);
+        return response()->json(['success' => $successMessage]);
     }
 
     /**

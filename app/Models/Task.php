@@ -47,4 +47,22 @@ class Task extends Model
     {
         return $this->hasMany(TaskAttachment::class);
     }
+
+    /**
+     * Check if a user can edit, duplicate or delete this task.
+     * Rule: User is the creator OR User is an admin in any of the workspaces this task belongs to.
+     */
+    public function canUserModify($user): bool
+    {
+        if (!$user) return false;
+        
+        // Creator can always modify
+        if ($this->user_id === $user->id) return true;
+        
+        // Check if user is admin in any of the workspaces this task belongs to
+        return $this->workspaces()->whereHas('members', function($q) use ($user) {
+            $q->where('users.id', $user->id)
+              ->where('workspace_user.role', 'admin');
+        })->exists();
+    }
 }

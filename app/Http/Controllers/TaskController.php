@@ -20,13 +20,26 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $query = Task::with('workspaces')
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('workspaces', function($qw) use ($user) {
+                      $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
+                  });
+            });
 
         if ($request->has('date')) {
-            $tasks = $user->tasks()->with('workspaces')->where('due_date', $request->date)->get();
+            $tasks = $query->where('due_date', $request->date)->get()->map(function($task) use ($user) {
+                $task->can_modify = $task->canUserModify($user);
+                return $task;
+            });
             return response()->json($tasks);
         }
 
-        $tasks = $user->tasks()->with('workspaces')->get();
+        $tasks = $query->get()->map(function($task) use ($user) {
+            $task->can_modify = $task->canUserModify($user);
+            return $task;
+        });
 
         return response()->json($tasks);
     }
@@ -112,7 +125,7 @@ class TaskController extends Controller
             ]);
         }
 
-        return redirect()->route('home');
+        return redirect()->back()->with('success', 'Task created successfully');
     }
 
     /**
@@ -120,7 +133,16 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        $task = Auth::user()->tasks()->with(['attachments', 'workspaces'])->findOrFail($id);
+        $user = Auth::user();
+        $task = Task::with(['attachments', 'workspaces'])->findOrFail($id);
+        
+        // Check visibility: creator or workspace member
+        $isCreator = $task->user_id === $user->id;
+        $isMember = $task->workspaces()->whereHas('members', function($q) use ($user) {
+            $q->where('users.id', $user->id);
+        })->exists();
+
+        $task->can_modify = $task->canUserModify($user);
         return response()->json($task);
     }
 
@@ -138,7 +160,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $task = Auth::user()->tasks()->findOrFail($id);
+        $task = Task::findOrFail($id);
+        if (!$task->canUserModify(Auth::user())) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -224,7 +249,10 @@ class TaskController extends Controller
 
     public function destroy(string $id)
     {
-        $task = Auth::user()->tasks()->findOrFail($id);
+        $task = Task::findOrFail($id);
+        if (!$task->canUserModify(Auth::user())) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $task->delete();
 
         return response()->json(['success' => true]);
@@ -232,7 +260,10 @@ class TaskController extends Controller
 
     public function duplicate($id)
     {
-        $task = Auth::user()->tasks()->findOrFail($id);
+        $task = Task::findOrFail($id);
+        if (!$task->canUserModify(Auth::user())) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
         $newTask = $task->replicate();
         $newTask->title = $task->title . ' (Copy)';
         $newTask->save();
@@ -273,36 +304,46 @@ class TaskController extends Controller
         $startOfMonth = \Carbon\Carbon::create($year, $month, 1)->startOfMonth();
         $endOfMonth = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
 
-        $tasks = $user->tasks()->with('workspaces')->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
+        $baseQuery = Task::with('workspaces')
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('workspaces', function($qw) use ($user) {
+                      $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
+                  });
+            });
+
+        $tasks = (clone $baseQuery)->whereBetween('due_date', [$startOfMonth, $endOfMonth])->get();
 
         $tasksByDate = $tasks->groupBy(function($task) {
             return $task->due_date->format('Y-m-d');
         });
 
         // Separate queries for better performance - exclude completed tasks from allTasks
-        $allTasks = $user->tasks()
-            ->with('workspaces')
+        $allTasks = (clone $baseQuery)
             ->where('completed', false)
             ->orderBy('due_date', 'asc')
             ->orderByRaw("CASE priority WHEN 'Urgent' THEN 1 WHEN 'High' THEN 2 WHEN 'Normal' THEN 3 WHEN 'Low' THEN 4 END")
             ->get();
 
-        $todayTasks = $user->tasks()
-            ->with('workspaces')
+        $todayTasks = (clone $baseQuery)
             ->where('due_date', now()->toDateString())
             ->where('completed', false)
             ->get();
 
-        $upcomingTasks = $user->tasks()
-            ->with('workspaces')
+        $upcomingTasks = (clone $baseQuery)
             ->where('due_date', '>', now()->toDateString())
             ->where('completed', false)
             ->get();
 
-        $completedTasks = $user->tasks()
-            ->with('workspaces')
+        $completedTasks = (clone $baseQuery)
             ->where('completed', true)
             ->get();
+
+        // Add can_modify to all collections
+        $allTasks->each(fn($t) => $t->can_modify = $t->canUserModify($user));
+        $todayTasks->each(fn($t) => $t->can_modify = $t->canUserModify($user));
+        $upcomingTasks->each(fn($t) => $t->can_modify = $t->canUserModify($user));
+        $completedTasks->each(fn($t) => $t->can_modify = $t->canUserModify($user));
 
         $workspaces = $user->workspaces()->get();
         return view('schedule', compact('tasksByDate', 'month', 'year', 'todayTasks', 'upcomingTasks', 'completedTasks', 'allTasks', 'workspaces'));
@@ -314,8 +355,13 @@ class TaskController extends Controller
     public function historyReport()
     {
         $user = Auth::user();
-        $historyTasks = $user->tasks()
-            ->with('workspaces')
+        $historyTasks = Task::with('workspaces')
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('workspaces', function($qw) use ($user) {
+                      $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
+                  });
+            })
             ->where('completed', true)
             ->orderBy('completed_at', 'desc')
             ->get();
@@ -325,19 +371,29 @@ class TaskController extends Controller
     public function search(Request $request)
     {
         $query = $request->get('query');
+        $user = Auth::user();
         
         if (empty($query)) {
             return response()->json([]);
         }
 
-        $tasks = Auth::user()->tasks()
-            ->with('workspaces')
+        $tasks = Task::with('workspaces')
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('workspaces', function($qw) use ($user) {
+                      $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
+                  });
+            })
             ->where(function($q) use ($query) {
                 $q->where('title', 'LIKE', "%{$query}%")
                   ->orWhere('description', 'LIKE', "%{$query}%");
             })
             ->limit(8)
-            ->get();
+            ->get()
+            ->map(function($task) use ($user) {
+                $task->can_modify = $task->canUserModify($user);
+                return $task;
+            });
 
         return response()->json($tasks);
     }

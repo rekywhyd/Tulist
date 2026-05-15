@@ -76,7 +76,7 @@
                                 <div @click="goToTask(task)" 
                                      class="flex items-center gap-4 px-5 py-4 transition-all border-b cursor-pointer hover:bg-blue-50/80 border-gray-50 last:border-0 group">
                                     <div class="flex-1 min-w-0">
-                                        <div class="text-sm text-[#132C51] group-hover:text-blue-600 transition-colors flex flex-wrap items-center gap-1.5 break-all" 
+                                        <div class="text-sm text-[#132C51] group-hover:text-blue-600 transition-colors flex flex-wrap items-center gap-1.5 break-all whitespace-normal" 
                                              :class="task.completed ? 'line-through text-gray-400' : ''">
                                              <span x-text="task.title"></span>
                                              <svg :class="{
@@ -85,11 +85,11 @@
                                                 'text-blue-500 shadow-blue-200': task.priority === 'Normal',
                                                 'text-green-500 shadow-green-200': task.priority === 'Low',
                                                 'text-gray-300': !task.priority
-                                             }" class="flex-shrink-0 w-4 h-4 transition-transform group-hover:scale-125" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                             }" class="flex-shrink-0 w-5 h-5 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
                                              </svg>
                                              <template x-for="ws in task.workspaces" :key="ws.id">
-                                                <div class="flex items-center justify-center flex-shrink-0 w-5 h-5 text-[7px] font-bold rounded-md bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10" :title="ws.name" x-text="ws.name.substring(0, 2).toUpperCase()"></div>
+                                                <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10" :title="ws.name" x-text="ws.name.substring(0, 2).toUpperCase()"></div>
                                              </template>
                                         </div>
                                         <div class="text-[11px] text-gray-500 mt-1 flex items-center gap-1.5" x-show="task.start_time || task.end_time">
