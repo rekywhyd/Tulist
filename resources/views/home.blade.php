@@ -364,6 +364,15 @@
                             </div>
                         </div>
                     @endforeach
+
+                    @if($historyTasks->count() > 0)
+                        <div class="flex justify-end mt-6">
+                            <button type="button" id="clear-history-btn" class="flex items-center gap-2 px-4 py-2 text-sm font-bold font-poppins text-white bg-red-600 shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                <span>Clear History</span>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -1525,6 +1534,35 @@
                         });
                     } else {
                         label.textContent = 'Add File';
+                    }
+                });
+            }
+
+            // Clear History
+            const clearHistoryBtn = document.getElementById('clear-history-btn');
+            if (clearHistoryBtn) {
+                clearHistoryBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to clear all tasks from your history? This action cannot be undone.')) {
+                        fetch("{{ route('history.clear') }}", {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.reload();
+                            } else {
+                                alert('Failed to clear history.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while clearing history.');
+                        });
                     }
                 });
             }

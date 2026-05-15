@@ -111,6 +111,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 
     Route::get('/history/report', [TaskController::class, 'historyReport'])->name('history.report');
+    Route::delete('/history/clear', [TaskController::class, 'clearHistory'])->name('history.clear');
 
     Route::post('/clear-alert', function () {
         session()->forget('show_alert');

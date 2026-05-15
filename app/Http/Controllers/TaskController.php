@@ -397,4 +397,30 @@ class TaskController extends Controller
 
         return response()->json($tasks);
     }
+
+    public function clearHistory()
+    {
+        $user = Auth::user();
+        
+        // Get all completed tasks the user can modify
+        $tasksToDelete = Task::where('completed', true)
+            ->where(function($q) use ($user) {
+                // User is creator
+                $q->where('user_id', $user->id)
+                  // OR User is admin in a workspace the task belongs to
+                  ->orWhereHas('workspaces', function($qw) use ($user) {
+                      $qw->whereHas('members', function($qm) use ($user) {
+                          $qm->where('users.id', $user->id)
+                             ->where('workspace_user.role', 'admin');
+                      });
+                  });
+            })
+            ->get();
+
+        foreach ($tasksToDelete as $task) {
+            $task->delete();
+        }
+
+        return response()->json(['success' => true]);
+    }
 }
