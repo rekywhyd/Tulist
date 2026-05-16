@@ -46,7 +46,10 @@
                     </g>
                 </svg>
             </a>
+        </div>
 
+        {{-- KOLOM 2 --}}
+        <div class="flex flex-col gap-2 border border-white w-fit bg-white/30 backdrop-blur-3xl rounded-3xl">
             {{-- ROUTE WORKSPACE --}}
             <a href="{{ route('workspace') }}" title="Workspace"
                 class="p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
@@ -54,14 +57,9 @@
             ? 'bg-[#0E213D] text-[#D5E2F5]'
             : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
 
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M164,56a12,12,0,0,1,12-12h12V32a12,12,0,0,1,24,0V44h12a12,12,0,0,1,0,24H212V80a12,12,0,0,1-24,0V68H176A12,12,0,0,1,164,56Zm70.66455,54.97949A109.05456,109.05456,0,0,1,236,128a107.73386,107.73386,0,0,1-35.01038,79.52783,11.88547,11.88547,0,0,1-1.6156,1.45166,107.77691,107.77691,0,0,1-142.74328.0044,11.89856,11.89856,0,0,1-1.6261-1.46143A107.94825,107.94825,0,0,1,128,20a109.15124,109.15124,0,0,1,17.02051,1.335Skip a bit...
-A12.00039,12.00039,0,0,1,141.26465,45.04,84.959,84.959,0,0,0,128,44,83.93054,83.93054,0,0,0,62.05481,179.9375a83.49358,83.49358,0,0,1,28.969-23.41992,52.00008,52.00008,0,1,1,73.95227,0A83.49788,83.49788,0,0,1,193.945,179.938,83.56278,83.56278,0,0,0,212,128a84.98237,84.98237,0,0,0-1.03955-13.26367,12,12,0,0,1,23.7041-3.75684ZM128,148a28,28,0,1,0-28-28A28.03146,28.03146,0,0,0,128,148Zm0,64a83.51225,83.51225,0,0,0,48.434-15.43359,60.02884,60.02884,0,0,0-96.86816-.00049A83.50931,83.50931,0,0,0,128,212Z"></path> </g></svg>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> </g></svg>
             </a>
-
-        </div>
-
-        {{-- KOLOM 2 --}}
-        <div class="flex flex-col gap-2 border border-white w-fit bg-white/30 backdrop-blur-3xl rounded-3xl">
+            
             {{-- NOTIF --}}
             <button id="notifications-btn" title="Notifications"
                 class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('notifications')
@@ -77,24 +75,6 @@ A12.00039,12.00039,0,0,1,141.26465,45.04,84.959,84.959,0,0,0,128,44,83.93054,83.
                     </g>
                 </svg>
             </button>
-
-            {{-- SETTING --}}
-            <a href="{{ route('profile.edit') }}"
-                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('profile.edit')
-                    ? 'bg-[#0E213D] text-[#D5E2F5]'
-                    : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}"
-                title="Profile">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                    data-name="Layer 1">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path
-                            d="M19.9,12.66a1,1,0,0,1,0-1.32L21.18,9.9a1,1,0,0,0,.12-1.17l-2-3.46a1,1,0,0,0-1.07-.48l-1.88.38a1,1,0,0,1-1.15-.66l-.61-1.83A1,1,0,0,0,13.64,2h-4a1,1,0,0,0-1,.68L8.08,4.51a1,1,0,0,1-1.15.66L5,4.79A1,1,0,0,0,4,5.27L2,8.73A1,1,0,0,0,2.1,9.9l1.27,1.44a1,1,0,0,1,0,1.32L2.1,14.1A1,1,0,0,0,2,15.27l2,3.46a1,1,0,0,0,1.07.48l1.88-.38a1,1,0,0,1,1.15.66l.61,1.83a1,1,0,0,0,1,.68h4a1,1,0,0,0,.95-.68l.61-1.83a1,1,0,0,1,1.15-.66l1.88.38a1,1,0,0,0,1.07-.48l2-3.46a1,1,0,0,0-.12-1.17ZM18.41,14l.8.9-1.28,2.22-1.18-.24a3,3,0,0,0-3.45,2L12.92,20H10.36L10,18.86a3,3,0,0,0-3.45-2l-1.18.24L4.07,14.89l.8-.9a3,3,0,0,0,0-4l-.8-.9L5.35,6.89l1.18.24a3,3,0,0,0,3.45-2L10.36,4h2.56l.38,1.14a3,3,0,0,0,3.45,2l1.18-.24,1.28,2.22-.8.9A3,3,0,0,0,18.41,14ZM11.64,8a4,4,0,1,0,4,4A4,4,0,0,0,11.64,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,11.64,14Z">
-                        </path>
-                    </g>
-                </svg>
-            </a>
         </div>
 
         {{-- KOLOM 3 --}}
