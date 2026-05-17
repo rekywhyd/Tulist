@@ -130,7 +130,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <a href="{{ route('logout') }}" title="Log Out"
-                    onclick="event.preventDefault(); this.closest('form').submit();"
+                    onclick="event.preventDefault(); if(confirm('Are you sure you want to logout?')) this.closest('form').submit();"
                     class="block p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('logout') ? 'bg-red-600 text-white' : 'text-[#717C8F] hover:bg-red-600 hover:text-white' }}">
                     <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
