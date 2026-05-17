@@ -7,7 +7,7 @@
 
 <input {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge([
     'class' =>
-        'border shadow-sm rounded-2xl focus:outline-none ' .
+        'border shadow-sm rounded-xl focus:outline-none ' .
         // --- Logika IF-ELSE untuk style ---
         ($hasError && $attributes->get('name') !== 'email'
             ? // --- KELAS JIKA ADA ERROR DAN BUKAN EMAIL ---

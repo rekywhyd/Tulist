@@ -17,6 +17,7 @@
                         <h2 class="text-xl font-bold text-black">
                             {{ __('Profile Information') }}
                         </h2>
+                        <p class="mb-2 text-sm text-gray-500">Leave it as it is if you don't want to change it.</p>
                     </header>
 
                     <div>
@@ -59,7 +60,7 @@
                         <h2 class="text-xl font-bold text-black">
                             {{ __('Update Password') }}
                         </h2>
-                        <p class="mb-2 text-sm text-gray-500">Kosongkan jika tidak ingin mengubah password.</p>
+                        <p class="mb-2 text-sm text-gray-500">Leave blank if you don't want to change it.</p>
                     </header>
 
                     <div>
@@ -97,12 +98,12 @@
         {{-- Tombol Aksi (Di bawah kedua kolom) --}}
         <div class="flex items-center gap-4 pt-10">
             <button type="submit"
-                class="inline-flex items-center px-6 py-1 text-base font-bold text-black transition duration-150 ease-in-out bg-[#C1D3EF] shadow-sm font-poppins rounded-3xl hover:bg-[#7b99ca] focus:outline-none">
+                class="items-center px-6 py-1 font-bold text-white transition duration-200 bg-[#0E213D] shadow-sm font-poppins rounded-2xl hover:scale-110">
                 {{ __('Save') }}
             </button>
 
             <button type="button" id="cancel-edit-btn"
-                class="inline-flex items-center px-6 py-1 text-base font-bold text-black transition duration-150 ease-in-out bg-gray-300 font-poppins rounded-3xl hover:bg-gray-400 focus:outline-none">
+                class="items-center gap-2 px-6 py-1 font-bold text-white transition duration-200  bg-gray-600 font-poppins rounded-2xl hover:scale-90">
                 {{ __('Cancel') }}
             </button>
 
