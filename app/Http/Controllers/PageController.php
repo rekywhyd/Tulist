@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HelpRequestMail;
 class PageController extends Controller
 {
     /**
@@ -13,6 +14,28 @@ class PageController extends Controller
     {
         // Pastikan file ini ada: resources/views/pages/help.blade.php
         return view('help');
+    }
+
+    /**
+     * Memproses form submit bantuan.
+     */
+    public function submitHelp(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'problem' => 'required|string',
+        ]);
+
+        // Kirim email ke admin (menggunakan config mail.from.address)
+        $adminEmail = config('mail.from.address');
+        
+        Mail::to($adminEmail)->send(new HelpRequestMail(
+            $request->name,
+            auth()->user()->email,
+            $request->problem
+        ));
+
+        return redirect()->back()->with('success', 'Your help request has been submitted successfully.');
     }
 
     public function privacy()

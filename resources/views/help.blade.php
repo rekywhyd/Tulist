@@ -10,31 +10,36 @@
             </div>
 
             <div class="px-12 pt-5 bg-[#F2F6FF] rounded-2xl">
-                <form action="/submit-help" method="POST">
+                @if (session('success'))
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('help.submit') }}" method="POST">
                     @csrf
 
                     <div class="mb-4">
                         <label for="name" class="block mb-1 text-sm font-semibold text-gray-600">Name</label>
-                        <input type="text" id="name" name="name"
-                            class="w-full px-4 py-2 transition duration-150 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        <input type="text" id="name" name="name" value="{{ old('name') }}"
+                            class="w-full px-4 py-2 transition duration-150 border @error('name') border-red-500 @else border-gray-300 @enderror rounded-lg focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Your Full Name">
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="email" class="block mb-1 text-sm font-semibold text-gray-600">Email</label>
-                        <input type="email" id="email" name="email"
-                            class="w-full px-4 py-2 transition duration-150 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Your Email Address">
+                        @error('name')
+                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <label for="problem" class="block mb-1 text-sm font-semibold text-gray-600">Problem</label>
                         <textarea id="problem" name="problem" rows="4"
-                            class="w-full px-4 py-2 transition duration-150 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Text here"></textarea>
+                            class="w-full px-4 py-2 transition duration-150 border @error('problem') border-red-500 @else border-gray-300 @enderror rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Text here">{{ old('problem') }}</textarea>
+                        @error('problem')
+                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div class="flex justify-end">
+                    <div class="flex justify-end mb-5">
                         <button type="submit"
                             class="px-8 py-3 font-semibold text-white transition duration-200 hover:hover:scale-110 bg-[#163769] shadow-lg rounded-xl hover:bg-[#132C51]">
                             Submit

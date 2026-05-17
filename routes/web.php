@@ -96,6 +96,9 @@ Route::post('/schedule', [App\Http\Controllers\TaskController::class, 'schedule'
 Route::get('/help', [PageController::class, 'help'])
     ->name('help')
     ->middleware('auth');
+Route::post('/submit-help', [PageController::class, 'submitHelp'])
+    ->name('help.submit')
+    ->middleware('auth');
 Route::get('/privacy', [PageController::class, 'privacy'])
     ->name('privacy')
     ->middleware('auth');
