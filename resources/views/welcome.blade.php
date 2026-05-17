@@ -1,33 +1,32 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="px-4 mx-auto mt-20 sm:px-8 lg:px-12 max-w-7xl">
+    <div class="px-4 mx-auto mt-10 sm:px-8 lg:px-12 max-w-7xl">
 
         <!-- hero section -->
         <section class="flex flex-row items-center justify-between w-full gap-6 mx-auto sm:gap-10">
             <div class="w-1/2 mb-10 text-left lg:mb-0 lg:ml-8">
                 <h1 class="font-serif text-2xl font-bold text-gray-900 sm:text-3xl sm:leading-tight lg:text-7xl">
 
-                    Kerja,<br>
-                    Tuntaskan
+                    Working,<br>
+                    Finish it
                 </h1>
                 <p class="mt-3 text-sm font-bold text-gray-600 sm:text-base lg:text-xl font-poppins">
 
-                    Kelola semua tugas kerja dengan lebih teratur. Catat, atur, dan
-                    selesaikan jobdesk kantor tanpa keteteran.
+                    Manage all your work tasks more effectively. Record, organize, and complete office tasks without overstrain.
                 </p>
                 @if (Route::has('login'))
                     <div class="flex items-center mt-4 text-lg lg:ml-24">
                         @auth
                             {{-- Tautan Home (Jika sudah login) --}}
                             <a href="{{ url('/home') }}"
-                                class="px-9 py-2 text-[#132C51] font-bold hover:scale-110 transition-all duration-200 rounded-full border border-opacity-40 border-[#acc5ea] bg-gradient-to-r from-[#EAF0FA] to-[#D3E4FF]">
+                                class="px-9 py-2 text-white font-bold hover:scale-110 transition-all duration-200 rounded-full border bg-blue-800 shadow-xl ease-out border-blue-600">
                                 Started Now
                             </a>
                         @else
                             {{-- Tautan Login (Jika belum login) --}}
                             <a href="{{ route('login') }}"
-                                class="px-9 py-2 text-[#132C51] font-bold hover:scale-110 transition-all duration-200 rounded-full border border-opacity-40 border-[#acc5ea] bg-gradient-to-r from-[#EAF0FA] to-[#D3E4FF]">
+                                class="px-9 py-2 text-white font-bold hover:scale-110 transition-all duration-200 rounded-full border bg-blue-800 shadow-xl ease-out border-blue-600">
                                 Started Now
                             </a>
                         @endauth
@@ -54,8 +53,7 @@
                     <div class="md:px-16 md:pb-12 md:ml-4">
                 <h3 class="mb-4 text-2xl font-bold sm:text-3xl sm:mb-6 lg:text-5xl">Organize Jobdesk</h3>
                         <p class="text-base text-white sm:text-xl lg:text-2xl">
-                            Simpan dan kelola setiap tanggung jawab kantor secara sistematis agar
-                            mudah diakses dan tidak ada yang terlewat.
+                            Save and manage every office responsibility systematically so that it is easily accessible and nothing is missed.
                         </p>
                     </div>
                     <div class="w-full py-4 md:w-auto md:py-4">
@@ -70,8 +68,7 @@
                     <div class="md:order-last md:px-16 md:ml-4 md:mr-8 md:text-right md:pb-14">
                         <h3 class="mb-4 text-2xl font-bold sm:text-3xl sm:mb-6 lg:text-5xl">Smart Scheduling</h3>
                         <p class="text-base text-white sm:text-xl lg:text-2xl">
-                            Atur jadwal harian dan meeting dengan efisien, sehingga setiap jam
-                            kerja lebih produktif.
+                            Organize your daily schedule and meetings efficiently, so that every working hour is more productive.
                         </p>
                     </div>
                     <div class="w-full md:w-auto md:pl-16 md:pt-8">
@@ -86,8 +83,7 @@
                     <div class="md:px-16 md:ml-4 md:pb-14">
                         <h3 class="mb-4 text-2xl font-bold sm:text-3xl sm:mb-6 lg:text-5xl">Deadline Tracking</h3>
                         <p class="text-base text-white sm:text-xl lg:text-2xl">
-                            Dapatkan pengingat otomatis untuk setiap deadline, memastikan semua
-                            tugas selesai tepat waktu.
+                            Get automatic reminders for every deadline, ensuring all tasks are completed on time.
                         </p>
                     </div>
                     <div class="w-full md:w-auto md:py-0 md:pr-12">
@@ -102,8 +98,7 @@
                     <div class="md:order-last md:px-16 md:ml-4 md:mr-8 md:text-right md:pb-14">
                         <h3 class="mb-4 text-2xl font-bold sm:text-3xl sm:mb-6 lg:text-5xl">Time Management</h3>
                         <p class="text-base text-white sm:text-xl lg:text-2xl">
-                            Kelola waktu secara efektif untuk menyelesaikan pekerjaan lebih cepat
-                            dan tepat sasaran.
+                            Manage time effectively to complete work faster and on target.
                         </p>
                     </div>
                     <div class="w-full md:w-auto md:pl-16 md:pt-10 md:pb-8">
@@ -118,8 +113,7 @@
                     <div class="md:pl-16 md:ml-0 md:pb-14">
                         <h3 class="mb-4 text-2xl font-bold sm:text-3xl sm:mb-6 lg:text-5xl">Progress Overview</h3>
                         <p class="text-base text-white sm:text-xl lg:text-2xl">
-                            Lihat perkembangan seluruh pekerjaan secara real-time sehingga Anda
-                            selalu terkendali.
+                            See the progress of all work in real-time so you are always in control.
                         </p>
                     </div>
                     <div class="w-full py-0 md:w-auto md:pr-0">

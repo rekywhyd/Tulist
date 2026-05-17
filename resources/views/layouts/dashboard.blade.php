@@ -12,7 +12,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-[radial-gradient(#FFFFFF_18%,_#EAF0FA_44%)] pt-16 md:pt-20">
+<body class="bg-[radial-gradient(#FFFFFF_18%,_#EAF0FA_44%)] pt-10">
 
     {{-- Sticky Navbar --}}
     <header class="sticky top-0 z-50">
@@ -48,21 +48,21 @@
                     </button>
 
                     @if (Route::has('login'))
-                        <div class="items-center hidden gap-6 text-base font-medium md:flex md:text-lg">
+                        <div class="items-center hidden gap-4 text-base font-medium md:flex md:text-lg">
                             @auth
                                 <a href="{{ url('/home') }}"
-                                    class="px-6 md:px-9 py-2 text-white border bg-[#1616b0] hover:bg-[#5e5ec5] rounded-full transition-colors duration-200 ease-out">
+                                    class="px-5 md:px-8 shadow-xl py-2 text-white border bg-blue-800 rounded-full ease-out hover:scale-105 transition-all duration-200 border-blue-600">
                                     Home
                                 </a>
                             @else
                                 <a href="{{ route('login') }}"
-                                    class="px-6 py-2 text-black transition-colors duration-200 ease-out bg-white border border-black rounded-full md:px-9 hover:bg-gray-200">
+                                    class="text-black bg-white border border-gray-100 rounded-full px-5 md:px-8 shadow-lg py-2 ease-out hover:scale-105 transition-all duration-200">
                                     Login
                                 </a>
 
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}"
-                                        class="px-5 md:px-8 py-2 text-white border bg-[#1616b0] hover:bg-[#5e5ec5] rounded-full transition-colors duration-200 ease-out">
+                                        class="px-5 md:px-8 shadow-xl py-2 text-white border bg-blue-800 rounded-full ease-out hover:scale-105 transition-all duration-200 border-blue-600">
                                         Sign Up
                                     </a>
                                 @endif
