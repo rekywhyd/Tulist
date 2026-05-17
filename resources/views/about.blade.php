@@ -10,8 +10,7 @@
                 </h3>
 
                 <p class="mt-5 text-3xl">
-                    Tulist hadir sebagai ruang kecil yang membantu kamu mencatat hal-hal penting dalam hidup. Dari rencana
-                    harian sampai ide mendadak, semuanya bisa kamu simpan dan kelola dengan mudah.
+                    Tulist is a small space that helps you jot down important things in life. From daily plans to spur-of-the-moment ideas, you can easily save and manage everything.
                 </p>
             </div>
 
@@ -22,24 +21,16 @@
 
 
         <h3 class="text-6xl font-bold">
-            Satu Tim, Satu Visi
+            One Team, One Vision
         </h3>
         <p class="mt-8 text-3xl text-justify">
-            Tulist dikembangkan sebagai bagian dari proyek magang yang mempertemukan kami dalam satu tujuan: menciptakan
-            solusi sederhana namun bermakna untuk membantu mengelola aktivitas sehari-hari. Meskipun berasal dari disiplin
-            dan latar belakang yang berbeda, kami dipersatukan oleh komitmen yang sama—menghasilkan karya yang tidak hanya
-            berfungsi, tetapi juga memberikan pengalaman terbaik bagi penggunanya.
+            Tulist was developed as part of an internship project that brought us together with a common goal: to create simple yet meaningful solutions to help manage everyday activities. Despite coming from different disciplines and backgrounds, we were united by a common commitment — to produce work that not only functions but also provides the best possible user experience.
         </p>
         <p class="mt-10 text-3xl text-justify">
-            Sebagai proyek magang, Tulist adalah cerminan kerja kolaboratif dan dedikasi. Kami berusaha menghadirkan
-            aplikasi yang ringkas, mudah dipahami, serta mampu mendampingi pengguna dalam menjaga keteraturan dan
-            produktivitas harian. Setiap keputusan yang kami ambil berlandaskan pada pengalaman pengguna dan prinsip desain
-            yang baik.
+            As an internship project, Tulist is a reflection of collaborative work and dedication. We strive to provide a concise, easy-to-understand application that can assist users in maintaining daily organization and productivity. Every decision we make is based on user experience and sound design principles.
         </p>
         <p class="mt-10 mb-32 text-3xl text-justify">
-            Kami percaya bahwa sebuah karya, sekecil apa pun, dapat memberi dampak positif ketika dibuat dengan kesungguhan.
-            Tulist adalah langkah pertama kami dalam perjalanan profesional ini—sebuah bukti bahwa kolaborasi, visi, dan
-            kualitas dapat melahirkan produk yang bernilai.
+            We believe that any work, no matter how small, can have a positive impact when created with dedication. Tulist is our first step on this professional journey — a testament to the power of collaboration, vision, and quality to create a valuable product.
         </p>
 
         <img class="w-[600px] mx-auto" src="{{ Vite::asset('resources/images/map.png') }}" alt="Map">
