@@ -48,6 +48,11 @@ class Task extends Model
         return $this->hasMany(TaskAttachment::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(\App\Models\TaskComment::class);
+    }
+
     /**
      * Check if a user can edit, duplicate or delete this task.
      * Rule: User is the creator OR User is an admin in any of the workspaces this task belongs to.

@@ -7,13 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @page {
+            margin: 0;
+        }
         @media print {
             .no-print {
-                display: none;
+                display: none !important;
             }
             body {
                 background-color: white !important;
                 padding: 0;
+                margin: 1.5cm !important;
             }
             .report-container {
                 box-shadow: none !important;
@@ -40,12 +44,49 @@
             </div>
             <div class="text-right">
                 <p class="text-sm opacity-80">Date Generated:</p>
-                <p class="font-semibold">{{ now()->format('d F Y, H:i') }}</p>
+                <p class="font-semibold">{{ now()->timezone('Asia/Jakarta')->format('d F Y, H:i') }}</p>
             </div>
         </div>
 
         <!-- Content -->
         <div class="p-8">
+            <!-- Filter Section (No Print) -->
+            <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 no-print">
+                <form action="{{ route('history.report') }}" method="GET" class="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+                    <div class="flex-1 w-full">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Filter by Workspaces</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="inline-flex items-start max-w-full">
+                                <input type="checkbox" id="all_workspaces" class="rounded border-gray-300 text-[#132C51] focus:ring-[#132C51] w-4 h-4 mt-0.5 flex-shrink-0 cursor-pointer" 
+                                    {{ empty($selectedWorkspaces) ? 'checked' : '' }}
+                                    onchange="if(this.checked) { document.querySelectorAll('.workspace-checkbox').forEach(cb => cb.checked = false); }">
+                                <span class="ml-2 text-sm text-gray-600 cursor-pointer break-words whitespace-normal">All Tasks</span>
+                            </label>
+                            
+                            @foreach($workspaces as $workspace)
+                                <label class="inline-flex items-start max-w-full">
+                                    <input type="checkbox" name="workspaces[]" value="{{ $workspace->id }}" 
+                                        class="workspace-checkbox rounded border-gray-300 text-[#132C51] focus:ring-[#132C51] w-4 h-4 mt-0.5 flex-shrink-0 cursor-pointer"
+                                        {{ in_array($workspace->id, $selectedWorkspaces) ? 'checked' : '' }}
+                                        onchange="if(this.checked) { document.getElementById('all_workspaces').checked = false; } else { let anyChecked = false; document.querySelectorAll('.workspace-checkbox').forEach(cb => { if(cb.checked) anyChecked = true; }); if(!anyChecked) document.getElementById('all_workspaces').checked = true; }">
+                                    <span class="ml-2 text-sm text-gray-600 cursor-pointer break-words whitespace-normal">{{ $workspace->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                        @if(!empty($selectedWorkspaces))
+                            <a href="{{ route('history.report') }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#132C51] text-center w-full sm:w-auto transition-colors">
+                                Clear
+                            </a>
+                        @endif
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-[#132C51] border border-transparent rounded-lg hover:bg-[#1C427A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#132C51] text-center w-full sm:w-auto transition-colors">
+                            Apply Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <div class="flex items-end justify-between mb-6">
                 <div>
                     <h2 class="text-xl font-bold text-[#132C51]">Completed Tasks</h2>
@@ -97,7 +138,7 @@
                                     {{ $task->due_date->format('d M Y') }}
                                 </td>
                                 <td class="px-4 py-4 text-sm text-center text-gray-600 align-top">
-                                    {{ $task->completed_at ? $task->completed_at->format('d M Y, H:i') : '-' }}
+                                    {{ $task->completed_at ? $task->completed_at->timezone('Asia/Jakarta')->format('d M Y, H:i') : '-' }}
                                 </td>
                             </tr>
                         @empty
@@ -111,7 +152,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-between p-6 border-t border-gray-100 bg-gray-50 no-print">
+        <div class="flex items-center justify-between p-6 border-t border-gray-100 bg-gray-50 no-print print:hidden">
             <button onclick="window.close()" class="font-medium text-gray-500 transition-colors hover:text-gray-700">
                 &larr; Back
             </button>

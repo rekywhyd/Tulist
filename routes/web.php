@@ -5,6 +5,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\TaskCommentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Task;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/workspace/{workspaceId}/member/{userId}/role', [WorkspaceController::class, 'updateRole'])->name('workspace.updateRole');
     Route::delete('/workspace/{workspaceId}/member/{userId}', [WorkspaceController::class, 'removeMember'])->name('workspace.removeMember');
     Route::post('/workspace/{workspaceId}/leave', [WorkspaceController::class, 'leave'])->name('workspace.leave');
+    Route::post('/workspace/{workspaceId}/mark-read', [WorkspaceController::class, 'markAsRead'])->name('workspace.markRead');
 });
 
 // Accept invitation (works for both authenticated and guest users)
@@ -49,7 +51,9 @@ Route::get('/home', function () {
 
 
     $todayTasks = $tasks->filter(function ($task) {
-        return $task->due_date->isToday() && !$task->completed;
+        if ($task->completed || !$task->due_date->isToday()) return false;
+        if ($task->end_time && now()->format('H:i:s') > $task->end_time->format('H:i:s')) return false;
+        return true;
     });
     $tomorrowTasks = $tasks->filter(function ($task) {
         return $task->due_date->isTomorrow() && !$task->completed;
@@ -58,7 +62,10 @@ Route::get('/home', function () {
         return $task->due_date->gt(now()->addDay()) && !$task->completed;
     });
     $overdueTasks = $tasks->filter(function ($task) {
-        return $task->due_date->lt(now()->startOfDay()) && !$task->completed;
+        if ($task->completed) return false;
+        if ($task->due_date->lt(now()->startOfDay())) return true;
+        if ($task->due_date->isToday() && $task->end_time && now()->format('H:i:s') > $task->end_time->format('H:i:s')) return true;
+        return false;
     });
     $historyTasks = $tasks->filter(function ($task) {
         return $task->completed;
@@ -107,11 +114,22 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('tasks/{id}/duplicate', [TaskController::class, 'duplicate'])->name('tasks.duplicate');
 
 
-    Route::resource('notifications', NotificationController::class);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::delete('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.deleteAll');
+    Route::post('/notifications/{notificationId}/accept-invitation', [NotificationController::class, 'acceptInvitation'])->name('notifications.acceptInvitation');
+    Route::post('/notifications/{notificationId}/decline-invitation', [NotificationController::class, 'declineInvitation'])->name('notifications.declineInvitation');
+    Route::resource('notifications', NotificationController::class);
 
     Route::get('/history/report', [TaskController::class, 'historyReport'])->name('history.report');
     Route::delete('/history/clear', [TaskController::class, 'clearHistory'])->name('history.clear');
+
+    // Task Comments & @Mentions
+    Route::get('/tasks/{taskId}/comments', [TaskCommentController::class, 'index'])->name('task.comments.index');
+    Route::post('/tasks/{taskId}/comments', [TaskCommentController::class, 'store'])->name('task.comments.store');
+    Route::delete('/tasks/{taskId}/comments/{commentId}', [TaskCommentController::class, 'destroy'])->name('task.comments.destroy');
+    Route::get('/tasks/{taskId}/mention-suggestions', [TaskCommentController::class, 'mentionSuggestions'])->name('task.mentionSuggestions');
+    Route::get('/global-mention-suggestions', [TaskCommentController::class, 'globalMentionSuggestions'])->name('global.mentionSuggestions');
 
     Route::post('/clear-alert', function () {
         session()->forget('show_alert');

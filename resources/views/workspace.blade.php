@@ -2,16 +2,6 @@
     <div class="items-center ml-20 py-6 border-white shadow-md bg-white/50 rounded-[40px] pt-6 mt-20 overflow-x-hidden">
         <h1 class="items-center mr-2 text-4xl font-bold text-center text-black font-poppins">Workspaces</h1>
 
-        @if(session('success'))
-            <div class="px-4 py-3 mx-10 mt-4 text-green-800 bg-green-100 border border-green-300 rounded-xl font-poppins" id="flash-success">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="px-4 py-3 mx-10 mt-4 text-red-800 bg-red-100 border border-red-300 rounded-xl font-poppins" id="flash-error">
-                {{ session('error') }}
-            </div>
-        @endif
 
         <div class="pt-4 pl-10 pr-10 mx-auto max-w-7xl font-poppins">
             <div class="flex justify-center gap-8">
@@ -30,6 +20,9 @@
                     <div class="space-y-2 overflow-y-auto max-h-[60vh] pr-1" id="workspace-list">
                         @forelse($workspaces as $ws)
                             <a href="{{ route('workspace', ['workspace_id' => $ws->id]) }}"
+                               @if($selectedWorkspace && $selectedWorkspace->id === $ws->id)
+                                   onclick="event.preventDefault(); fetch('{{ route('workspace.markRead', $ws->id) }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } }).then(() => window.location.reload());"
+                               @endif
                                class="flex items-center gap-3 p-3 transition-all duration-200 rounded-2xl group
                                    {{ $selectedWorkspace && $selectedWorkspace->id === $ws->id
                                        ? 'bg-[#0E213D] text-white shadow-lg'
@@ -43,7 +36,7 @@
                                     <div class="text-xs opacity-60">{{ $ws->members_count }} {{ $ws->members_count === 1 ? 'member' : 'members' }}</div>
                                 </div>
                                 @if(isset($ws->unread_tasks_count) && $ws->unread_tasks_count > 0)
-                                    <div class="flex items-center justify-center min-w-[24px] h-[24px] text-[10px] font-bold text-white bg-red-500 rounded-full shadow-lg border-2 border-white animate-pulse" title="{{ $ws->unread_tasks_count }} new tasks">
+                                    <div class="ws-badge-{{ $ws->id }} flex items-center justify-center min-w-[24px] h-[24px] text-[10px] font-bold text-white bg-red-500 rounded-full shadow-lg border-2 border-white animate-pulse" title="{{ $ws->unread_tasks_count }} new tasks">
                                         {{ $ws->unread_tasks_count > 99 ? '99+' : $ws->unread_tasks_count }}
                                     </div>
                                 @endif
@@ -592,11 +585,6 @@
             });
         }
 
-        // Flash message auto-hide
-        ['flash-success', 'flash-error'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) setTimeout(() => { el.style.transition = 'opacity 0.5s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 500); }, 4000);
-        });
 
         // Create Workspace Modal
         const createModal = document.getElementById('create-workspace-modal');
@@ -880,17 +868,51 @@
             }
         });
 
+        const viewedTasksThisSession = new Set();
+
         // Task Details
-        document.addEventListener('click', function(e) {
-            const detailsBtn = e.target.closest('.details-btn') || e.target.closest('[data-task-title]');
-            if (detailsBtn) {
-                const taskId = detailsBtn.dataset.task || detailsBtn.dataset.taskTitle;
-                if (!taskId) return;
-                hideMenus();
-                
-                fetch(`/tasks/${taskId}`)
-                    .then(res => res.json())
-                    .then(task => {
+        function showTaskDetailsInner(taskId) {
+            if (!taskId) return;
+            hideMenus();
+            
+            fetch(`/tasks/${taskId}`)
+                .then(res => res.json())
+                .then(task => {
+                        // Decrease badge counts
+                        if (!viewedTasksThisSession.has(taskId)) {
+                            viewedTasksThisSession.add(taskId);
+                            
+                            const sidebarBadge = document.getElementById('sidebar-workspace-badge');
+                            if (sidebarBadge) {
+                                let count = parseInt(sidebarBadge.textContent);
+                                if (!isNaN(count) && count > 0) {
+                                    count--;
+                                    if (count === 0) {
+                                        sidebarBadge.remove();
+                                    } else {
+                                        sidebarBadge.textContent = count > 99 ? '99+' : count;
+                                    }
+                                }
+                            }
+
+                            if (task.workspaces) {
+                                task.workspaces.forEach(ws => {
+                                    const wsBadge = document.querySelector(`.ws-badge-${ws.id}`);
+                                    if (wsBadge) {
+                                        let wsCount = parseInt(wsBadge.textContent);
+                                        if (!isNaN(wsCount) && wsCount > 0) {
+                                            wsCount--;
+                                            if (wsCount === 0) {
+                                                wsBadge.remove();
+                                            } else {
+                                                wsBadge.textContent = wsCount > 99 ? '99+' : wsCount;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
                         document.getElementById('details-title').textContent = task.title ?? '';
                         document.getElementById('details-description').textContent = task.description ?? 'No description provided';
                         document.getElementById('details-due-date').textContent = task.due_date ?? 'N/A';
@@ -947,7 +969,25 @@
                             (canModify && !task.completed) ? editDetailsBtn.classList.remove('hidden'): editDetailsBtn
                                 .classList.add('hidden');
                         }
+
+                        // Load comments & mention suggestions
+                        currentTaskIdForComments = taskId;
+                        loadComments(taskId, 'details-comments-list', 'details-comment-count');
+                        loadMentionSuggestions(taskId);
+                        // Clear input
+                        const detailsInput = document.getElementById('details-comment-input');
+                        if (detailsInput) detailsInput.value = '';
                     });
+        }
+
+        window.showTaskDetails = showTaskDetailsInner;
+
+        // Delegate clicks to show task details
+        document.addEventListener('click', function(e) {
+            const detailsBtn = e.target.closest('.details-btn') || e.target.closest('[data-task-title]');
+            if (detailsBtn) {
+                const taskId = detailsBtn.dataset.task || detailsBtn.dataset.taskTitle;
+                showTaskDetailsInner(taskId);
             }
         });
 
@@ -1003,6 +1043,13 @@
                         }
 
                         document.getElementById('edit-task-modal').classList.remove('hidden');
+
+                        // Load comments & mention suggestions for edit modal
+                        currentTaskIdForComments = data.id;
+                        loadComments(data.id, 'edit-comments-list', 'edit-comment-count');
+                        loadMentionSuggestions(data.id);
+                        const editCommentInput = document.getElementById('edit-comment-input');
+                        if (editCommentInput) editCommentInput.value = '';
                     });
             }
         });
@@ -1024,18 +1071,12 @@
             const delBtn = e.target.closest('.delete-btn');
             if (delBtn) {
                 hideMenus();
-                const modal = document.getElementById('delete-task-confirm-modal');
-                modal.dataset.taskId = delBtn.dataset.task;
-                modal.classList.remove('hidden');
+                const taskId = delBtn.dataset.task;
+                if (confirm('Are you sure you want to delete this task?')) {
+                    fetch(`/tasks/${taskId}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken } })
+                        .then(() => location.reload());
+                }
             }
-        });
-
-        document.getElementById('cancel-delete-task-btn')?.addEventListener('click', () => document.getElementById('delete-task-confirm-modal').classList.add('hidden'));
-
-        document.getElementById('confirm-delete-task-btn')?.addEventListener('click', function() {
-            const taskId = this.closest('#delete-task-confirm-modal').dataset.taskId;
-            fetch(`/tasks/${taskId}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken } })
-                .then(() => location.reload());
         });
 
         // Global listener for search details
@@ -1052,6 +1093,14 @@
                 detailsBtn.remove();
             }
         });
+
+        // Handle URL param open_task
+        const urlParams = new URLSearchParams(window.location.search);
+        const openTaskId = urlParams.get('open_task');
+        if (openTaskId) {
+            window.showTaskDetails(openTaskId);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
         // Task Checkbox completion/uncompletion
         document.addEventListener('change', function(e) {
@@ -1089,6 +1138,363 @@
                 });
             }
         });
+
+        // =====================================================
+        // COMMENT & @MENTION SYSTEM
+        // =====================================================
+        let currentTaskIdForComments = null;
+        let mentionSuggestions = [];
+
+        // Helper: Render a single comment HTML
+        function renderCommentHtml(comment) {
+            const photoPath = comment.user.profile_photo_path
+                ? `/storage/${comment.user.profile_photo_path}`
+                : null;
+            const avatar = photoPath
+                ? `<img src="${photoPath}" class="flex-shrink-0 object-cover w-8 h-8 rounded-full">`
+                : `<div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-xs font-bold rounded-full bg-[#1C427A] text-white">${comment.user.name.charAt(0).toUpperCase()}</div>`;
+            
+            // Highlight @mentions in the body
+            const body = comment.body.replace(/@(\S+(?:\s\S+)*?)(?=\s*@|\s*$)/g, '<span class="text-cyan-400 font-semibold">@$1</span>');
+
+            const deleteBtn = comment.is_own
+                ? `<button type="button" class="comment-delete-btn text-gray-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100" data-comment-id="${comment.id}" title="Delete comment">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                   </button>`
+                : '';
+
+            return `<div class="flex items-start gap-3 group" data-comment-id="${comment.id}">
+                ${avatar}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-semibold text-white">${comment.user.name}</span>
+                        <span class="text-[10px] text-gray-500" title="${comment.created_at_full}">${comment.created_at}</span>
+                        ${deleteBtn}
+                    </div>
+                    <p class="text-sm text-gray-300 break-words mt-0.5">${body}</p>
+                </div>
+            </div>`;
+        }
+
+        // Load comments for a task
+        async function loadComments(taskId, listElId, countElId) {
+            const listEl = document.getElementById(listElId);
+            const countEl = document.getElementById(countElId);
+
+            try {
+                const res = await fetch(`/tasks/${taskId}/comments`);
+                const comments = await res.json();
+
+                if (comments.length === 0) {
+                    listEl.innerHTML = '<p class="text-sm italic text-gray-500">No comments yet</p>';
+                    countEl.textContent = '';
+                } else {
+                    listEl.innerHTML = comments.map(renderCommentHtml).join('');
+                    countEl.textContent = comments.length;
+                    // Scroll to bottom
+                    listEl.scrollTop = listEl.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Error loading comments:', err);
+                listEl.innerHTML = '<p class="text-sm italic text-red-400">Failed to load comments</p>';
+            }
+        }
+
+        // Load mention suggestions
+        async function loadMentionSuggestions(taskId) {
+            try {
+                const res = await fetch(`/tasks/${taskId}/mention-suggestions`);
+                mentionSuggestions = await res.json();
+            } catch (err) {
+                console.error('Error loading mention suggestions:', err);
+                mentionSuggestions = [];
+            }
+        }
+
+        // Setup @mention input for a specific input field
+        function setupMentionInput(inputId, dropdownId, sendBtnId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            const sendBtn = document.getElementById(sendBtnId);
+
+            if (!input || !dropdown || !sendBtn) return;
+
+            input.addEventListener('input', function() {
+                const value = this.value;
+                sendBtn.disabled = !value.trim();
+
+                // Check for @mention trigger
+                const cursorPos = this.selectionStart;
+                const textBeforeCursor = value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
+
+                if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                    const query = textBeforeCursor.substring(atIndex + 1).toLowerCase();
+                    const filtered = mentionSuggestions.filter(m =>
+                        m.name.toLowerCase().includes(query)
+                    );
+
+                    if (filtered.length > 0) {
+                        dropdown.innerHTML = filtered.map(m => {
+                            const photo = m.profile_photo_path
+                                ? `<img src="/storage/${m.profile_photo_path}" class="flex-shrink-0 object-cover w-7 h-7 rounded-full">`
+                                : `<div class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold rounded-full bg-[#E8EEF9] text-[#1C427A]">${m.name.charAt(0).toUpperCase()}</div>`;
+                            return `<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors mention-option" data-name="${m.name}">
+                                ${photo}
+                                <span class="text-sm font-medium text-[#132C51]">${m.name}</span>
+                            </div>`;
+                        }).join('');
+                        dropdown.classList.remove('hidden');
+                    } else {
+                        dropdown.classList.add('hidden');
+                    }
+                } else {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Handle mention selection
+            dropdown.addEventListener('click', function(e) {
+                const option = e.target.closest('.mention-option');
+                if (!option) return;
+
+                const name = option.dataset.name;
+                const cursorPos = input.selectionStart;
+                const textBeforeCursor = input.value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
+                const textAfterCursor = input.value.substring(cursorPos);
+
+                input.value = textBeforeCursor.substring(0, atIndex) + '@' + name + ' ' + textAfterCursor;
+                dropdown.classList.add('hidden');
+                input.focus();
+                const newPos = atIndex + name.length + 2;
+                input.setSelectionRange(newPos, newPos);
+                sendBtn.disabled = !input.value.trim();
+            });
+
+            // Handle Enter key to send comment
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey && !dropdown.classList.contains('hidden')) {
+                    // If dropdown is open, select the first option
+                    const firstOption = dropdown.querySelector('.mention-option');
+                    if (firstOption) {
+                        e.preventDefault();
+                        firstOption.click();
+                    }
+                } else if (e.key === 'Enter' && !e.shiftKey && dropdown.classList.contains('hidden')) {
+                    e.preventDefault();
+                    if (input.value.trim()) {
+                        sendBtn.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        // Setup @mention input for a specific input field using global suggestions
+        async function setupGlobalMentionInput(inputId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+
+            if (!input || !dropdown) return;
+
+            // Fetch global suggestions once
+            let globalSuggestions = [];
+            try {
+                const res = await fetch('/global-mention-suggestions');
+                globalSuggestions = await res.json();
+            } catch (err) {
+                console.error('Error loading global mention suggestions:', err);
+            }
+
+            input.addEventListener('input', function() {
+                const value = this.value;
+
+                // Check for @mention trigger
+                const cursorPos = this.selectionStart;
+                const textBeforeCursor = value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
+
+                if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                    const query = textBeforeCursor.substring(atIndex + 1).toLowerCase();
+                    const filtered = globalSuggestions.filter(m =>
+                        m.name.toLowerCase().includes(query)
+                    );
+
+                    if (filtered.length > 0) {
+                        dropdown.innerHTML = filtered.map(m => {
+                            const photo = m.profile_photo_path
+                                ? `<img src="/storage/${m.profile_photo_path}" class="flex-shrink-0 object-cover w-7 h-7 rounded-full">`
+                                : `<div class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold rounded-full bg-[#E8EEF9] text-[#1C427A]">${m.name.charAt(0).toUpperCase()}</div>`;
+                            return `<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors mention-option" data-name="${m.name}">
+                                ${photo}
+                                <span class="text-sm font-medium text-[#132C51]">${m.name}</span>
+                            </div>`;
+                        }).join('');
+                        dropdown.classList.remove('hidden');
+                    } else {
+                        dropdown.classList.add('hidden');
+                    }
+                } else {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Handle mention selection
+            dropdown.addEventListener('click', function(e) {
+                const option = e.target.closest('.mention-option');
+                if (!option) return;
+
+                const name = option.dataset.name;
+                const cursorPos = input.selectionStart;
+                const textBeforeCursor = input.value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
+                const textAfterCursor = input.value.substring(cursorPos);
+
+                input.value = textBeforeCursor.substring(0, atIndex) + '@' + name + ' ' + textAfterCursor;
+                dropdown.classList.add('hidden');
+                input.focus();
+                const newPos = atIndex + name.length + 2;
+                input.setSelectionRange(newPos, newPos);
+            });
+
+            // Handle Enter key to select mention
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey && !dropdown.classList.contains('hidden')) {
+                    const firstOption = dropdown.querySelector('.mention-option');
+                    if (firstOption) {
+                        e.preventDefault();
+                        firstOption.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+
+
+        // Setup comment sending
+        function setupCommentSend(sendBtnId, inputId, listElId, countElId) {
+            const sendBtn = document.getElementById(sendBtnId);
+            const input = document.getElementById(inputId);
+
+            if (!sendBtn || !input) return;
+
+            sendBtn.addEventListener('click', async function() {
+                const body = input.value.trim();
+                if (!body || !currentTaskIdForComments) return;
+
+                sendBtn.disabled = true;
+
+                try {
+                    const res = await fetch(`/tasks/${currentTaskIdForComments}/comments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ body: body })
+                    });
+
+                    if (res.ok) {
+                        const comment = await res.json();
+                        const listEl = document.getElementById(listElId);
+                        const countEl = document.getElementById(countElId);
+
+                        // Remove empty state if present
+                        const emptyState = listEl.querySelector('.italic');
+                        if (emptyState) emptyState.remove();
+
+                        // Append new comment
+                        listEl.insertAdjacentHTML('beforeend', renderCommentHtml(comment));
+                        listEl.scrollTop = listEl.scrollHeight;
+
+                        // Update count
+                        const currentCount = parseInt(countEl.textContent || '0');
+                        countEl.textContent = currentCount + 1;
+
+                        input.value = '';
+                        sendBtn.disabled = true;
+
+                        // Also refresh the other modal's comments if it exists
+                        if (listElId === 'details-comments-list') {
+                            loadComments(currentTaskIdForComments, 'edit-comments-list', 'edit-comment-count');
+                        } else {
+                            loadComments(currentTaskIdForComments, 'details-comments-list', 'details-comment-count');
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error sending comment:', err);
+                } finally {
+                    sendBtn.disabled = !input.value.trim();
+                }
+            });
+        }
+
+        // Handle comment deletion (delegated)
+        document.addEventListener('click', async function(e) {
+            const deleteBtn = e.target.closest('.comment-delete-btn');
+            if (!deleteBtn || !currentTaskIdForComments) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const commentId = deleteBtn.dataset.commentId;
+            if (!confirm('Delete this comment?')) return;
+
+            try {
+                const res = await fetch(`/tasks/${currentTaskIdForComments}/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+                });
+
+                if (res.ok) {
+                    // Remove from all comment lists
+                    document.querySelectorAll(`[data-comment-id="${commentId}"]`).forEach(el => {
+                        el.style.transition = 'opacity 0.3s, transform 0.3s';
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateX(20px)';
+                        setTimeout(() => el.remove(), 300);
+                    });
+
+                    // Update counts
+                    setTimeout(() => {
+                        ['details-comment-count', 'edit-comment-count'].forEach(id => {
+                            const countEl = document.getElementById(id);
+                            if (countEl && countEl.textContent) {
+                                const newCount = Math.max(0, parseInt(countEl.textContent) - 1);
+                                countEl.textContent = newCount || '';
+                            }
+                        });
+                    }, 350);
+                }
+            } catch (err) {
+                console.error('Error deleting comment:', err);
+            }
+        });
+
+        // Initialize mention inputs and send buttons
+        setupMentionInput('details-comment-input', 'details-mention-dropdown', 'details-comment-send-btn');
+        setupMentionInput('edit-comment-input', 'edit-mention-dropdown', 'edit-comment-send-btn');
+        setupCommentSend('details-comment-send-btn', 'details-comment-input', 'details-comments-list', 'details-comment-count');
+        setupCommentSend('edit-comment-send-btn', 'edit-comment-input', 'edit-comments-list', 'edit-comment-count');
+        setupGlobalMentionInput('new-task-comment-input', 'new-task-mention-dropdown');
 
     });
     </script>
@@ -1249,6 +1655,21 @@
                         <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
                     </div>
 
+                    {{-- Initial Comment Section --}}
+                    <div class="col-span-12">
+                        <div class="flex items-center gap-2 mt-2 mb-1">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <label class="font-semibold text-gray-100">Initial Comments (Optional)</label>
+                        </div>
+                        <div class="relative">
+                            <input type="text" name="initial_comment" id="new-task-comment-input" placeholder="Write the initial comment... Use @ to mention members"
+                                class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                autocomplete="off">
+                            <div id="new-task-mention-dropdown" class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Row 5: Buttons -->
                     <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
                         <button type="submit" class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
@@ -1354,6 +1775,36 @@
                         </div>
                         <div id="details-attachments" class="grid grid-cols-2 gap-4 text-sm text-gray-200">
                             <p class="col-span-2 text-gray-400">No attachments</p>
+                        </div>
+                    </div>
+
+                    {{-- Comments Section --}}
+                    <div class="col-span-12 mt-2">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <label class="font-semibold text-gray-100">Comment</label>
+                            <span id="details-comment-count" class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                        </div>
+
+                        <div id="details-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                            <p class="text-sm text-gray-500 italic">No comments yet</p>
+                        </div>
+
+                        {{-- Comment Input --}}
+                        <div class="relative">
+                            <div class="flex gap-2">
+                                <div class="relative flex-1">
+                                    <input type="text" id="details-comment-input" placeholder="Write an initial comment... Use @ to mention members"
+                                        class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                        autocomplete="off">
+                                    {{-- Mention Dropdown --}}
+                                    <div id="details-mention-dropdown" class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                    </div>
+                                </div>
+                                <button type="button" id="details-comment-send-btn" class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1500,6 +1951,34 @@
                         <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
                     </div>
 
+                    {{-- Comments Section in Edit Modal --}}
+                    <div class="col-span-12 mt-2">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <label class="font-semibold text-gray-100">Comment</label>
+                            <span id="edit-comment-count" class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                        </div>
+
+                        <div id="edit-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                            <p class="text-sm text-gray-500 italic">No comments yet</p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="flex gap-2">
+                                <div class="relative flex-1">
+                                    <input type="text" id="edit-comment-input" placeholder="Write an initial comment... Use @ to mention members"
+                                        class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                        autocomplete="off">
+                                    <div id="edit-mention-dropdown" class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                    </div>
+                                </div>
+                                <button type="button" id="edit-comment-send-btn" class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
                         <button type="submit" class="px-5 py-1 text-white bg-[#1C427A] rounded-3xl hover:scale-110">Save</button>
                         <button type="button" id="close-edit-modal" class="px-5 py-1 text-white bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
@@ -1510,22 +1989,5 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-task-confirm-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative p-8 bg-[#132C51] shadow-xl rounded-2xl w-[450px] max-w-full">
-                <div class="text-center">
-                    <div class="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-red-100 rounded-full">
-                        <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    </div>
-                    <h3 class="mb-2 text-2xl font-bold text-white">Delete Task?</h3>
-                    <p class="mb-8 text-gray-300">This action cannot be undone. Are you sure you want to delete this task?</p>
-                    <div class="flex justify-center gap-4">
-                        <button id="confirm-delete-task-btn" class="px-8 py-2 font-semibold text-white transition-colors bg-red-600 rounded-3xl hover:bg-red-700">Delete</button>
-                        <button id="cancel-delete-task-btn" class="px-8 py-2 font-semibold text-white transition-colors bg-gray-500 rounded-3xl hover:bg-gray-600">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </x-app-layout>

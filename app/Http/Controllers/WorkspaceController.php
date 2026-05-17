@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
 use App\Models\User;
+use App\Models\Notification;
 use App\Mail\WorkspaceInvitationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,14 +47,7 @@ class WorkspaceController extends Controller
 
         // Add unread tasks count to each workspace in the list
         foreach ($workspaces as $ws) {
-            $lastViewedAt = $ws->pivot->last_viewed_at;
-            $unreadQuery = $ws->tasks()->where('completed', false);
-            
-            if ($lastViewedAt) {
-                $unreadQuery->where('tasks.created_at', '>', $lastViewedAt);
-            }
-            
-            $ws->unread_tasks_count = $unreadQuery->count();
+            $ws->unread_tasks_count = $user->unreadTasksCountForWorkspace($ws->id);
         }
 
         return view('workspace', compact('workspaces', 'selectedWorkspace', 'members', 'userRole', 'tasks'));
@@ -148,6 +142,24 @@ class WorkspaceController extends Controller
                 $invited[] = $email;
             } catch (\Exception $e) {
                 $errors[] = "Failed to send email to $email.";
+            }
+
+            // Create in-app notification for registered users
+            $invitedUser = User::where('email', $email)->first();
+            if ($invitedUser) {
+                Notification::create([
+                    'user_id' => $invitedUser->id,
+                    'title' => '📨 Workspace Invitation',
+                    'message' => "{$user->name} invited you to join \"{$workspace->name}\".",
+                    'type' => 'workspace_invitation',
+                    'is_read' => false,
+                    'data' => [
+                        'workspace_id' => $workspace->id,
+                        'workspace_name' => $workspace->name,
+                        'invitation_id' => $invitation->id,
+                        'invited_by' => $user->name,
+                    ],
+                ]);
             }
         }
 
@@ -348,5 +360,28 @@ class WorkspaceController extends Controller
         $workspace->members()->detach($user->id);
 
         return redirect()->route('workspace')->with('success', 'You have left the workspace.');
+    }
+
+    /**
+     * Mark all tasks in a workspace as read for the current user.
+     */
+    public function markAsRead($workspaceId)
+    {
+        $user = Auth::user();
+        $workspace = Workspace::findOrFail($workspaceId);
+
+        if (!$workspace->members()->where('user_id', $user->id)->exists()) {
+            return response()->json(['error' => 'Not a member of this workspace.'], 403);
+        }
+
+        $tasks = $workspace->tasks()->where('completed', false)->get();
+        foreach ($tasks as $task) {
+            \App\Models\TaskView::firstOrCreate([
+                'user_id' => $user->id,
+                'task_id' => $task->id,
+            ]);
+        }
+
+        return response()->json(['success' => true]);
     }
 }

@@ -57,6 +57,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * In-app notifications for this user.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(\App\Models\Notification::class);
+    }
+
+    /**
      * Global admin check (backward compatibility).
      */
     public function isAdmin(): bool
@@ -108,5 +116,39 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAnyWorkspace(): bool
     {
         return $this->workspaces()->exists();
+    }
+
+    /**
+     * Get unread active tasks count across all workspaces.
+     */
+    public function unreadWorkspaceTasksCount(): int
+    {
+        return \App\Models\Task::whereHas('workspaces', function($q) {
+                $q->whereIn('workspaces.id', $this->workspaces()->pluck('workspaces.id'));
+            })
+            ->where('completed', false) // active tasks
+            ->whereNotIn('id', function ($query) {
+                $query->select('task_id')
+                    ->from('task_views')
+                    ->where('user_id', $this->id);
+            })
+            ->count();
+    }
+
+    /**
+     * Get unread active tasks count for a specific workspace.
+     */
+    public function unreadTasksCountForWorkspace($workspaceId): int
+    {
+        return \App\Models\Task::whereHas('workspaces', function($q) use ($workspaceId) {
+                $q->where('workspaces.id', $workspaceId);
+            })
+            ->where('completed', false)
+            ->whereNotIn('id', function ($query) {
+                $query->select('task_id')
+                    ->from('task_views')
+                    ->where('user_id', $this->id);
+            })
+            ->count();
     }
 }

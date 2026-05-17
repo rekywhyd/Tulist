@@ -12,74 +12,137 @@
                         <h3 class="text-3xl text-[#1C427A] font-bold">All My Task</h3>
                         <button type="button" id="add-task-btn"
                             class="add-task-btn flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
-                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#ffffff" fill-rule="evenodd" d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z"></path> </g></svg>
+                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="#ffffff" fill-rule="evenodd"
+                                        d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z">
+                                    </path>
+                                </g>
+                            </svg>
                             <span>New Task</span>
                         </button>
                     </div>
 
                     <!-- Today Section -->
                     <div class="mb-6">
-                        <button class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle" data-category="today">
+                        <button
+                            class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle"
+                            data-category="today">
                             <span>Today</span>
-                            <span class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">
+                            <span
+                                class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">
                                 {{ $todayCount }}
                             </span>
                         </button>
                         <div class="category-content" id="today-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($todayTasks as $task)
-                                    <div class="p-4 mb-3 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200 group" data-original-due-date="{{ optional($task->due_date)->format('Y-m-d') }}">
+                                    <div class="p-4 mb-3 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200 group task-item"
+                                        data-task-id="{{ $task->id }}"
+                                        data-original-due-date="{{ optional($task->due_date)->format('Y-m-d') }}"
+                                        data-end-time="{{ optional($task->end_time)->format('H:i:s') }}">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center flex-1 min-w-0 gap-4">
-                                                <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" {{ $task->completed ? 'checked' : '' }}>
+                                                <input type="checkbox"
+                                                    class="w-5 h-5 rounded-full task-checkbox accent-blue-500"
+                                                    data-id="{{ $task->id }}"
+                                                    {{ $task->completed ? 'checked' : '' }}>
                                                 <div class="flex-1 min-w-0">
                                                     <div class="flex flex-wrap items-center gap-2">
-                                                        <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
+                                                        <span data-task-title="{{ $task->id }}"
+                                                            class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
                                                             {{ $task->title }}
                                                         </span>
-                                                        @if($task->priority)
-                                                            <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                        @if ($task->priority)
+                                                            <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}"
+                                                                fill="currentColor" viewBox="0 0 24 24">
                                                                 <title>{{ $task->priority }}</title>
-                                                                <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                                <path
+                                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                                    fill="currentColor"></path>
                                                             </svg>
                                                         @endif
-                                                        @foreach($task->workspaces as $ws)
-                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                        @foreach ($task->workspaces as $ws)
+                                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}"
+                                                                title="{{ $ws->name }}">
                                                                 {{ strtoupper(substr($ws->name, 0, 2)) }}
                                                             </div>
                                                         @endforeach
                                                     </div>
-                                                    @if($task->start_time || $task->end_time)
-                                                        <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
-                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    @if ($task->start_time || $task->end_time)
+                                                        <div
+                                                            class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                                </path>
+                                                            </svg>
                                                             {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
                                                         </div>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="relative ml-2">
-                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700"
+                                                    data-task="{{ $task->id }}">⋯</button>
+                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu"
+                                                    data-task="{{ $task->id }}">
                                                     @php $canModify = $task->canUserModify(Auth::user()); @endphp
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
-                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <button
+                                                        class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600"
+                                                        onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                            </path>
+                                                        </svg>
                                                         Details
                                                     </button>
 
-                                                    @if($canModify && !$task->completed)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    @if ($canModify && !$task->completed)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                                </path>
+                                                            </svg>
                                                             Edit
                                                         </button>
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                                                </path>
+                                                            </svg>
                                                             Duplicate
                                                         </button>
                                                     @endif
 
-                                                    @if($canModify)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    @if ($canModify)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
                                                             Delete
                                                         </button>
                                                     @endif
@@ -94,63 +157,114 @@
 
                     <!-- Tomorrow Section -->
                     <div class="mb-6">
-                        <button class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle" data-category="tomorrow">
+                        <button
+                            class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle"
+                            data-category="tomorrow">
                             <span>Tomorrow</span>
-                            <span class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">{{ $tomorrowCount }}</span>
+                            <span
+                                class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">{{ $tomorrowCount }}</span>
                         </button>
                         <div class="category-content" id="tomorrow-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($tomorrowTasks as $task)
                                     <div class="mb-3 group">
-                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
-                                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
+                                        <div
+                                            class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
+                                            <input type="checkbox"
+                                                class="w-5 h-5 rounded-full task-checkbox accent-blue-500"
+                                                data-id="{{ $task->id }}">
                                             <div class="flex-1 min-w-0 ml-4">
                                                 <div class="flex flex-wrap items-center gap-2">
-                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
+                                                    <span data-task-title="{{ $task->id }}"
+                                                        class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
                                                         {{ $task->title }}
                                                     </span>
-                                                    @if($task->priority)
-                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                    @if ($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            fill="currentColor" viewBox="0 0 24 24">
                                                             <title>{{ $task->priority }}</title>
-                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                            <path
+                                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                                fill="currentColor"></path>
                                                         </svg>
                                                     @endif
-                                                    @foreach($task->workspaces as $ws)
-                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                    @foreach ($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            title="{{ $ws->name }}">
                                                             {{ strtoupper(substr($ws->name, 0, 2)) }}
                                                         </div>
                                                     @endforeach
                                                 </div>
-                                                @if($task->start_time || $task->end_time)
-                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                @if ($task->start_time || $task->end_time)
+                                                    <div
+                                                        class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
                                                         {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
                                                     </div>
                                                 @endif
                                             </div>
                                             <div class="relative ml-2">
-                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700"
+                                                    data-task="{{ $task->id }}">⋯</button>
+                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu"
+                                                    data-task="{{ $task->id }}">
                                                     @php $canModify = $task->canUserModify(Auth::user()); @endphp
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
-                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <button
+                                                        class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600"
+                                                        onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                            </path>
+                                                        </svg>
                                                         Details
                                                     </button>
 
-                                                    @if($canModify && !$task->completed)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    @if ($canModify && !$task->completed)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                                </path>
+                                                            </svg>
                                                             Edit
                                                         </button>
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                                                </path>
+                                                            </svg>
                                                             Duplicate
                                                         </button>
                                                     @endif
 
-                                                    @if($canModify)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    @if ($canModify)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
                                                             Delete
                                                         </button>
                                                     @endif
@@ -165,63 +279,114 @@
 
                     <!-- Upcoming Section -->
                     <div class="mb-6">
-                        <button class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle" data-category="upcoming">
+                        <button
+                            class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle"
+                            data-category="upcoming">
                             <span>Upcoming</span>
-                            <span class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">{{ $upcomingCount }}</span>
+                            <span
+                                class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-[#132C51] rounded-full">{{ $upcomingCount }}</span>
                         </button>
                         <div class="category-content" id="upcoming-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($upcomingTasks as $task)
                                     <div class="mb-3 group">
-                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
-                                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
+                                        <div
+                                            class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
+                                            <input type="checkbox"
+                                                class="w-5 h-5 rounded-full task-checkbox accent-blue-500"
+                                                data-id="{{ $task->id }}">
                                             <div class="flex-1 min-w-0 ml-4">
                                                 <div class="flex flex-wrap items-center gap-2">
-                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
+                                                    <span data-task-title="{{ $task->id }}"
+                                                        class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]' }}">
                                                         {{ $task->title }}
                                                     </span>
-                                                    @if($task->priority)
-                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                    @if ($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            fill="currentColor" viewBox="0 0 24 24">
                                                             <title>{{ $task->priority }}</title>
-                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                            <path
+                                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                                fill="currentColor"></path>
                                                         </svg>
                                                     @endif
-                                                    @foreach($task->workspaces as $ws)
-                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                    @foreach ($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            title="{{ $ws->name }}">
                                                             {{ strtoupper(substr($ws->name, 0, 2)) }}
                                                         </div>
                                                     @endforeach
                                                 </div>
-                                                @if($task->start_time || $task->end_time)
-                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                @if ($task->start_time || $task->end_time)
+                                                    <div
+                                                        class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
                                                         {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
                                                     </div>
                                                 @endif
                                             </div>
                                             <div class="relative ml-2">
-                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700"
+                                                    data-task="{{ $task->id }}">⋯</button>
+                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu"
+                                                    data-task="{{ $task->id }}">
                                                     @php $canModify = $task->canUserModify(Auth::user()); @endphp
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
-                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <button
+                                                        class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600"
+                                                        onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                            </path>
+                                                        </svg>
                                                         Details
                                                     </button>
 
-                                                    @if($canModify && !$task->completed)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    @if ($canModify && !$task->completed)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                                </path>
+                                                            </svg>
                                                             Edit
                                                         </button>
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                                                </path>
+                                                            </svg>
                                                             Duplicate
                                                         </button>
                                                     @endif
 
-                                                    @if($canModify)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    @if ($canModify)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
                                                             Delete
                                                         </button>
                                                     @endif
@@ -236,63 +401,114 @@
 
                     <!-- Overdue Section -->
                     <div class="mb-6">
-                        <button class="flex items-center justify-between w-full mb-2 text-xl font-bold text-red-600 category-toggle" data-category="overdue">
+                        <button
+                            class="flex items-center justify-between w-full mb-2 text-xl font-bold text-red-600 category-toggle"
+                            data-category="overdue">
                             <span>Overdue</span>
-                            <span class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-red-600 rounded-full">{{ $overdueCount }}</span>
+                            <span
+                                class="flex items-center justify-center w-6 h-6 text-sm font-bold text-white bg-red-600 rounded-full">{{ $overdueCount }}</span>
                         </button>
                         <div class="category-content" id="overdue-content">
                             <div class="space-y-4 text-lg text-[#132C51]">
                                 @foreach ($overdueTasks as $task)
                                     <div class="mb-3 group">
-                                        <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
-                                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}">
+                                        <div
+                                            class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
+                                            <input type="checkbox"
+                                                class="w-5 h-5 rounded-full task-checkbox accent-blue-500"
+                                                data-id="{{ $task->id }}">
                                             <div class="flex-1 min-w-0 ml-4">
                                                 <div class="flex flex-wrap items-center gap-2">
-                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-red-600' }}">
+                                                    <span data-task-title="{{ $task->id }}"
+                                                        class="text-lg font-medium cursor-pointer hover:text-blue-600 transition-colors break-all whitespace-normal {{ $task->completed ? 'line-through text-gray-500 opacity-50' : 'text-red-600' }}">
                                                         {{ $task->title }}
                                                     </span>
-                                                    @if($task->priority)
-                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}" fill="currentColor" viewBox="0 0 24 24">
+                                                    @if ($task->priority)
+                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            fill="currentColor" viewBox="0 0 24 24">
                                                             <title>{{ $task->priority }}</title>
-                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                                            <path
+                                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                                fill="currentColor"></path>
                                                         </svg>
                                                     @endif
-                                                    @foreach($task->workspaces as $ws)
-                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}" title="{{ $ws->name }}">
+                                                    @foreach ($task->workspaces as $ws)
+                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 {{ $task->completed ? 'opacity-50' : '' }}"
+                                                            title="{{ $ws->name }}">
                                                             {{ strtoupper(substr($ws->name, 0, 2)) }}
                                                         </div>
                                                     @endforeach
                                                 </div>
-                                                @if($task->start_time || $task->end_time)
-                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                @if ($task->start_time || $task->end_time)
+                                                    <div
+                                                        class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 {{ $task->completed ? 'line-through opacity-50' : '' }}">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
                                                         {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
                                                     </div>
                                                 @endif
                                             </div>
                                             <div class="relative ml-2">
-                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                                <button class="text-gray-500 task-menu-btn hover:text-gray-700"
+                                                    data-task="{{ $task->id }}">⋯</button>
+                                                <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu"
+                                                    data-task="{{ $task->id }}">
                                                     @php $canModify = $task->canUserModify(Auth::user()); @endphp
-                                                    <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
-                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <button
+                                                        class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600"
+                                                        onclick="window.showTaskDetails({{ $task->id }})">
+                                                        <svg class="w-4 h-4 text-green-400" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                            </path>
+                                                        </svg>
                                                         Details
                                                     </button>
 
-                                                    @if($canModify && !$task->completed)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    @if ($canModify && !$task->completed)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-blue-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                                </path>
+                                                            </svg>
                                                             Edit
                                                         </button>
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-indigo-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                                                </path>
+                                                            </svg>
                                                             Duplicate
                                                         </button>
                                                     @endif
 
-                                                    @if($canModify)
-                                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    @if ($canModify)
+                                                        <button
+                                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn"
+                                                            data-task="{{ $task->id }}">
+                                                            <svg class="w-4 h-4 text-red-500" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
                                                             Delete
                                                         </button>
                                                     @endif
@@ -311,51 +527,103 @@
                 <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl font-bold text-[#132C51]">History</h3>
-                        <a href="{{ route('history.report') }}" target="_blank" class="flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
-                            <svg fill="#ffffff" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;}</style></defs><title>report--alt</title><rect x="10" y="18" width="8" height="2"></rect><rect x="10" y="13" width="12" height="2"></rect><rect x="10" y="23" width="5" height="2"></rect><path d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z"></path><rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"></rect></g></svg>
+                        <a href="{{ route('history.report') }}" target="_blank"
+                            class="flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                            <svg fill="#ffffff" viewBox="0 0 32 32" id="icon"
+                                xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <defs>
+                                        <style>
+                                            .cls-1 {
+                                                fill: none;
+                                            }
+                                        </style>
+                                    </defs>
+                                    <title>report--alt</title>
+                                    <rect x="10" y="18" width="8" height="2"></rect>
+                                    <rect x="10" y="13" width="12" height="2"></rect>
+                                    <rect x="10" y="23" width="5" height="2"></rect>
+                                    <path
+                                        d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z">
+                                    </path>
+                                    <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;"
+                                        class="cls-1" width="32" height="32"></rect>
+                                </g>
+                            </svg>
                             <span>Generate Report</span>
                         </a>
                     </div>
                     @foreach ($historyTasks as $task)
                         <div class="mb-3 group">
-                            <div class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
-                                <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="{{ $task->id }}" checked>
-                                            <div class="flex-1 min-w-0 ml-4">
-                                                <div class="flex flex-wrap items-center gap-2">
-                                                    <span data-task-title="{{ $task->id }}" class="text-lg font-medium text-gray-500 line-through break-all whitespace-normal transition-colors opacity-50 cursor-pointer hover:text-blue-600">
-                                                        {{ $task->title }}
-                                                    </span>
-                                                    @if($task->priority)
-                                                        <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} opacity-50" fill="currentColor" viewBox="0 0 24 24">
-                                                            <title>{{ $task->priority }}</title>
-                                                            <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
-                                                        </svg>
-                                                    @endif
-                                                    @foreach($task->workspaces as $ws)
-                                                        <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 opacity-50" title="{{ $ws->name }}">
-                                                            {{ strtoupper(substr($ws->name, 0, 2)) }}
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                @if($task->start_time || $task->end_time)
-                                                    <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 line-through opacity-50">
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                        {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
-                                                    </div>
-                                                @endif
+                            <div
+                                class="flex items-center p-4 transition-all duration-200 bg-white border border-gray-100 shadow-sm rounded-2xl hover:border-blue-200">
+                                <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500"
+                                    data-id="{{ $task->id }}" checked>
+                                <div class="flex-1 min-w-0 ml-4">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span data-task-title="{{ $task->id }}"
+                                            class="text-lg font-medium text-gray-500 line-through break-all whitespace-normal transition-colors opacity-50 cursor-pointer hover:text-blue-600">
+                                            {{ $task->title }}
+                                        </span>
+                                        @if ($task->priority)
+                                            <svg class="flex-shrink-0 w-5 h-5 {{ $task->priority === 'Urgent' ? 'text-red-500' : ($task->priority === 'High' ? 'text-yellow-500' : ($task->priority === 'Normal' ? 'text-blue-500' : 'text-green-500')) }} opacity-50"
+                                                fill="currentColor" viewBox="0 0 24 24">
+                                                <title>{{ $task->priority }}</title>
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                        @endif
+                                        @foreach ($task->workspaces as $ws)
+                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 opacity-50"
+                                                title="{{ $ws->name }}">
+                                                {{ strtoupper(substr($ws->name, 0, 2)) }}
                                             </div>
+                                        @endforeach
+                                    </div>
+                                    @if ($task->start_time || $task->end_time)
+                                        <div
+                                            class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 line-through opacity-50">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            {{ $task->start_time ? $task->start_time->format('H:i') : '' }}{{ $task->start_time && $task->end_time ? ' - ' : '' }}{{ $task->end_time ? $task->end_time->format('H:i') : '' }}
+                                        </div>
+                                    @endif
+                                </div>
                                 <div class="relative ml-2">
-                                    <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="{{ $task->id }}">⋯</button>
-                                    <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="{{ $task->id }}">
+                                    <button class="text-gray-500 task-menu-btn hover:text-gray-700"
+                                        data-task="{{ $task->id }}">⋯</button>
+                                    <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu"
+                                        data-task="{{ $task->id }}">
                                         @php $canModify = $task->canUserModify(Auth::user()); @endphp
-                                        <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails({{ $task->id }})">
-                                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <button
+                                            class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600"
+                                            onclick="window.showTaskDetails({{ $task->id }})">
+                                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
                                             Details
                                         </button>
 
-                                        @if($canModify)
-                                            <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="{{ $task->id }}">
-                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        @if ($canModify)
+                                            <button
+                                                class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn"
+                                                data-task="{{ $task->id }}">
+                                                <svg class="w-4 h-4 text-red-500" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
                                                 Delete
                                             </button>
                                         @endif
@@ -365,10 +633,15 @@
                         </div>
                     @endforeach
 
-                    @if($historyTasks->count() > 0)
+                    @if ($historyTasks->count() > 0)
                         <div class="flex justify-end mt-6">
-                            <button type="button" id="clear-history-btn" class="flex items-center gap-2 px-4 py-2 text-sm font-bold font-poppins text-white bg-red-600 shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            <button type="button" id="clear-history-btn"
+                                class="flex items-center gap-2 px-4 py-2 text-sm font-bold font-poppins text-white bg-red-600 shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
                                 <span>Clear History</span>
                             </button>
                         </div>
@@ -382,298 +655,510 @@
     <!-- (Potongan modal Anda yang lain tetap di sini, pastikan tidak ada tag yang bocor) -->
 
     <!-- Task Details Modal (view only) -->
-    <div id="task-details-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
+    <div id="task-details-modal"
+        class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 bg-[#132C51] shadow-xl rounded-xl w-[850px] max-w-full my-8">
-            <div>
-                <h3 class="mb-3 text-2xl font-semibold text-white">Task Details</h3>
+                <div>
+                    <h3 class="mb-3 text-2xl font-semibold text-white">Task Details</h3>
 
-                <div class="grid grid-cols-12 gap-y-2 gap-x-6">
-                    <!-- Row 1: Title -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            <label class="font-semibold text-gray-100">Title</label>
+                    <div class="grid grid-cols-12 gap-y-2 gap-x-6">
+                        <!-- Row 1: Title -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Title</label>
+                            </div>
+                            <p id="details-title" class="text-gray-200 break-words"></p>
                         </div>
-                        <p id="details-title" class="text-gray-200 break-words"></p>
-                    </div>
 
-                    <!-- Row 2: Description -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                            <label class="font-semibold text-gray-100">Description</label>
+                        <!-- Row 2: Description -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h7"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Description</label>
+                            </div>
+                            <p id="details-description" class="text-gray-200 break-words"></p>
                         </div>
-                        <p id="details-description" class="text-gray-200 break-words"></p>
-                    </div>
 
-                    <!-- Row 3: Due Date, Created Date, Completed Date -->
-                    <div class="col-span-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <label class="font-semibold text-gray-100">Due Date</label>
+                        <!-- Row 3: Due Date, Created Date, Completed Date -->
+                        <div class="col-span-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Due Date</label>
+                            </div>
+                            <p id="details-due-date" class="text-gray-200"></p>
                         </div>
-                        <p id="details-due-date" class="text-gray-200"></p>
-                    </div>
-                    <div class="col-span-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-4 h-4 text-indigo-400 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            <label class="font-semibold text-gray-100">Created Date</label>
+                        <div class="col-span-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-4 h-4 text-indigo-400 opacity-70" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Created Date</label>
+                            </div>
+                            <p id="details-created-date" class="text-gray-200"></p>
                         </div>
-                        <p id="details-created-date" class="text-gray-200"></p>
-                    </div>
-                    <div class="col-span-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-4 h-4 text-purple-400 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <label class="font-semibold text-gray-100">Completed Date</label>
+                        <div class="col-span-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-4 h-4 text-purple-400 opacity-70" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Completed Date</label>
+                            </div>
+                            <p id="details-completed-at" class="text-gray-200"></p>
                         </div>
-                        <p id="details-completed-at" class="text-gray-200"></p>
-                    </div>
 
-                    <!-- Row 3.5: Start Time, End Time -->
-                    <div class="col-span-6">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <label class="font-semibold text-gray-100">Start Time</label>
+                        <!-- Row 3.5: Start Time, End Time -->
+                        <div class="col-span-6">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Start Time</label>
+                            </div>
+                            <p id="details-start-time" class="text-gray-200"></p>
                         </div>
-                        <p id="details-start-time" class="text-gray-200"></p>
-                    </div>
-                    <div class="col-span-6">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <label class="font-semibold text-gray-100">End Time</label>
+                        <div class="col-span-6">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">End Time</label>
+                            </div>
+                            <p id="details-end-time" class="text-gray-200"></p>
                         </div>
-                        <p id="details-end-time" class="text-gray-200"></p>
-                    </div>
 
-                    <!-- Row 4: Priority, Status -->
-                    <div class="col-span-6">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
-                            <label class="font-semibold text-gray-100">Priority</label>
+                        <!-- Row 4: Priority, Status -->
+                        <div class="col-span-6">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Priority</label>
+                            </div>
+                            <p id="details-priority" class="font-semibold text-gray-200"></p>
                         </div>
-                        <p id="details-priority" class="font-semibold text-gray-200"></p>
-                    </div>
-                    <div class="col-span-6">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <label class="font-semibold text-gray-100">Status</label>
+                        <div class="col-span-6">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Status</label>
+                            </div>
+                            <p id="details-completed" class="text-gray-200"></p>
                         </div>
-                        <p id="details-completed" class="text-gray-200"></p>
-                    </div>
 
-                    <!-- Row 5: Workspaces -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
-                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        <!-- Row 5: Workspaces -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Workspaces</label>
+                            </div>
+                            <div id="details-workspaces" class="flex flex-wrap gap-2 text-sm text-gray-200">
+                                <p class="text-gray-400">No workspaces assigned</p>
+                            </div>
                         </div>
-                        <div id="details-workspaces" class="flex flex-wrap gap-2 text-sm text-gray-200">
-                            <p class="text-gray-400">No workspaces assigned</p>
-                        </div>
-                    </div>
 
-                    <!-- Row 6: Attachments -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <label class="font-semibold text-gray-100">Attachments</label>
+                        <!-- Row 6: Attachments -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Attachments</label>
+                            </div>
+                            <div id="details-attachments" class="grid grid-cols-2 gap-4 text-sm text-gray-200">
+                                <p class="col-span-2 text-gray-400">No attachments</p>
+                            </div>
                         </div>
-                        <div id="details-attachments" class="grid grid-cols-2 gap-4 text-sm text-gray-200">
-                            <p class="col-span-2 text-gray-400">No attachments</p>
-                        </div>
-                    </div>
 
-                    <!-- Buttons -->
-                    <div class="flex justify-center col-span-12 gap-4 mt-6 font-medium">
-                        <button type="button" id="edit-details-btn" class="px-5 py-1 text-white transition-transform duration-200 bg-[#1C427A] hover:hover:scale-110 rounded-3xl">
-                            Edit
-                        </button>
-                        <button type="button" id="close-details-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-110 rounded-3xl">
-                            Close
-                        </button>
+                        {{-- Comments Section --}}
+                        <div class="col-span-12 mt-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Comment</label>
+                                <span id="details-comment-count"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                            </div>
+                            <div id="details-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                                <p class="text-sm text-gray-500 italic">No comments yet</p>
+                            </div>
+                            <div class="relative">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" id="details-comment-input"
+                                            placeholder="Write an initial comment... Use @ to mention members"
+                                            class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                            autocomplete="off">
+                                        <div id="details-mention-dropdown"
+                                            class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="details-comment-send-btn"
+                                        class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex justify-center col-span-12 gap-4 mt-6 font-medium">
+                            <button type="button" id="edit-details-btn"
+                                class="px-5 py-1 text-white transition-transform duration-200 bg-[#1C427A] hover:hover:scale-110 rounded-3xl">
+                                Edit
+                            </button>
+                            <button type="button" id="close-details-modal"
+                                class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-110 rounded-3xl">
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="edit-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
+    <div id="edit-task-modal"
+        class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
-            <div>
-                <h3 class="mb-3 text-2xl font-semibold text-white">Edit Task</h3>
+                <div>
+                    <h3 class="mb-3 text-2xl font-semibold text-white">Edit Task</h3>
 
-                <form id="edit-task-form" method="POST" action="" enctype="multipart/form-data" class="grid grid-cols-12 gap-y-2 gap-x-6">
-                    @csrf
-                    @method('PATCH')
+                    <form id="edit-task-form" method="POST" action="" enctype="multipart/form-data"
+                        class="grid grid-cols-12 gap-y-2 gap-x-6">
+                        @csrf
+                        @method('PATCH')
 
-                    <input type="hidden" name="task_id" id="edit-task-id">
+                        <input type="hidden" name="task_id" id="edit-task-id">
 
-                    <!-- Row 1: Title -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            <label class="font-semibold text-gray-100">Title</label>
-                        </div>
-                        <input id="edit-title" placeholder="Title Name" type="text" name="title"
-                            class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
-                            required>
-                    </div>
-
-                    <!-- Row 2: Description -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                            <label class="font-semibold text-gray-100">Description</label>
-                        </div>
-                        <textarea id="edit-description" placeholder="Add Description" name="description"
-                            class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
-                    </div>
-
-                    <!-- Row 3: Due Date, Times, Priority -->
-                    <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
-                        <div class="flex flex-col justify-end">
+                        <!-- Row 1: Title -->
+                        <div class="col-span-12">
                             <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                <label class="font-semibold text-gray-100">Due Date</label>
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Title</label>
                             </div>
-                            <input id="edit-due-date" type="date" name="due_date"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                            <input id="edit-title" placeholder="Title Name" type="text" name="title"
+                                class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
                                 required>
                         </div>
 
-                        <div class="flex flex-col justify-end">
+                        <!-- Row 2: Description -->
+                        <div class="col-span-12">
                             <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <label class="font-semibold text-gray-100">Start Time</label>
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h7"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Description</label>
                             </div>
-                            <input id="edit-start-time" type="time" name="start_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            <textarea id="edit-description" placeholder="Add Description" name="description"
+                                class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
                         </div>
 
-                        <div class="flex flex-col justify-end">
-                            <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <label class="font-semibold text-gray-100">End Time</label>
-                            </div>
-                            <input id="edit-end-time" type="time" name="end_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
-                        </div>
-
-                        <div class="flex flex-col justify-end">
-                            <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
-                                <label class="font-semibold text-gray-100">Priority</label>
-                            </div>
-                            <div x-data="{ open: false, selected: null }" 
-                                 @set-edit-priority.window="selected = $event.detail.priority"
-                                 class="relative w-full">
-                                <button @click="open = !open" type="button"
-                                    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
-                                    :class="{
-                                        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
-                                        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
-                                        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
-                                        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
-                                        'text-white border-gray-600': selected === null
-                                    }">
-                                    <svg class="w-5 h-5"
-                                        :class="{
-                                            'text-red-500': selected === 'Urgent',
-                                            'text-yellow-500': selected === 'High',
-                                            'text-blue-500': selected === 'Normal',
-                                            'text-green-500': selected === 'Low',
-                                            'text-gray-400': selected === null
-                                        }"
-                                        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                        <!-- Row 3: Due Date, Times, Priority -->
+                        <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
                                     </svg>
-                                    <span id="edit-priority-label" x-text="selected || 'Priority'" class="flex-1"></span>
-                                </button>
-
-                                <div x-show="open" @click.outside="open = false" x-transition
-                                    class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
-                                    <div @click="selected = 'Urgent'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">Urgent</span>
-                                    </div>
-                                    <div @click="selected = 'High'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">High</span>
-                                    </div>
-                                    <div @click="selected = 'Normal'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">Normal</span>
-                                    </div>
-                                    <div @click="selected = 'Low'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-gray-800">Low</span>
-                                    </div>
+                                    <label class="font-semibold text-gray-100">Due Date</label>
                                 </div>
+                                <input id="edit-due-date" type="date" name="due_date"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required>
+                            </div>
 
-                                <select id="edit-priority" name="priority" x-model="selected" class="hidden">
-                                    <option value="">Priority</option>
-                                    <option value="Urgent">Urgent</option>
-                                    <option value="High">High</option>
-                                    <option value="Normal">Normal</option>
-                                    <option value="Low">Low</option>
-                                </select>
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">Start Time</label>
+                                </div>
+                                <input id="edit-start-time" type="time" name="start_time"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            </div>
+
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">End Time</label>
+                                </div>
+                                <input id="edit-end-time" type="time" name="end_time"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            </div>
+
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9">
+                                        </path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">Priority</label>
+                                </div>
+                                <div x-data="{ open: false, selected: null }"
+                                    @set-edit-priority.window="selected = $event.detail.priority"
+                                    class="relative w-full">
+                                    <button @click="open = !open" type="button"
+                                        class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
+                                        :class="{
+                                            'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+                                            'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+                                            'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+                                            'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+                                            'text-white border-gray-600': selected === null
+                                        }">
+                                        <svg class="w-5 h-5"
+                                            :class="{
+                                                'text-red-500': selected === 'Urgent',
+                                                'text-yellow-500': selected === 'High',
+                                                'text-blue-500': selected === 'Normal',
+                                                'text-green-500': selected === 'Low',
+                                                'text-gray-400': selected === null
+                                            }"
+                                            fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span id="edit-priority-label" x-text="selected || 'Priority'"
+                                            class="flex-1"></span>
+                                    </button>
+
+                                    <div x-show="open" @click.outside="open = false" x-transition
+                                        class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
+                                        <div @click="selected = 'Urgent'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-red-500" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">Urgent</span>
+                                        </div>
+                                        <div @click="selected = 'High'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">High</span>
+                                        </div>
+                                        <div @click="selected = 'Normal'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-blue-600" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">Normal</span>
+                                        </div>
+                                        <div @click="selected = 'Low'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-green-600" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-gray-800">Low</span>
+                                        </div>
+                                    </div>
+
+                                    <select id="edit-priority" name="priority" x-model="selected" class="hidden">
+                                        <option value="">Priority</option>
+                                        <option value="Urgent">Urgent</option>
+                                        <option value="High">High</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Low">Low</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Workspace Selection (Multiple) -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
-                            <label class="font-semibold text-gray-100">Workspaces</label>
-                        </div>
-                        <div id="edit-workspaces-container" class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
-                            @foreach($workspaces as $workspace)
-                                <label class="flex items-start gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 edit-workspace-checkbox">
-                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
-                                </label>
-                            @endforeach
-                            @if($workspaces->isEmpty())
-                                <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create one first.</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Row 5: Attachments -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mt-2 mb-1">
-                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <label class="font-semibold text-gray-100">Attachments</label>
-                        </div>
-                        <div id="edit-existing-attachments-wrap" class="hidden mb-4">
-                            <div id="edit-existing-attachments" class="grid grid-cols-2 gap-4"></div>
+                        <!-- Workspace Selection (Multiple) -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Workspaces</label>
+                            </div>
+                            <div id="edit-workspaces-container"
+                                class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
+                                @foreach ($workspaces as $workspace)
+                                    <label class="flex items-start gap-2 cursor-pointer group">
+                                        <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}"
+                                            class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600 edit-workspace-checkbox">
+                                        <span
+                                            class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
+                                    </label>
+                                @endforeach
+                                @if ($workspaces->isEmpty())
+                                    <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create
+                                        one first.</p>
+                                @endif
+                            </div>
                         </div>
 
-                        <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="edit-file-label">Add New File</span>
-                            <input type="file" name="attachments[]" multiple class="hidden" id="edit-task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
-                        </label>
-                        <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
-                    </div>
+                        <!-- Row 5: Attachments -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mt-2 mb-1">
+                                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Attachments</label>
+                            </div>
+                            <div id="edit-existing-attachments-wrap" class="hidden mb-4">
+                                <div id="edit-existing-attachments" class="grid grid-cols-2 gap-4"></div>
+                            </div>
 
-                    <!-- Row 6: Buttons -->
-                    <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
-                        <button type="submit" class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
-                        <button type="button" id="close-edit-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:hover:scale-95">Cancel</button>
-                    </div>
-                </form>
+                            <label
+                                class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                    </path>
+                                </svg>
+                                <span id="edit-file-label">Add New File</span>
+                                <input type="file" name="attachments[]" multiple class="hidden"
+                                    id="edit-task-file-input"
+                                    accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            </label>
+                            <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
+                        </div>
 
-                {{-- Prevent full-page navigation and ignore JSON response when saving edit task --}}
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const form = document.getElementById('edit-task-form');
-                        if (!form) return;
+                        {{-- Comments Section in Edit Modal --}}
+                        <div class="col-span-12 mt-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Comment</label>
+                                <span id="edit-comment-count"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                            </div>
+                            <div id="edit-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                                <p class="text-sm text-gray-500 italic">No comments yet</p>
+                            </div>
+                            <div class="relative">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" id="edit-comment-input"
+                                            placeholder="Write an initial comment... Use @ to mention members"
+                                            class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                            autocomplete="off">
+                                        <div id="edit-mention-dropdown"
+                                            class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="edit-comment-send-btn"
+                                        class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 6: Buttons -->
+                        <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
+                            <button type="submit"
+                                class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                            <button type="button" id="close-edit-modal"
+                                class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:hover:scale-95">Cancel</button>
+                        </div>
+                    </form>
+
+                    {{-- Prevent full-page navigation and ignore JSON response when saving edit task --}}
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const form = document.getElementById('edit-task-form');
+                            if (!form) return;
 
                             form.addEventListener('submit', (e) => {
                                 // Let normal submit happen, but avoid displaying JSON response in browser.
@@ -685,189 +1170,288 @@
 
                                 const formData = new FormData(form);
                                 fetch(action, {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
-                                    },
-                                    body: formData
-                                })
-                                .then(async (res) => {
-                                    // Always go back to home after save to avoid rendering JSON object on page
-                                    window.location.href = '/home';
-                                })
-                                .catch(() => {
-                                    window.location.href = '/home';
-                                });
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
+                                        },
+                                        body: formData
+                                    })
+                                    .then(async (res) => {
+                                        // Always go back to home after save to avoid rendering JSON object on page
+                                        window.location.href = '/home';
+                                    })
+                                    .catch(() => {
+                                        window.location.href = '/home';
+                                    });
                             });
                         });
                     </script>
 
-            </div>
+                </div>
             </div>
         </div>
-    </div>    
+    </div>
     <!-- Add Task Modal -->
     <div id="add-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
-            <div>
-                <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
-                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-12 gap-y-2 gap-x-6">
-                    @csrf
-                    
-                    <!-- Row 1: Title -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            <label class="font-semibold text-gray-100">Title</label>
-                        </div>
-                        <input placeholder="Title Name" type="text" name="title"
-                            class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
-                            required>
-                    </div>
+                <div>
+                    <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
+                    <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data"
+                        class="grid grid-cols-12 gap-y-2 gap-x-6">
+                        @csrf
 
-                    <!-- Row 2: Description -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                            <label class="font-semibold text-gray-100">Description</label>
-                        </div>
-                        <textarea placeholder="Add Description" name="description"
-                            class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
-                    </div>
-
-                    <!-- Row 3: Due Date, Times, Priority -->
-                    <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
-                        <div class="flex flex-col justify-end">
+                        <!-- Row 1: Title -->
+                        <div class="col-span-12">
                             <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                <label class="font-semibold text-gray-100">Due Date</label>
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Title</label>
                             </div>
-                            <input type="date" name="due_date"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
-                                required value="{{ date('Y-m-d') }}">
+                            <input placeholder="Title Name" type="text" name="title"
+                                class="w-full px-3 py-2 border text-white border-gray-600 bg-[#0C1F3B] rounded-lg"
+                                required>
                         </div>
 
-                        <div class="flex flex-col justify-end">
+                        <!-- Row 2: Description -->
+                        <div class="col-span-12">
                             <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <label class="font-semibold text-gray-100">Start Time</label>
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h7"></path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Description</label>
                             </div>
-                            <input type="time" name="start_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            <textarea placeholder="Add Description" name="description"
+                                class="w-full bg-[#0C1F3B] px-3 text-white py-2 border-gray-600 border rounded-lg"></textarea>
                         </div>
 
-                        <div class="flex flex-col justify-end">
-                            <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <label class="font-semibold text-gray-100">End Time</label>
-                            </div>
-                            <input type="time" name="end_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
-                        </div>
-
-                        <!-- Priority Selection -->
-                        <div class="flex flex-col justify-end">
-                            <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9"></path></svg>
-                                <label class="font-semibold text-gray-100">Priority</label>
-                            </div>
-                            <div x-data="{ open: false, selected: null }" class="relative w-full">
-                                <button @click="open = !open" type="button"
-                                    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
-                                    :class="{
-                                        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
-                                        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
-                                        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
-                                        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
-                                        'text-white border-gray-600': selected === null
-                                    }">
-                                    <svg class="w-5 h-5"
-                                        :class="{
-                                            'text-red-500': selected === 'Urgent',
-                                            'text-yellow-500': selected === 'High',
-                                            'text-blue-500': selected === 'Normal',
-                                            'text-green-500': selected === 'Low',
-                                            'text-gray-400': selected === null
-                                        }"
-                                        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                        <!-- Row 3: Due Date, Times, Priority -->
+                        <div class="grid grid-cols-1 col-span-12 gap-6 md:grid-cols-4">
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
                                     </svg>
-                                    <span x-text="selected || 'Priority'" class="flex-1"></span>
-                                </button>
-
-                                <div x-show="open" @click.outside="open = false" x-transition
-                                    class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
-                                    <div @click="selected = 'Urgent'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">Urgent</span>
-                                    </div>
-                                    <div @click="selected = 'High'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">High</span>
-                                    </div>
-                                    <div @click="selected = 'Normal'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-black">Normal</span>
-                                    </div>
-                                    <div @click="selected = 'Low'; open = false" class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
-                                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="font-semibold text-gray-800">Low</span>
-                                    </div>
+                                    <label class="font-semibold text-gray-100">Due Date</label>
                                 </div>
+                                <input type="date" name="due_date"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required value="{{ date('Y-m-d') }}">
+                            </div>
+
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">Start Time</label>
+                                </div>
+                                <input type="time" name="start_time"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            </div>
+
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">End Time</label>
+                                </div>
+                                <input type="time" name="end_time"
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                            </div>
+
+                            <!-- Priority Selection -->
+                            <div class="flex flex-col justify-end">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 01-2 2zm9-13.5V9">
+                                        </path>
+                                    </svg>
+                                    <label class="font-semibold text-gray-100">Priority</label>
+                                </div>
+                                <div x-data="{ open: false, selected: null }" class="relative w-full">
+                                    <button @click="open = !open" type="button"
+                                        class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
+                                        :class="{
+                                            'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+                                            'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+                                            'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+                                            'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+                                            'text-white border-gray-600': selected === null
+                                        }">
+                                        <svg class="w-5 h-5"
+                                            :class="{
+                                                'text-red-500': selected === 'Urgent',
+                                                'text-yellow-500': selected === 'High',
+                                                'text-blue-500': selected === 'Normal',
+                                                'text-green-500': selected === 'Low',
+                                                'text-gray-400': selected === null
+                                            }"
+                                            fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span x-text="selected || 'Priority'" class="flex-1"></span>
+                                    </button>
+
+                                    <div x-show="open" @click.outside="open = false" x-transition
+                                        class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
+                                        <div @click="selected = 'Urgent'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-red-500" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">Urgent</span>
+                                        </div>
+                                        <div @click="selected = 'High'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">High</span>
+                                        </div>
+                                        <div @click="selected = 'Normal'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-blue-600" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-black">Normal</span>
+                                        </div>
+                                        <div @click="selected = 'Low'; open = false"
+                                            class="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100">
+                                            <svg class="w-5 h-5 text-green-600" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path
+                                                    d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span class="font-semibold text-gray-800">Low</span>
+                                        </div>
+                                    </div>
 
 
-                                <select name="priority" x-model="selected" class="hidden">
-                                    <option value="">Priority</option>
-                                    <option value="Urgent">Urgent</option>
-                                    <option value="High">High</option>
-                                    <option value="Normal">Normal</option>
-                                    <option value="Low">Low</option>
-                                </select>
+                                    <select name="priority" x-model="selected" class="hidden">
+                                        <option value="">Priority</option>
+                                        <option value="Urgent">Urgent</option>
+                                        <option value="High">High</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Low">Low</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Row 4: Workspace Selection (Multiple) -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path></svg>
-                            <label class="font-semibold text-gray-100">Workspaces</label>
+                        <!-- Row 4: Workspace Selection (Multiple) -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Workspaces</label>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
+                                @foreach ($workspaces as $workspace)
+                                    <label class="flex items-start gap-2 cursor-pointer group">
+                                        <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}"
+                                            class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600">
+                                        <span
+                                            class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
+                                    </label>
+                                @endforeach
+                                @if ($workspaces->isEmpty())
+                                    <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create
+                                        one first.</p>
+                                @endif
+                            </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 p-3 border border-gray-600 rounded-lg bg-[#0C1F3B]">
-                            @foreach($workspaces as $workspace)
-                                <label class="flex items-start gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="workspace_ids[]" value="{{ $workspace->id }}" class="w-4 h-4 mt-0.5 rounded text-[#1C427A] focus:ring-[#1C427A] bg-gray-700 border-gray-600">
-                                    <span class="text-sm text-gray-300 break-all whitespace-normal group-hover:text-white">{{ $workspace->name }}</span>
-                                </label>
-                            @endforeach
-                            @if($workspaces->isEmpty())
-                                <p class="col-span-2 text-xs italic text-gray-500">No workspaces available. Create one first.</p>
-                            @endif
-                        </div>
-                    </div>
 
-                    <!-- Row 5: Attachments -->
-                    <div class="col-span-12">
-                        <div class="flex items-center gap-2 mt-2 mb-1">
-                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <label class="font-semibold text-gray-100">Attachments</label>
+                        <!-- Row 5: Attachments -->
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mt-2 mb-1">
+                                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Attachments</label>
+                            </div>
+                            <label
+                                class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                                    </path>
+                                </svg>
+                                <span id="file-label">Add File</span>
+                                <input type="file" name="attachments[]" multiple class="hidden"
+                                    id="task-file-input"
+                                    accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            </label>
+                            <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
                         </div>
-                        <label class="flex items-center justify-center w-full gap-2 px-3 py-1 text-white transition-transform duration-200 border border-gray-600 rounded-lg cursor-pointer bg-[#0C1F3B] hover:scale-[1.01] hover:bg-[#1A365D]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span id="file-label">Add File</span>
-                            <input type="file" name="attachments[]" multiple class="hidden" id="task-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
-                        </label>
-                        <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
-                    </div>
 
-                    <!-- Row 5: Buttons -->
-                    <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
-                        <button type="submit" class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
-                        <button type="button" id="close-modal" class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
-                    </div>
-                </form>
-            </div>
+                        {{-- Initial Comment Section --}}
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mt-2 mb-1">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Initial Comments (Optional)</label>
+                            </div>
+                            <div class="relative">
+                                <input type="text" name="initial_comment" id="new-task-comment-input"
+                                    placeholder="Write the initial comment... Use @ to mention members"
+                                    class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                    autocomplete="off">
+                                <div id="new-task-mention-dropdown"
+                                    class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 5: Buttons -->
+                        <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
+                            <button type="submit"
+                                class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                            <button type="button" id="close-modal"
+                                class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -965,26 +1549,28 @@
                     }
 
                     fetch(`/tasks/${taskId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ completed: isCompleted })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.reload();
-                        } else {
-                            alert('You cannot update this task.');
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                completed: isCompleted
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.reload();
+                            } else {
+                                alert('You cannot update this task.');
+                                checkbox.checked = !isCompleted;
+                            }
+                        })
+                        .catch(() => {
+                            alert('Error updating task.');
                             checkbox.checked = !isCompleted;
-                        }
-                    })
-                    .catch(() => {
-                        alert('Error updating task.');
-                        checkbox.checked = !isCompleted;
-                    });
+                        });
                 }
             });
 
@@ -1017,6 +1603,172 @@
                 }
             });
 
+                // Reusable function to show task details
+                const viewedTasksThisSession = new Set();
+                window.showTaskDetails = function(taskId) {
+                    if (!taskId) return;
+
+                    if (editDetailsBtn) editDetailsBtn.dataset.taskId = String(taskId);
+
+                    const prLabel = document.getElementById('edit-priority-label');
+                    if (prLabel) prLabel.textContent = 'Priority';
+
+                    const editForm = document.getElementById('edit-task-form');
+                    if (editForm) editForm.action = `/tasks/${taskId}`;
+
+                    fetch(`/tasks/${taskId}`)
+                        .then(r => r.json())
+                        .then(task => {
+                            if (!viewedTasksThisSession.has(taskId)) {
+                                viewedTasksThisSession.add(taskId);
+                                const sidebarBadge = document.getElementById('sidebar-workspace-badge');
+                                if (sidebarBadge) {
+                                    let count = parseInt(sidebarBadge.textContent);
+                                    if (!isNaN(count) && count > 0) {
+                                        count--;
+                                        if (count === 0) {
+                                            sidebarBadge.remove();
+                                        } else {
+                                            sidebarBadge.textContent = count > 99 ? '99+' : count;
+                                        }
+                                    }
+                                }
+                            }
+
+                            const detailsTitle = document.getElementById('details-title');
+                            const detailsDescription = document.getElementById(
+                                'details-description');
+                            const detailsDueDate = document.getElementById('details-due-date');
+                            const detailsCreatedDate = document.getElementById(
+                                'details-created-date');
+                            const detailsCompletedAt = document.getElementById(
+                                'details-completed-at');
+                            const detailsPriority = document.getElementById('details-priority');
+                            const detailsCompleted = document.getElementById('details-completed');
+                            const detailsStartTime = document.getElementById('details-start-time');
+                            const detailsEndTime = document.getElementById('details-end-time');
+
+                            if (detailsTitle) detailsTitle.textContent = task.title ?? '';
+                            if (detailsDescription) detailsDescription.textContent = task
+                                .description ?? '';
+                            if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? '';
+                            if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(
+                                task.created_at);
+                            if (detailsStartTime) detailsStartTime.textContent = task.start_time ?
+                                task.start_time.substring(0, 5) : '-';
+                            if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task
+                                .end_time.substring(0, 5) : '-';
+                            if (detailsCompletedAt) {
+                                let completedDate = task.completed_at || task.complated_at || '';
+                                detailsCompletedAt.textContent = completedDate ? formatDateTime(
+                                    completedDate) : '-';
+                            }
+
+                            // Workspaces display
+                            const detailsWorkspaces = document.getElementById('details-workspaces');
+                            if (detailsWorkspaces) {
+                                if (task.workspaces && task.workspaces.length > 0) {
+                                    detailsWorkspaces.innerHTML = task.workspaces.map(ws =>
+                                        `<span class="px-2 py-0.5 bg-teal-900/50 text-teal-300 border border-teal-500/30 rounded-full text-xs break-all whitespace-normal">${ws.name}</span>`
+                                    ).join('');
+                                } else {
+                                    detailsWorkspaces.innerHTML =
+                                        '<p class="text-gray-400">No workspaces assigned</p>';
+                                }
+                            }
+
+                            if (detailsPriority) {
+                                const pr = task.priority ?? '';
+                                let textClass = 'text-gray-400';
+                                if (pr === 'Urgent') textClass = 'text-red-500';
+                                else if (pr === 'High') textClass = 'text-yellow-500';
+                                else if (pr === 'Normal') textClass = 'text-blue-500';
+                                else if (pr === 'Low') textClass = 'text-green-500';
+
+                                if (pr) {
+                                    detailsPriority.innerHTML = `
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                        <span class="${textClass} font-semibold">${pr}</span>
+                                    </div>
+                                `;
+                                } else {
+                                    detailsPriority.textContent = '-';
+                                }
+                            }
+
+                            if (detailsCompleted) {
+                                detailsCompleted.innerHTML = task.completed ?
+                                    '<span class="font-bold text-green-500">Completed</span>' :
+                                    '<span class="font-bold text-red-500">Not Completed</span>';
+                            }
+
+                            const detailsAttachments = document.getElementById(
+                                'details-attachments');
+                            if (detailsAttachments) {
+                                const attachments = Array.isArray(task.attachments) ? task
+                                    .attachments : [];
+                                if (!attachments.length) {
+                                    detailsAttachments.innerHTML =
+                                        '<p class="col-span-2 text-gray-400">No attachments</p>';
+                                } else {
+                                    detailsAttachments.innerHTML = attachments.map(att => {
+                                        const originalName = att.original_name || att
+                                            .filename || 'Attachment';
+                                        const path = att.storage_path ?
+                                            `/storage/${att.storage_path}` : '#';
+                                        const isImage = att.mime_type && att.mime_type
+                                            .startsWith('image/') && att.storage_path;
+                                        const imgHtml = isImage ?
+                                            `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
+                                            '';
+                                        return `
+                                        <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
+                                            ${imgHtml}
+                                            <div class="flex-1 min-w-0">
+                                                <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
+                                                <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                            </div>
+                                        </a>
+                                    `;
+                                    }).join('');
+                                }
+                            }
+
+                            if (taskDetailsModal) taskDetailsModal.classList.remove('hidden');
+                            if (editDetailsBtn) {
+                                const canModify = task.can_modify === true || task.can_modify === 1;
+                                (canModify && !task.completed) ? editDetailsBtn.classList.remove(
+                                    'hidden'): editDetailsBtn.classList.add('hidden');
+                            }
+
+                            // Load comments & mention suggestions
+                            if (typeof currentTaskIdForComments !== 'undefined') {
+                                currentTaskIdForComments = taskId;
+                                loadComments(taskId, 'details-comments-list',
+                                    'details-comment-count');
+                                loadMentionSuggestions(taskId);
+                                const detailsInput = document.getElementById(
+                                    'details-comment-input');
+                                if (detailsInput) detailsInput.value = '';
+                            }
+                        })
+                        .catch(() => alert('Failed to load task details'));
+                };
+
+                // Global listener for search details
+                window.addEventListener('open-task-details', (e) => {
+                    window.showTaskDetails(e.detail.taskId);
+                });
+
+                // Handle URL param open_task
+                const urlParams = new URLSearchParams(window.location.search);
+                const openTaskId = urlParams.get('open_task');
+                if (openTaskId) {
+                    window.showTaskDetails(openTaskId);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+
             // Menu actions: Duplicate, Delete, Edit
             document.addEventListener('click', function(e) {
 
@@ -1031,7 +1783,10 @@
 
                     // Show edit modal
                     editTaskModal?.classList.remove('hidden');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
 
                     // Pre-fill form
                     fetch(`/tasks/${taskId}`)
@@ -1048,11 +1803,13 @@
                             if (editTitleEl) editTitleEl.value = task.title ?? '';
                             if (editDescriptionEl) editDescriptionEl.value = task.description ?? '';
                             if (editDueDateEl) editDueDateEl.value = task.due_date ?? '';
-                            
+
                             const editStartTimeEl = document.getElementById('edit-start-time');
                             const editEndTimeEl = document.getElementById('edit-end-time');
-                            if (editStartTimeEl) editStartTimeEl.value = task.start_time ? task.start_time.substring(0, 5) : '';
-                            if (editEndTimeEl) editEndTimeEl.value = task.end_time ? task.end_time.substring(0, 5) : '';
+                            if (editStartTimeEl) editStartTimeEl.value = task.start_time ? task
+                                .start_time.substring(0, 5) : '';
+                            if (editEndTimeEl) editEndTimeEl.value = task.end_time ? task.end_time
+                                .substring(0, 5) : '';
 
                             const pr = task.priority ?? '';
 
@@ -1060,14 +1817,20 @@
                             // (jika Alpine belum booting atau structure berbeda, lakukan fallback + trigger event)
                             // Sync Alpine selected via custom event
                             window.dispatchEvent(new CustomEvent('set-edit-priority', {
-                                detail: { priority: pr }
+                                detail: {
+                                    priority: pr
+                                }
                             }));
 
                             // Fallback: set value select + trigger change (agar x-model mengikuti)
                             if (editPrioritySelect) {
                                 editPrioritySelect.value = pr;
-                                editPrioritySelect.dispatchEvent(new Event('input', { bubbles: true }));
-                                editPrioritySelect.dispatchEvent(new Event('change', { bubbles: true }));
+                                editPrioritySelect.dispatchEvent(new Event('input', {
+                                    bubbles: true
+                                }));
+                                editPrioritySelect.dispatchEvent(new Event('change', {
+                                    bubbles: true
+                                }));
                             }
 
                             // UI label update (untuk reliability walau Alpine belum sempat me-render)
@@ -1086,20 +1849,28 @@
                             if (editFileLabel) editFileLabel.textContent = 'Add File';
 
                             // Attachments existing preview with remove option
-                            const existingWrap = document.getElementById('edit-existing-attachments-wrap');
-                            const existingContainer = document.getElementById('edit-existing-attachments');
+                            const existingWrap = document.getElementById(
+                                'edit-existing-attachments-wrap');
+                            const existingContainer = document.getElementById(
+                                'edit-existing-attachments');
                             if (existingWrap && existingContainer) {
-                                const existingAttachments = task.attachments && Array.isArray(task.attachments) ? task.attachments : [];
+                                const existingAttachments = task.attachments && Array.isArray(task
+                                    .attachments) ? task.attachments : [];
 
                                 if (existingAttachments.length) {
                                     existingWrap.classList.remove('hidden');
                                     existingContainer.innerHTML = existingAttachments.map(att => {
-                                        const originalName = att.original_name || att.filename || 'Attachment';
+                                        const originalName = att.original_name || att
+                                            .filename || 'Attachment';
                                         const id = att.id;
-                                        const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                        
-                                        const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                        const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                        const path = att.storage_path ?
+                                            `/storage/${att.storage_path}` : '#';
+
+                                        const isImage = att.mime_type && att.mime_type
+                                            .startsWith('image/') && att.storage_path;
+                                        const imgHtml = isImage ?
+                                            `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
+                                            '';
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
@@ -1129,13 +1900,24 @@
                             }
 
                             // Workspaces: check corresponding checkboxes
-                            const workspaceCheckboxes = document.querySelectorAll('.edit-workspace-checkbox');
+                            const workspaceCheckboxes = document.querySelectorAll(
+                                '.edit-workspace-checkbox');
                             workspaceCheckboxes.forEach(cb => cb.checked = false);
                             if (task.workspaces && Array.isArray(task.workspaces)) {
                                 task.workspaces.forEach(ws => {
-                                    const cb = document.querySelector(`.edit-workspace-checkbox[value="${ws.id}"]`);
+                                    const cb = document.querySelector(
+                                        `.edit-workspace-checkbox[value="${ws.id}"]`);
                                     if (cb) cb.checked = true;
                                 });
+                            }
+
+                            // Load comments & mention suggestions
+                            if (typeof currentTaskIdForComments !== 'undefined') {
+                                currentTaskIdForComments = taskId;
+                                loadComments(taskId, 'edit-comments-list', 'edit-comment-count');
+                                loadMentionSuggestions(taskId);
+                                const editInput = document.getElementById('edit-comment-input');
+                                if (editInput) editInput.value = '';
                             }
                         })
                         .catch(() => alert('Failed to load task details'));
@@ -1176,132 +1958,13 @@
                     return;
                 }
 
-            // Reusable function to show task details
-            window.showTaskDetails = function(taskId) {
-                if (!taskId) return;
-                
-                if (editDetailsBtn) editDetailsBtn.dataset.taskId = String(taskId);
-                
-                const prLabel = document.getElementById('edit-priority-label');
-                if (prLabel) prLabel.textContent = 'Priority';
 
-                const editForm = document.getElementById('edit-task-form');
-                if (editForm) editForm.action = `/tasks/${taskId}`;
-
-                fetch(`/tasks/${taskId}`)
-                    .then(r => r.json())
-                    .then(task => {
-                        const detailsTitle = document.getElementById('details-title');
-                        const detailsDescription = document.getElementById('details-description');
-                        const detailsDueDate = document.getElementById('details-due-date');
-                        const detailsCreatedDate = document.getElementById('details-created-date');
-                        const detailsCompletedAt = document.getElementById('details-completed-at');
-                        const detailsPriority = document.getElementById('details-priority');
-                        const detailsCompleted = document.getElementById('details-completed');
-                        const detailsStartTime = document.getElementById('details-start-time');
-                        const detailsEndTime = document.getElementById('details-end-time');
-
-                        if (detailsTitle) detailsTitle.textContent = task.title ?? '';
-                        if (detailsDescription) detailsDescription.textContent = task.description ?? '';
-                        if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? '';
-                        if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(task.created_at);
-                        if (detailsStartTime) detailsStartTime.textContent = task.start_time ? task.start_time.substring(0, 5) : '-';
-                        if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task.end_time.substring(0, 5) : '-';
-                        if (detailsCompletedAt) {
-                            let completedDate = task.completed_at || task.complated_at || '';
-                            detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
-                        }
-
-                        // Workspaces display
-                        const detailsWorkspaces = document.getElementById('details-workspaces');
-                        if (detailsWorkspaces) {
-                            if (task.workspaces && task.workspaces.length > 0) {
-                                detailsWorkspaces.innerHTML = task.workspaces.map(ws => 
-                                    `<span class="px-2 py-0.5 bg-teal-900/50 text-teal-300 border border-teal-500/30 rounded-full text-xs break-all whitespace-normal">${ws.name}</span>`
-                                ).join('');
-                            } else {
-                                detailsWorkspaces.innerHTML = '<p class="text-gray-400">No workspaces assigned</p>';
-                            }
-                        }
-                        
-                        if (detailsPriority) {
-                            const pr = task.priority ?? '';
-                            let textClass = 'text-gray-400';
-                            if (pr === 'Urgent') textClass = 'text-red-500';
-                            else if (pr === 'High') textClass = 'text-yellow-500';
-                            else if (pr === 'Normal') textClass = 'text-blue-500';
-                            else if (pr === 'Low') textClass = 'text-green-500';
-
-                            if (pr) {
-                                detailsPriority.innerHTML = `
-                                    <div class="flex items-center gap-1.5">
-                                        <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                        <span class="${textClass} font-semibold">${pr}</span>
-                                    </div>
-                                `;
-                            } else {
-                                detailsPriority.textContent = '-';
-                            }
-                        }
-                        
-                        if (detailsCompleted) {
-                            detailsCompleted.innerHTML = task.completed ? 
-                                '<span class="font-bold text-green-500">Completed</span>' : 
-                                '<span class="font-bold text-red-500">Not Completed</span>';
-                        }
-
-                        const detailsAttachments = document.getElementById('details-attachments');
-                        if (detailsAttachments) {
-                            const attachments = Array.isArray(task.attachments) ? task.attachments : [];
-                            if (!attachments.length) {
-                                detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
-                            } else {
-                                detailsAttachments.innerHTML = attachments.map(att => {
-                                    const originalName = att.original_name || att.filename || 'Attachment';
-                                    const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                    const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                    const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
-                                    return `
-                                        <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
-                                            ${imgHtml}
-                                            <div class="flex-1 min-w-0">
-                                                <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
-                                                <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                            </div>
-                                        </a>
-                                    `;
-                                }).join('');
-                            }
-                        }
-
-                        if (taskDetailsModal) taskDetailsModal.classList.remove('hidden');
-                        if (editDetailsBtn) {
-                            const canModify = task.can_modify === true || task.can_modify === 1;
-                            (canModify && !task.completed) ? editDetailsBtn.classList.remove('hidden') : editDetailsBtn.classList.add('hidden');
-                        }
-                    })
-                    .catch(() => alert('Failed to load task details'));
-            };
-
-            // Global listener for search details
-            window.addEventListener('open-task-details', (e) => {
-                window.showTaskDetails(e.detail.taskId);
-            });
-
-            // Handle URL param open_task
-            const urlParams = new URLSearchParams(window.location.search);
-            const openTaskId = urlParams.get('open_task');
-            if (openTaskId) {
-                window.showTaskDetails(openTaskId);
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-
-            // Open Task Details Modal (view-only) when clicking the task title
-            const taskTitleEl = e.target.closest('[data-task-title]');
-            if (taskTitleEl) {
-                window.showTaskDetails(taskTitleEl.dataset.taskTitle);
-                document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
-            }
+                // Open Task Details Modal (view-only) when clicking the task title
+                const taskTitleEl = e.target.closest('[data-task-title]');
+                if (taskTitleEl) {
+                    window.showTaskDetails(taskTitleEl.dataset.taskTitle);
+                    document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
+                }
             });
 
             // Close detail modal
@@ -1335,8 +1998,10 @@
                             document.getElementById('edit-title').value = task.title ?? '';
                             document.getElementById('edit-description').value = task.description ?? '';
                             document.getElementById('edit-due-date').value = task.due_date ?? '';
-                            document.getElementById('edit-start-time').value = task.start_time ? task.start_time.substring(0, 5) : '';
-                            document.getElementById('edit-end-time').value = task.end_time ? task.end_time.substring(0, 5) : '';
+                            document.getElementById('edit-start-time').value = task.start_time ? task
+                                .start_time.substring(0, 5) : '';
+                            document.getElementById('edit-end-time').value = task.end_time ? task
+                                .end_time.substring(0, 5) : '';
 
                             // priority dropdown label + value
                             const prSelect = document.getElementById('edit-priority');
@@ -1345,13 +2010,19 @@
 
                             // Sync Alpine selected (source of truth) via custom event
                             window.dispatchEvent(new CustomEvent('set-edit-priority', {
-                                detail: { priority: pr }
+                                detail: {
+                                    priority: pr
+                                }
                             }));
 
                             if (prSelect) {
                                 prSelect.value = pr;
-                                prSelect.dispatchEvent(new Event('input', { bubbles: true }));
-                                prSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                                prSelect.dispatchEvent(new Event('input', {
+                                    bubbles: true
+                                }));
+                                prSelect.dispatchEvent(new Event('change', {
+                                    bubbles: true
+                                }));
                             }
 
                             if (prLabel) prLabel.textContent = pr || 'Priority';
@@ -1366,20 +2037,28 @@
                             if (editFileLabel) editFileLabel.textContent = 'Add File';
 
                             // Attachments existing preview with remove option (hapus attachment lama) via checkbox
-                            const existingAttachments = task.attachments && Array.isArray(task.attachments) ? task.attachments : [];
-                            const existingWrap = document.getElementById('edit-existing-attachments-wrap');
-                            const existingContainer = document.getElementById('edit-existing-attachments');
+                            const existingAttachments = task.attachments && Array.isArray(task
+                                .attachments) ? task.attachments : [];
+                            const existingWrap = document.getElementById(
+                                'edit-existing-attachments-wrap');
+                            const existingContainer = document.getElementById(
+                                'edit-existing-attachments');
 
                             if (existingWrap && existingContainer) {
                                 if (existingAttachments.length) {
                                     existingWrap.classList.remove('hidden');
                                     existingContainer.innerHTML = existingAttachments.map(att => {
-                                        const originalName = att.original_name || att.filename || 'Attachment';
+                                        const originalName = att.original_name || att
+                                            .filename || 'Attachment';
                                         const id = att.id;
-                                        const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                        
-                                        const isImage = att.mime_type && att.mime_type.startsWith('image/') && att.storage_path;
-                                        const imgHtml = isImage ? `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` : '';
+                                        const path = att.storage_path ?
+                                            `/storage/${att.storage_path}` : '#';
+
+                                        const isImage = att.mime_type && att.mime_type
+                                            .startsWith('image/') && att.storage_path;
+                                        const imgHtml = isImage ?
+                                            `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
+                                            '';
 
                                         return `
                                             <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
@@ -1408,11 +2087,22 @@
                                 }
                             }
 
+                            // Load comments & mention suggestions
+                            if (typeof currentTaskIdForComments !== 'undefined') {
+                                currentTaskIdForComments = taskId;
+                                loadComments(taskId, 'edit-comments-list', 'edit-comment-count');
+                                loadMentionSuggestions(taskId);
+                                const editInput = document.getElementById('edit-comment-input');
+                                if (editInput) editInput.value = '';
+                            }
 
-                    // Show edit modal
+                            // Show edit modal
                             taskDetailsModal.classList.add('hidden');
                             editTaskModal.classList.remove('hidden');
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
                         });
                 });
             }
@@ -1448,26 +2138,27 @@
                 fileInput.addEventListener('change', function() {
                     const fileList = document.getElementById('file-list');
                     const label = document.getElementById('file-label');
-                    
+
                     Array.from(this.files).forEach(file => {
                         window.newTaskFiles.items.add(file);
                     });
                     this.files = window.newTaskFiles.files;
-                    
+
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
                         label.textContent = this.files.length + ' file(s) selected';
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
                             div.className = 'flex justify-between items-center text-sm mt-1';
-                            
+
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
-                            
+
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
                             removeBtn.innerHTML = '&times;';
-                            removeBtn.className = 'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
+                            removeBtn.className =
+                                'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
                             removeBtn.onclick = (e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -1479,7 +2170,7 @@
                                 fileInput.files = window.newTaskFiles.files;
                                 fileInput.dispatchEvent(new Event('change'));
                             };
-                            
+
                             div.appendChild(nameSpan);
                             div.appendChild(removeBtn);
                             fileList.appendChild(div);
@@ -1496,26 +2187,27 @@
                 editFileInputEl.addEventListener('change', function() {
                     const fileList = document.getElementById('edit-file-list');
                     const label = document.getElementById('edit-file-label');
-                    
+
                     Array.from(this.files).forEach(file => {
                         window.editTaskFiles.items.add(file);
                     });
                     this.files = window.editTaskFiles.files;
-                    
+
                     fileList.innerHTML = '';
                     if (this.files.length > 0) {
                         label.textContent = this.files.length + ' file(s) selected';
                         Array.from(this.files).forEach((f, index) => {
                             const div = document.createElement('div');
                             div.className = 'flex justify-between items-center text-sm mt-1';
-                            
+
                             const nameSpan = document.createElement('span');
                             nameSpan.textContent = '📎 ' + f.name;
-                            
+
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
                             removeBtn.innerHTML = '&times;';
-                            removeBtn.className = 'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
+                            removeBtn.className =
+                                'text-red-400 hover:text-red-600 font-bold ml-2 text-lg leading-none';
                             removeBtn.onclick = (e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -1527,7 +2219,7 @@
                                 editFileInputEl.files = window.editTaskFiles.files;
                                 editFileInputEl.dispatchEvent(new Event('change'));
                             };
-                            
+
                             div.appendChild(nameSpan);
                             div.appendChild(removeBtn);
                             fileList.appendChild(div);
@@ -1542,32 +2234,465 @@
             const clearHistoryBtn = document.getElementById('clear-history-btn');
             if (clearHistoryBtn) {
                 clearHistoryBtn.addEventListener('click', () => {
-                    if (confirm('Are you sure you want to clear all tasks from your history? This action cannot be undone.')) {
+                    if (confirm(
+                            'Are you sure you want to clear all tasks from your history? This action cannot be undone.'
+                            )) {
                         fetch("{{ route('history.clear') }}", {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                window.location.reload();
-                            } else {
-                                alert('Failed to clear history.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while clearing history.');
-                        });
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    window.location.reload();
+                                } else {
+                                    alert('Failed to clear history.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while clearing history.');
+                            });
                     }
                 });
             }
+
+            // =====================================================
+            // COMMENT & @MENTION SYSTEM
+            // =====================================================
+            let currentTaskIdForComments = null;
+            let mentionSuggestions = [];
+            const csrfToken = '{{ csrf_token() }}';
+
+            // Helper: Render a single comment HTML
+            function renderCommentHtml(comment) {
+                const photoPath = comment.user.profile_photo_path ?
+                    `/storage/${comment.user.profile_photo_path}` :
+                    null;
+                const avatar = photoPath ?
+                    `<img src="${photoPath}" class="flex-shrink-0 object-cover w-8 h-8 rounded-full">` :
+                    `<div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-xs font-bold rounded-full bg-[#1C427A] text-white">${comment.user.name.charAt(0).toUpperCase()}</div>`;
+
+                // Highlight @mentions in the body
+                const body = comment.body.replace(/@(\S+(?:\s\S+)*?)(?=\s*@|\s*$)/g,
+                    '<span class="text-cyan-400 font-semibold">@$1</span>');
+
+                const deleteBtn = comment.is_own ?
+                    `<button type="button" class="comment-delete-btn text-gray-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100" data-comment-id="${comment.id}" title="Delete comment">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                   </button>` :
+                    '';
+
+                return `<div class="flex items-start gap-3 group" data-comment-id="${comment.id}">
+                ${avatar}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-semibold text-white">${comment.user.name}</span>
+                        <span class="text-[10px] text-gray-500" title="${comment.created_at_full}">${comment.created_at}</span>
+                        ${deleteBtn}
+                    </div>
+                    <p class="text-sm text-gray-300 break-words mt-0.5">${body}</p>
+                </div>
+            </div>`;
+            }
+
+            // Load comments for a task
+            async function loadComments(taskId, listElId, countElId) {
+                const listEl = document.getElementById(listElId);
+                const countEl = document.getElementById(countElId);
+
+                if (!listEl) return;
+
+                try {
+                    const res = await fetch(`/tasks/${taskId}/comments`);
+                    const comments = await res.json();
+
+                    if (comments.length === 0) {
+                        listEl.innerHTML = '<p class="text-sm italic text-gray-500">No comments yet</p>';
+                        if (countEl) countEl.textContent = '';
+                    } else {
+                        listEl.innerHTML = comments.map(renderCommentHtml).join('');
+                        if (countEl) countEl.textContent = comments.length;
+                        // Scroll to bottom
+                        listEl.scrollTop = listEl.scrollHeight;
+                    }
+                } catch (err) {
+                    console.error('Error loading comments:', err);
+                    listEl.innerHTML = '<p class="text-sm italic text-red-400">Failed to load comments</p>';
+                }
+            }
+
+            // Load mention suggestions
+            async function loadMentionSuggestions(taskId) {
+                try {
+                    const res = await fetch(`/tasks/${taskId}/mention-suggestions`);
+                    mentionSuggestions = await res.json();
+                } catch (err) {
+                    console.error('Error loading mention suggestions:', err);
+                    mentionSuggestions = [];
+                }
+            }
+
+            // Setup @mention input for a specific input field
+            function setupMentionInput(inputId, dropdownId, sendBtnId) {
+                const input = document.getElementById(inputId);
+                const dropdown = document.getElementById(dropdownId);
+                const sendBtn = document.getElementById(sendBtnId);
+
+                if (!input || !dropdown || !sendBtn) return;
+
+                input.addEventListener('input', function() {
+                    const value = this.value;
+                    sendBtn.disabled = !value.trim();
+
+                    // Check for @mention trigger
+                    const cursorPos = this.selectionStart;
+                    const textBeforeCursor = value.substring(0, cursorPos);
+                    const atIndex = textBeforeCursor.lastIndexOf('@');
+
+                    if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                        const query = textBeforeCursor.substring(atIndex + 1).toLowerCase();
+                        const filtered = mentionSuggestions.filter(m =>
+                            m.name.toLowerCase().includes(query)
+                        );
+
+                        if (filtered.length > 0) {
+                            dropdown.innerHTML = filtered.map(m => {
+                                const photo = m.profile_photo_path ?
+                                    `<img src="/storage/${m.profile_photo_path}" class="flex-shrink-0 object-cover w-7 h-7 rounded-full">` :
+                                    `<div class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold rounded-full bg-[#E8EEF9] text-[#1C427A]">${m.name.charAt(0).toUpperCase()}</div>`;
+                                return `<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors mention-option" data-name="${m.name}">
+                                ${photo}
+                                <span class="text-sm font-medium text-[#132C51]">${m.name}</span>
+                            </div>`;
+                            }).join('');
+                            dropdown.classList.remove('hidden');
+                        } else {
+                            dropdown.classList.add('hidden');
+                        }
+                    } else {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+
+                // Handle mention selection
+                dropdown.addEventListener('click', function(e) {
+                    const option = e.target.closest('.mention-option');
+                    if (!option) return;
+
+                    const name = option.dataset.name;
+                    const cursorPos = input.selectionStart;
+                    const textBeforeCursor = input.value.substring(0, cursorPos);
+                    const atIndex = textBeforeCursor.lastIndexOf('@');
+                    const textAfterCursor = input.value.substring(cursorPos);
+
+                    input.value = textBeforeCursor.substring(0, atIndex) + '@' + name + ' ' +
+                        textAfterCursor;
+                    dropdown.classList.add('hidden');
+                    input.focus();
+                    const newPos = atIndex + name.length + 2;
+                    input.setSelectionRange(newPos, newPos);
+                    sendBtn.disabled = !input.value.trim();
+                });
+
+                // Handle Enter key to send comment
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey && !dropdown.classList.contains('hidden')) {
+                        // If dropdown is open, select the first option
+                        const firstOption = dropdown.querySelector('.mention-option');
+                        if (firstOption) {
+                            e.preventDefault();
+                            firstOption.click();
+                        }
+                    } else if (e.key === 'Enter' && !e.shiftKey && dropdown.classList.contains('hidden')) {
+                        e.preventDefault();
+                        if (input.value.trim()) {
+                            sendBtn.click();
+                        }
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (input && !input.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Setup comment sending
+            function setupCommentSend(sendBtnId, inputId, listElId, countElId) {
+                const sendBtn = document.getElementById(sendBtnId);
+                const input = document.getElementById(inputId);
+
+                if (!sendBtn || !input) return;
+
+                sendBtn.addEventListener('click', async function() {
+                    const body = input.value.trim();
+                    if (!body || !currentTaskIdForComments) return;
+
+                    sendBtn.disabled = true;
+
+                    try {
+                        const res = await fetch(`/tasks/${currentTaskIdForComments}/comments`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                body: body
+                            })
+                        });
+
+                        if (res.ok) {
+                            const comment = await res.json();
+                            const listEl = document.getElementById(listElId);
+                            const countEl = document.getElementById(countElId);
+
+                            // Remove empty state if present
+                            const emptyState = listEl.querySelector('.italic');
+                            if (emptyState) emptyState.remove();
+
+                            // Append new comment
+                            listEl.insertAdjacentHTML('beforeend', renderCommentHtml(comment));
+                            listEl.scrollTop = listEl.scrollHeight;
+
+                            // Update count
+                            if (countEl) {
+                                const currentCount = parseInt(countEl.textContent || '0');
+                                countEl.textContent = currentCount + 1;
+                            }
+
+                            input.value = '';
+                            sendBtn.disabled = true;
+
+                            // Also refresh the other modal's comments if it exists
+                            if (listElId === 'details-comments-list') {
+                                loadComments(currentTaskIdForComments, 'edit-comments-list',
+                                    'edit-comment-count');
+                            } else {
+                                loadComments(currentTaskIdForComments, 'details-comments-list',
+                                    'details-comment-count');
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error sending comment:', err);
+                    } finally {
+                        sendBtn.disabled = !input.value.trim();
+                    }
+                });
+            }
+
+            // Handle comment deletion (delegated)
+            document.addEventListener('click', async function(e) {
+                const deleteBtn = e.target.closest('.comment-delete-btn');
+                if (!deleteBtn || !currentTaskIdForComments) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const commentId = deleteBtn.dataset.commentId;
+                if (!confirm('Delete this comment?')) return;
+
+                try {
+                    const res = await fetch(
+                    `/tasks/${currentTaskIdForComments}/comments/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (res.ok) {
+                        // Remove from all comment lists
+                        document.querySelectorAll(`[data-comment-id="${commentId}"]`).forEach(el => {
+                            el.style.transition = 'opacity 0.3s, transform 0.3s';
+                            el.style.opacity = '0';
+                            el.style.transform = 'translateX(20px)';
+                            setTimeout(() => el.remove(), 300);
+                        });
+
+                        // Update counts
+                        setTimeout(() => {
+                            ['details-comment-count', 'edit-comment-count'].forEach(id => {
+                                const countEl = document.getElementById(id);
+                                if (countEl && countEl.textContent) {
+                                    const newCount = Math.max(0, parseInt(countEl
+                                        .textContent) - 1);
+                                    countEl.textContent = newCount || '';
+                                }
+                            });
+                        }, 350);
+                    }
+                } catch (err) {
+                    console.error('Error deleting comment:', err);
+                }
+            });
+
+            // Setup @mention input for a specific input field using global suggestions
+            async function setupGlobalMentionInput(inputId, dropdownId) {
+                const input = document.getElementById(inputId);
+                const dropdown = document.getElementById(dropdownId);
+
+                if (!input || !dropdown) return;
+
+                // Fetch global suggestions once
+                let globalSuggestions = [];
+                try {
+                    const res = await fetch('/global-mention-suggestions');
+                    globalSuggestions = await res.json();
+                } catch (err) {
+                    console.error('Error loading global mention suggestions:', err);
+                }
+
+                input.addEventListener('input', function() {
+                    const value = this.value;
+
+                    // Check for @mention trigger
+                    const cursorPos = this.selectionStart;
+                    const textBeforeCursor = value.substring(0, cursorPos);
+                    const atIndex = textBeforeCursor.lastIndexOf('@');
+
+                    if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                        const query = textBeforeCursor.substring(atIndex + 1).toLowerCase();
+                        const filtered = globalSuggestions.filter(m =>
+                            m.name.toLowerCase().includes(query)
+                        );
+
+                        if (filtered.length > 0) {
+                            dropdown.innerHTML = filtered.map(m => {
+                                const photo = m.profile_photo_path ?
+                                    `<img src="/storage/${m.profile_photo_path}" class="flex-shrink-0 object-cover w-7 h-7 rounded-full">` :
+                                    `<div class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold rounded-full bg-[#E8EEF9] text-[#1C427A]">${m.name.charAt(0).toUpperCase()}</div>`;
+                                return `<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors mention-option" data-name="${m.name}">
+                                ${photo}
+                                <span class="text-sm font-medium text-[#132C51]">${m.name}</span>
+                            </div>`;
+                            }).join('');
+                            dropdown.classList.remove('hidden');
+                        } else {
+                            dropdown.classList.add('hidden');
+                        }
+                    } else {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+
+                // Handle mention selection
+                dropdown.addEventListener('click', function(e) {
+                    const option = e.target.closest('.mention-option');
+                    if (!option) return;
+
+                    const name = option.dataset.name;
+                    const cursorPos = input.selectionStart;
+                    const textBeforeCursor = input.value.substring(0, cursorPos);
+                    const atIndex = textBeforeCursor.lastIndexOf('@');
+                    const textAfterCursor = input.value.substring(cursorPos);
+
+                    input.value = textBeforeCursor.substring(0, atIndex) + '@' + name + ' ' +
+                        textAfterCursor;
+                    dropdown.classList.add('hidden');
+                    input.focus();
+                    const newPos = atIndex + name.length + 2;
+                    input.setSelectionRange(newPos, newPos);
+                });
+
+                // Handle Enter key to select mention
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey && !dropdown.classList.contains('hidden')) {
+                        const firstOption = dropdown.querySelector('.mention-option');
+                        if (firstOption) {
+                            e.preventDefault();
+                            firstOption.click();
+                        }
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (input && !input.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Initialize mention inputs and send buttons
+            setupMentionInput('details-comment-input', 'details-mention-dropdown', 'details-comment-send-btn');
+            setupMentionInput('edit-comment-input', 'edit-mention-dropdown', 'edit-comment-send-btn');
+            setupCommentSend('details-comment-send-btn', 'details-comment-input', 'details-comments-list',
+                'details-comment-count');
+            setupCommentSend('edit-comment-send-btn', 'edit-comment-input', 'edit-comments-list',
+                'edit-comment-count');
+            setupGlobalMentionInput('new-task-comment-input', 'new-task-mention-dropdown');
+
+            // Real-time Overdue Check
+            setInterval(() => {
+                const now = new Date();
+                const todayContent = document.getElementById('today-content');
+                const overdueContent = document.getElementById('overdue-content');
+
+                if (!todayContent || !overdueContent) return;
+
+                const todayCountEl = document.querySelector(
+                    '.category-toggle[data-category="today"] span:last-child');
+                const overdueCountEl = document.querySelector(
+                    '.category-toggle[data-category="overdue"] span:last-child');
+                const taskItems = todayContent.querySelectorAll('.task-item');
+
+                taskItems.forEach(item => {
+                    const dueDate = item.getAttribute('data-original-due-date');
+                    const endTime = item.getAttribute('data-end-time');
+
+                    if (dueDate && endTime) {
+                        const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1)
+                            .padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                        if (dueDate === todayStr) {
+                            const [hours, minutes, seconds] = endTime.split(':');
+                            const taskTime = new Date();
+                            taskTime.setHours(parseInt(hours), parseInt(minutes), parseInt(
+                                seconds || 0), 0);
+
+                            if (now > taskTime) {
+                                // Move to overdue
+                                const overdueContainer = overdueContent.querySelector('.space-y-4');
+                                if (overdueContainer) {
+                                    overdueContainer.appendChild(item);
+
+                                    // Change text to red
+                                    const titleSpan = item.querySelector('span[data-task-title]');
+                                    if (titleSpan) {
+                                        titleSpan.classList.remove('text-[#132C51]');
+                                        titleSpan.classList.add('text-red-600');
+                                    }
+
+                                    // Update counts
+                                    if (todayCountEl) {
+                                        todayCountEl.textContent = Math.max(0, parseInt(todayCountEl
+                                            .textContent) - 1);
+                                    }
+                                    if (overdueCountEl) {
+                                        overdueCountEl.textContent = parseInt(overdueCountEl
+                                            .textContent) + 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }, 10000); // Check every 10 seconds
+
         });
     </script>
 
 </x-app-layout>
-

@@ -84,6 +84,19 @@ class TaskController extends Controller
             $task->workspaces()->sync($request->workspace_ids);
         }
 
+        // Create initial comment if provided
+        if ($request->has('initial_comment') && !empty($request->initial_comment)) {
+            $comment = \App\Models\TaskComment::create([
+                'task_id' => $task->id,
+                'user_id' => Auth::id(),
+                'body' => $request->initial_comment,
+            ]);
+
+            // Process mentions for the initial comment
+            $commentController = new \App\Http\Controllers\TaskCommentController();
+            $commentController->processMentions($comment, $task, Auth::user());
+        }
+
 
 
         if ($request->hasFile('attachments')) {
@@ -142,6 +155,14 @@ class TaskController extends Controller
             $q->where('users.id', $user->id);
         })->exists();
 
+        // Record task view
+        if ($task->workspaces->count() > 0) {
+            \App\Models\TaskView::firstOrCreate([
+                'user_id' => $user->id,
+                'task_id' => $task->id,
+            ]);
+        }
+
         $task->can_modify = $task->canUserModify($user);
         return response()->json($task);
     }
@@ -189,6 +210,33 @@ class TaskController extends Controller
         if ($request->has('completed')) {
             if ($request->completed && !$task->completed) {
                 $data['completed_at'] = now();
+
+                // Trigger mention_completed notification
+                $currentUserId = Auth::id();
+                $mentionedUserIds = \App\Models\Notification::where('type', 'mention')
+                    ->where('data->task_id', $task->id)
+                    ->pluck('user_id')
+                    ->unique();
+                
+                foreach ($mentionedUserIds as $mentionedUserId) {
+                    if ($mentionedUserId !== $currentUserId) {
+                        \App\Models\Notification::create([
+                            'user_id' => $mentionedUserId,
+                            'type' => 'mention_completed',
+                            'title' => 'Tugas Selesai',
+                            'message' => "Tugas \"{$task->title}\" dimana Anda disebutkan telah diselesaikan.",
+                            'is_read' => false,
+                            'data' => [
+                                'task_id' => $task->id,
+                                'task_title' => $task->title,
+                                'completer_id' => $currentUserId,
+                                'completer_name' => Auth::user()->name,
+                                'completer_avatar' => Auth::user()->profile_photo_path,
+                            ]
+                        ]);
+                    }
+                }
+
             } elseif (!$request->completed && $task->completed) {
                 $data['completed_at'] = null;
             }
@@ -352,21 +400,31 @@ class TaskController extends Controller
     /**
      * Generate a report of completed tasks (History).
      */
-    public function historyReport()
+    public function historyReport(Request $request)
     {
         $user = Auth::user();
-        $historyTasks = Task::with('workspaces')
+        
+        $query = Task::with('workspaces')
             ->where(function($q) use ($user) {
                 $q->where('user_id', $user->id)
                   ->orWhereHas('workspaces', function($qw) use ($user) {
                       $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
                   });
             })
-            ->where('completed', true)
-            ->orderBy('completed_at', 'desc')
-            ->get();
+            ->where('completed', true);
 
-        return view('reports.history', compact('historyTasks', 'user'));
+        // Filter by selected workspaces
+        if ($request->has('workspaces') && is_array($request->workspaces)) {
+            $query->whereHas('workspaces', function($qw) use ($request) {
+                $qw->whereIn('workspaces.id', $request->workspaces);
+            });
+        }
+
+        $historyTasks = $query->orderBy('completed_at', 'desc')->get();
+        $workspaces = $user->workspaces()->get();
+        $selectedWorkspaces = $request->input('workspaces', []);
+
+        return view('reports.history', compact('historyTasks', 'user', 'workspaces', 'selectedWorkspaces'));
     }
     public function search(Request $request)
     {

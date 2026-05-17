@@ -26,30 +26,23 @@
                             </button>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-3 text-sm">
-                        <button id="toggle-view"
-                            class="px-4 py-2 text-white transition-transform duration-200 bg-[##5F6E84] hover:hover:scale-110 rounded-3xl">
-                            <span id="view-text">Calendar View</span>
-                        </button>
-                        <button type="button" id="add-task-btn"
-                            class="add-task-btn flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
-                            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path fill="#ffffff" fill-rule="evenodd"
-                                        d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z">
-                                    </path>
-                                </g>
-                            </svg>
-                            <span>New Task</span>
-                        </button>
-                    </div>
+                    <button type="button" id="add-task-btn"
+                        class="add-task-btn flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
+                        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path fill="#ffffff" fill-rule="evenodd"
+                                    d="M9 17a1 1 0 102 0v-6h6a1 1 0 100-2h-6V3a1 1 0 10-2 0v6H3a1 1 0 000 2h6v6z">
+                                </path>
+                            </g>
+                        </svg>
+                        <span>New Task</span>
+                    </button>
                 </div>
             </div>
 
             <div class="flex flex-wrap justify-center gap-8">
-
                 <!-- Calendar Grid View -->
                 <div id="calendar-view" class="flex-[2] min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="grid grid-cols-7 gap-2 mb-4">
@@ -78,7 +71,7 @@
                                 $lowCount = $incompleteTasksOnDate->where('priority', 'Low')->count();
                                 $totalTasks = $incompleteTasksOnDate->count();
                             @endphp
-                            <div class="min-h-[100px] border rounded-lg p-2 {{ $isCurrentMonth ? 'bg-white' : 'bg-gray-50' }} {{ $isToday ? 'bg-blue-100' : '' }} {{ $isToday ? 'ring-2 ring-blue-500' : '' }} cursor-pointer hover:bg-gray-50 transition-colors date-cell"
+                            <div class="min-h-[100px] border rounded-lg p-2 {{ $isCurrentMonth ? 'bg-white' : 'bg-gray-50' }} {{ $isToday ? 'bg-blue-100 ring-2 ring-blue-500' : '' }} cursor-pointer hover:bg-gray-50 transition-colors date-cell"
                                 data-date="{{ $dateKey }}">
                                 <div
                                     class="text-sm font-medium {{ $isToday ? 'text-blue-600 text-lg' : ($date->isSunday() ? 'text-red-500' : ($isCurrentMonth ? 'text-gray-900' : 'text-gray-400')) }}">
@@ -114,9 +107,8 @@
                                 class="px-3 py-1 text-white border border-[#0E213D] rounded-full bg-[#0E213D]">{{ date('d M Y') }}</span>
                         </h2>
                     </div>
-
                     <div id="task-list" class="space-y-3 overflow-y-auto max-h-[600px] text-[#132C51]">
-                        <!-- Tasks will be loaded here via JavaScript -->
+                        <!-- Tasks loaded via JS -->
                     </div>
                 </div>
             </div>
@@ -220,30 +212,28 @@
                                 <div x-data="{ open: false, selected: null }" @reset-new-task.window="selected = null"
                                     class="relative w-full">
                                     <button @click="open = !open" type="button"
-                                        class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
-                                        :class="{
-                                            'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
-                                            'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
-                                            'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
-                                            'bg-green-50 border-green-300 text-green-700': selected === 'Low',
-                                            'text-white border-gray-600': !selected
-                                        }">
-                                        <svg class="w-5 h-5"
-                                            :class="{
-                                                'text-red-500': selected === 'Urgent',
-                                                'text-yellow-500': selected === 'High',
-                                                'text-blue-500': selected === 'Normal',
-                                                'text-green-500': selected === 'Low',
-                                                'text-gray-400': !selected
-                                            }"
-                                            fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                        <span x-text="selected || 'Priority'" class="flex-1"></span>
-                                    </button>
+    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] rounded-lg transition-colors duration-150 border border-gray-300"
+    :class="{
+        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+        'text-white border-gray-600': selected === null || selected === ''
+    }">
+    
+    <svg class="w-5 h-5"
+        :class="{
+            'text-red-500': selected === 'Urgent',
+            'text-yellow-500': selected === 'High',
+            'text-blue-500': selected === 'Normal',
+            'text-green-500': selected === 'Low',
+            'text-gray-400': selected === null || selected === ''
+        }"
+        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+    </svg>
+    <span x-text="selected || 'Priority'" class="flex-1 text-current"></span>
+</button>
 
                                     <div x-show="open" @click.outside="open = false" x-transition
                                         class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
@@ -351,6 +341,28 @@
                                     accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                             </label>
                             <div id="file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
+                        </div>
+
+                        {{-- Initial Comment Section --}}
+                        <div class="col-span-12">
+                            <div class="flex items-center gap-2 mt-2 mb-1">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Initial Comments (Optional)</label>
+                            </div>
+                            <div class="relative">
+                                <input type="text" name="initial_comment" id="new-task-comment-input"
+                                    placeholder="Write the initial comment... Use @ to mention members"
+                                    class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                    autocomplete="off">
+                                <div id="new-task-mention-dropdown"
+                                    class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Row 5: Buttons -->
@@ -468,31 +480,28 @@
                                     @set-edit-priority.window="selected = $event.detail.priority"
                                     class="relative w-full">
                                     <button @click="open = !open" type="button"
-                                        class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] border border-gray-300 rounded-lg"
-                                        :class="{
-                                            'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
-                                            'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
-                                            'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
-                                            'bg-green-50 border-green-300 text-green-700': selected === 'Low',
-                                            'text-white border-gray-600': !selected
-                                        }">
-                                        <svg class="w-5 h-5"
-                                            :class="{
-                                                'text-red-500': selected === 'Urgent',
-                                                'text-yellow-500': selected === 'High',
-                                                'text-blue-500': selected === 'Normal',
-                                                'text-green-500': selected === 'Low',
-                                                'text-gray-400': !selected
-                                            }"
-                                            fill="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                        <span id="edit-priority-label" x-text="selected || 'Priority'"
-                                            class="flex-1"></span>
-                                    </button>
+    class="flex items-center w-full gap-2 px-3 py-2 text-left bg-[#0C1F3B] rounded-lg transition-colors duration-150 border border-gray-300"
+    :class="{
+        'bg-red-50 border-red-300 text-red-700': selected === 'Urgent',
+        'bg-yellow-50 border-yellow-300 text-yellow-700': selected === 'High',
+        'bg-blue-50 border-blue-300 text-blue-700': selected === 'Normal',
+        'bg-green-50 border-green-300 text-green-700': selected === 'Low',
+        'text-white border-gray-600': selected === null || selected === ''
+    }">
+    
+    <svg class="w-5 h-5"
+        :class="{
+            'text-red-500': selected === 'Urgent',
+            'text-yellow-500': selected === 'High',
+            'text-blue-500': selected === 'Normal',
+            'text-green-500': selected === 'Low',
+            'text-gray-400': selected === null || selected === ''
+        }"
+        fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+    </svg>
+    <span x-text="selected || 'Priority'" class="flex-1 text-current"></span>
+</button>
 
                                     <div x-show="open" @click.outside="open = false" x-transition
                                         class="absolute z-10 w-full p-1 mt-1 bg-[#EAF0FA] rounded-xl shadow-xl">
@@ -607,71 +616,61 @@
                             <div id="edit-file-list" class="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-300"></div>
                         </div>
 
+                        {{-- Comments Section in Edit Modal --}}
+                        <div class="col-span-12 mt-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Comment</label>
+                                <span id="edit-comment-count"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                            </div>
+                            <div id="edit-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                                <p class="text-sm text-gray-500 italic">No comments yet</p>
+                            </div>
+                            <div class="relative">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" id="edit-comment-input"
+                                            placeholder="Write an initial comment... Use @ to mention members"
+                                            class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                            autocomplete="off">
+                                        <div id="edit-mention-dropdown"
+                                            class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="edit-comment-send-btn"
+                                        class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Row 6: Buttons -->
                         <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
                             <button type="submit"
-                                class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
+                                class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
                             <button type="button" id="close-edit-modal"
-                                class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:hover:scale-95">Cancel</button>
+                                class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>
                         </div>
                     </form>
-
-                    {{-- Prevent full-page navigation and ignore JSON response when saving edit task --}}
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            const form = document.getElementById('edit-task-form');
-                            if (!form) return;
-
-                            form.addEventListener('submit', (e) => {
-                                // Let normal submit happen, but avoid displaying JSON response in browser.
-                                // If server returns JSON, redirect back to /home.
-                                const action = form.getAttribute('action') || '';
-                                if (!action || !action.startsWith('/tasks/')) return;
-
-                                e.preventDefault();
-
-                                const formData = new FormData(form);
-                                fetch(action, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
-                                        },
-                                        body: formData
-                                    })
-                                    .then(async (res) => {
-                                        // Always go back to home after save to avoid rendering JSON object on page
-                                        window.location.href = '/home';
-                                    })
-                                    .catch(() => {
-                                        window.location.href = '/home';
-                                    });
-                            });
-                        });
-                    </script>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="delete-confirm-modal"
-        class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative p-5 shadow-xl rounded-xl w-[500px] bg-[#132C51] max-w-full my-8">
-                <div class="mt-3 text-center">
-                    <h3 class="mb-4 text-lg font-semibold text-white">Are you sure you want to delete this task?</h3>
-                    <div class="flex justify-center gap-6 mt-6 font-medium">
-                        <button id="delete-no"
-                            class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 hover:hover:scale-95 rounded-3xl">No</button>
-                        <button id="delete-yes"
-                            class="transition-transform duration-200 hover:hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Yes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Task Details Modal (view only) -->
+    <!-- Delete Confirm Modal -->
+    <!-- Task Details Modal -->
     <div id="task-details-modal"
         class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
@@ -707,6 +706,7 @@
                             <p id="details-description" class="text-gray-200 break-words"></p>
                         </div>
 
+                        <!-- Row 3: Due Date, Created Date, Completed Date -->
                         <div class="col-span-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor"
@@ -823,6 +823,46 @@
                             </div>
                         </div>
 
+                        {{-- Comments Section --}}
+                        <div class="col-span-12 mt-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <label class="font-semibold text-gray-100">Comment</label>
+                                <span id="details-comment-count"
+                                    class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 rounded-full"></span>
+                            </div>
+                            <div id="details-comments-list" class="space-y-3 overflow-y-auto max-h-[200px] pr-1 mb-3">
+                                <p class="text-sm text-gray-500 italic">No comments yet</p>
+                            </div>
+                            <div class="relative">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" id="details-comment-input"
+                                            placeholder="Write an initial comment... Use @ to mention members"
+                                            class="w-full px-4 py-2.5 text-sm text-white bg-[#0C1F3B] border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all placeholder-gray-500"
+                                            autocomplete="off">
+                                        <div id="details-mention-dropdown"
+                                            class="absolute bottom-full left-0 z-50 hidden w-full mb-1 overflow-y-auto bg-white shadow-2xl rounded-xl max-h-40 border border-gray-200">
+                                        </div>
+                                    </div>
+                                    <button type="button" id="details-comment-send-btn"
+                                        class="px-4 py-2 text-sm font-semibold text-white transition-all bg-cyan-600 rounded-xl hover:bg-cyan-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Buttons -->
                         <div class="flex justify-center col-span-12 gap-4 mt-6 font-medium">
                             <button type="button" id="edit-details-btn"
@@ -862,9 +902,8 @@
         let currentMonth = {{ $month }};
         let currentYear = {{ $year }};
         let selectedDate = null;
+        let currentTaskIdForComments = null;
 
-
-        // Priority colors
         const priorityColors = {
             'Urgent': '#DC2626',
             'High': '#F59E0B',
@@ -872,36 +911,22 @@
             'Low': '#10B981'
         };
 
-        // Global task objects (keyed by task ID for better mapping)
         let allTasks = @json($allTasks->keyBy('id'));
         let todayTasks = @json($todayTasks->keyBy('id'));
         let upcomingTasks = @json($upcomingTasks->keyBy('id'));
         let completedTasks = @json($completedTasks->keyBy('id'));
 
-        // Debugging logs
-        console.log('All Tasks:', allTasks);
-        console.log('Today Tasks:', todayTasks);
-        console.log('Upcoming Tasks:', upcomingTasks);
-        console.log('Completed Tasks:', completedTasks);
-
-        // Load tasks for selected date (tanpa filter sidebar)
         function loadTasks(date = null) {
-            console.log('loadTasks called with date:', date);
             const taskList = document.getElementById('task-list');
-            const targetDate = date || new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+            const targetDate = date || new Date().toISOString().slice(0, 10);
 
             fetch(`/tasks?date=${targetDate}`)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+                    if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Fetched tasks for date', targetDate, ':', data);
                     displayTasks(data, taskList);
-
-                    // Update title "Task in (Date)" (isi pill)
                     const pillEl = document.getElementById('task-in-date-pill');
                     if (pillEl) {
                         const pretty = new Date(targetDate).toLocaleDateString('en-US', {
@@ -914,213 +939,511 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error loading tasks for date', targetDate, ':', error);
-                    taskList.innerHTML =
-                        '<div class="p-3 text-[#132C51] text-center">No tasks on this date!</div>';
-
-                    const pillEl = document.getElementById('task-in-date-pill');
-                    if (pillEl) {
-                        const pretty = new Date(targetDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: '2-digit'
-                        });
-                        pillEl.textContent = `${pretty}`;
-                    }
+                    console.error('Error loading tasks:', error);
+                    taskList.innerHTML = '<div class="p-3 text-[#132C51] text-center">No tasks on this date!</div>';
                 });
-
         }
 
-
-        // Update task arrays when task status changes
         function updateTaskArrays(taskId, completed) {
-            console.log('updateTaskArrays called with taskId:', taskId, 'completed:', completed);
-            // Find the task in allTasks and update it
             if (allTasks[taskId]) {
                 allTasks[taskId].completed = completed;
-
-                // Update todayTasks
-                if (todayTasks[taskId]) {
-                    if (completed) {
-                        delete todayTasks[taskId];
-                    }
-                } else if (!completed && allTasks[taskId].due_date && new Date(allTasks[taskId].due_date).toDateString() ===
-                    new Date().toDateString()) {
-                    todayTasks[taskId] = allTasks[taskId];
-                }
-
-                // Update upcomingTasks
-                if (upcomingTasks[taskId]) {
-                    if (completed) {
-                        delete upcomingTasks[taskId];
-                    }
-                } else if (!completed && allTasks[taskId].due_date && new Date(allTasks[taskId].due_date) > new Date()) {
-                    upcomingTasks[taskId] = allTasks[taskId];
-                }
-
-                // Update completedTasks
                 if (completed) {
+                    delete todayTasks[taskId];
+                    delete upcomingTasks[taskId];
                     completedTasks[taskId] = allTasks[taskId];
                 } else {
                     delete completedTasks[taskId];
+                    const dueDate = allTasks[taskId].due_date;
+                    if (dueDate && new Date(dueDate).toDateString() === new Date().toDateString()) {
+                        todayTasks[taskId] = allTasks[taskId];
+                    }
                 }
             }
         }
 
-        // Function to add new task to UI
         function addTaskToUI(task) {
-            // Add to allTasks
             allTasks[task.id] = task;
-
-            // Determine category based on due_date
-            const dueDate = new Date(task.due_date);
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1);
-
-            if (dueDate.toDateString() === today.toDateString()) {
-                todayTasks[task.id] = task;
-            } else if (dueDate.toDateString() === tomorrow.toDateString()) {
-                upcomingTasks[task.id] = task;
-            } else if (dueDate > today) {
-                upcomingTasks[task.id] = task;
-            }
-
-            // Reload tasks to reflect changes
             loadTasks(selectedDate);
         }
 
-
-
         function displayTasks(tasks, container) {
-            console.log('displayTasks called with tasks:', tasks);
             container.innerHTML = '';
-
             if (tasks.length === 0) {
-                container.innerHTML =
-                    '<div class="p-3 text-[#132C51] text-center">No tasks on this date!</div>';
+                container.innerHTML = '<div class="p-3 text-[#132C51] text-center">No tasks on this date!</div>';
                 return;
             }
 
-            // Sort tasks (sesuai logika Anda)
-            const today = new Date().toDateString();
             const priorityOrder = {
                 'Urgent': 1,
                 'High': 2,
                 'Normal': 3,
                 'Low': 4
             };
-            tasks.sort((a, b) => {
-                const aDate = a.due_date ? new Date(a.due_date).toDateString() : null;
-                const bDate = b.due_date ? new Date(b.due_date).toDateString() : null;
-                const aIsToday = aDate === today;
-                const bIsToday = bDate === today;
-
-                if (aIsToday && !bIsToday) return -1;
-                if (!aIsToday && bIsToday) return 1;
-
-                if (aDate && bDate) {
-                    const dateDiff = new Date(a.due_date) - new Date(b.due_date);
-                    if (dateDiff !== 0) return dateDiff;
-                } else if (aDate) return -1;
-                else if (bDate) return 1;
-
-                return priorityOrder[a.priority] - priorityOrder[b.priority];
-            });
+            tasks.sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
 
             tasks.forEach(task => {
                 const taskDiv = document.createElement('div');
-                taskDiv.className = 'p-4 bg-white transition-all duration-200 border shadow-sm rounded-2xl border-gray-100 group hover:border-blue-200';
+                taskDiv.className =
+                    'p-4 bg-white transition-all duration-200 border shadow-sm rounded-2xl border-gray-100 group hover:border-blue-200';
                 taskDiv.setAttribute('data-task-id', task.id);
 
+                let isOverdue = false;
+                if (!task.completed && task.due_date) {
+                    const dueDate = new Date(task.due_date);
+                    const now = new Date();
+                    if (dueDate.toDateString() === now.toDateString() && task.end_time) {
+                        const [h, m, s] = task.end_time.split(':');
+                        const taskTime = new Date();
+                        taskTime.setHours(parseInt(h), parseInt(m), parseInt(s || 0), 0);
+                        if (now > taskTime) isOverdue = true;
+                    } else if (dueDate < new Date(now.toDateString())) {
+                        isOverdue = true;
+                    }
+                }
+
                 taskDiv.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center flex-1 min-w-0 mr-4">
-                        <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
-                        <div class="flex-1 min-w-0 ml-3">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="text-lg font-medium break-all whitespace-normal ${task.completed ? 'line-through text-gray-500 opacity-50' : 'text-[#132C51]'} cursor-pointer hover:text-blue-600 transition-colors" data-task-title="${task.id}">
-                                    ${task.title}
-                                </span>
-                                ${task.priority ? `
-                                    <svg class="flex-shrink-0 w-5 h-5 ${task.priority === 'Urgent' ? 'text-red-500' : (task.priority === 'High' ? 'text-yellow-500' : (task.priority === 'Normal' ? 'text-blue-500' : 'text-green-500'))} ${task.completed ? 'opacity-50' : ''}" fill="currentColor" viewBox="0 0 24 24">
-                                        <title>${task.priority}</title>
-                                        <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
-                                    </svg>
-                                ` : ''}
-                                ${task.workspaces && task.workspaces.length > 0 ? task.workspaces.map(ws => `
-                                    <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 ${task.completed ? 'opacity-50' : ''}" title="${ws.name}">
-                                        ${ws.name.substring(0, 2).toUpperCase()}
-                                    </div>
-                                `).join('') : ''}
-                            </div>
-                            ${task.start_time || task.end_time ? `
-                                <div class="flex items-center gap-1 text-xs text-gray-400 mt-1 ${task.completed ? 'line-through opacity-50' : ''}">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>
-                                        ${task.start_time ? task.start_time.substring(0, 5) : ''}
-                                        ${task.start_time && task.end_time ? '-' : ''}
-                                        ${task.end_time ? task.end_time.substring(0, 5) : ''}
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center flex-1 min-w-0 mr-4">
+                            <input type="checkbox" class="w-5 h-5 rounded-full task-checkbox accent-blue-500" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
+                            <div class="flex-1 min-w-0 ml-3">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-lg font-medium break-all whitespace-normal ${task.completed ? 'line-through text-gray-500 opacity-50' : (isOverdue ? 'text-red-600' : 'text-[#132C51]')} cursor-pointer hover:text-blue-600 transition-colors title-click-trigger" data-task="${task.id}">
+                                        ${task.title}
                                     </span>
+                                    ${task.priority ? `
+                                            <svg class="flex-shrink-0 w-5 h-5 ${task.priority === 'Urgent' ? 'text-red-500' : (task.priority === 'High' ? 'text-yellow-500' : (task.priority === 'Normal' ? 'text-blue-500' : 'text-green-500'))} ${task.completed ? 'opacity-50' : ''}" fill="currentColor" viewBox="0 0 24 24">
+                                                <title>${task.priority}</title>
+                                                <path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path>
+                                            </svg>
+                                        ` : ''}
+                                    ${task.workspaces && task.workspaces.length > 0 ? 
+                                        task.workspaces.map(ws => `
+                                            <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-[9px] font-bold rounded-lg bg-[#E8EEF9] text-[#1C427A] shadow-sm border border-[#1C427A]/10 ${task.completed ? 'opacity-50' : ''}" title="${ws.name}">
+                                                ${ws.name.substring(0, 2).toUpperCase()}
+                                            </div>
+                                        `).join('') : ''
+                                    }
                                 </div>
-                            ` : ''}
+                                ${task.start_time || task.end_time ? `
+                                        <div class="flex items-center gap-1.5 text-[11px] text-gray-400 mt-0.5 ${task.completed ? 'line-through opacity-50' : ''}">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <span>${task.start_time ? task.start_time.substring(0,5) : ''} ${task.end_time ? '-' + task.end_time.substring(0,5) : ''}</span>
+                                        </div>
+                                    ` : ''}
+                            </div>
                         </div>
-                    </div>
-                    <div class="relative ml-2">
-                        <button class="text-gray-500 task-menu-btn hover:text-gray-700" data-task="${task.id}">⋯</button>
-                        <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="${task.id}">
-                            <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600" onclick="window.showTaskDetails(${task.id})">
-                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Details
-                            </button>
-                            ${task.can_modify ? `
-                                ${!task.completed ? `
-                                     <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 edit-btn" data-task="${task.id}">
-                                         <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                         Edit
-                                     </button>
-                                     <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 duplicate-btn" data-task="${task.id}">
-                                         <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                                         Duplicate
-                                     </button>
-                                ` : ''}
-                                <button class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 delete-btn" data-task="${task.id}">
-                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    Delete
+                        <div class="relative ml-2">
+                            <button class="text-gray-500 task-menu-btn hover:text-gray-700 p-1" data-task="${task.id}">⋯</button>
+                            <div class="absolute right-0 z-50 hidden w-48 mt-1 shadow-xl rounded-xl bg-[#0C1F3B] task-menu" data-task="${task.id}">
+                                <button type="button" class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white rounded-t-xl hover:bg-gray-600 menu-details-trigger" data-task="${task.id}">
+                                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Details
                                 </button>
-                            ` : ''}
+                                ${task.can_modify ? `
+                                        <button type="button" class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 menu-edit-trigger" data-task="${task.id}">
+                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            Edit
+                                        </button>
+                                        <button type="button" class="flex items-center w-full gap-3 px-4 py-2 text-sm text-white hover:bg-gray-600 menu-duplicate-trigger" data-task="${task.id}">
+                                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                            Duplicate
+                                        </button>
+                                        <button type="button" class="flex items-center w-full gap-3 px-4 py-2 text-sm text-red-500 rounded-b-xl hover:bg-gray-600 menu-delete-trigger" data-task="${task.id}">
+                                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H9.862a2 2 0 01-1.995-1.858L7 7m3 4v4m4-4v4m1-8V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            Delete
+                                        </button>
+                                    ` : ''}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
                 container.appendChild(taskDiv);
             });
         }
 
-        // Calendar navigation
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentMonth--;
-            if (currentMonth < 1) {
-                currentMonth = 12;
-                currentYear--;
+        // =====================================================
+        // CENTRALIZED EVENT DELEGATION
+        // =====================================================
+
+        // 1. Handle Klik di seluruh container Task List panel dinamis
+        document.addEventListener('click', function(e) {
+            // Dropdown triggers (Titik tiga)
+            const taskMenuBtn = e.target.closest('.task-menu-btn');
+            if (taskMenuBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = taskMenuBtn.getAttribute('data-task');
+                const targetMenu = document.querySelector(`.task-menu[data-task="${taskId}"]`);
+                document.querySelectorAll('.task-menu').forEach(m => {
+                    if (m !== targetMenu) m.classList.add('hidden');
+                });
+                if (targetMenu) targetMenu.classList.toggle('hidden');
+                return;
             }
-            navigateToMonth(currentYear, currentMonth);
+
+            // Menu Details & Title click trigger
+            const titleTrigger = e.target.closest('.title-click-trigger');
+            const menuDetailsTrigger = e.target.closest('.menu-details-trigger');
+            if (titleTrigger || menuDetailsTrigger) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = (titleTrigger || menuDetailsTrigger).getAttribute('data-task');
+                if (taskId) window.showTaskDetails(taskId);
+                return;
+            }
+
+            // Menu Edit Trigger
+            const editTrigger = e.target.closest('.menu-edit-trigger');
+            if (editTrigger) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = editTrigger.getAttribute('data-task');
+                if (taskId) triggerEditModalFlow(taskId);
+                return;
+            }
+
+            // Menu Duplicate Trigger
+            const duplicateTrigger = e.target.closest('.menu-duplicate-trigger');
+            if (duplicateTrigger) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = duplicateTrigger.getAttribute('data-task');
+                if (taskId) {
+                    hideMenus();
+                    fetch(`/tasks/${taskId}/duplicate`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    }).then(() => location.reload());
+                }
+                return;
+            }
+
+            // Menu Delete Trigger (Buka konfirmasi modal)
+            const deleteTrigger = e.target.closest('.menu-delete-trigger');
+            if (deleteTrigger) {
+                e.preventDefault();
+                e.stopPropagation();
+                const taskId = deleteTrigger.getAttribute('data-task');
+                if (taskId && confirm('Are you sure you want to delete this task?')) {
+                    hideMenus();
+                    fetch(`/tasks/${taskId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    }).then(() => {
+                        const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
+                        if (taskDiv) taskDiv.remove();
+                        delete allTasks[taskId];
+                    });
+                }
+                return;
+            }
+
+            // Task Completion (Checkbox)
+            if (e.target.classList.contains('task-checkbox')) {
+                const checkbox = e.target;
+                const taskId = checkbox.dataset.id;
+                const isCompleted = checkbox.checked;
+                const actionText = isCompleted ? 'complete' : 'uncomplete';
+
+                if (!confirm(`Are you sure you want to mark this task as ${actionText}?`)) {
+                    checkbox.checked = !isCompleted; // revert
+                    return;
+                }
+
+                fetch(`/tasks/${taskId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            completed: isCompleted
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateTaskArrays(taskId, isCompleted);
+                            loadTasks(selectedDate);
+                        } else {
+                            alert('You cannot update this task.');
+                            checkbox.checked = !isCompleted; // revert
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                        checkbox.checked = !isCompleted; // revert
+                    });
+                return;
+            }
+
+            // Tutup task-menu dropdown jika klik sembarang di luar menu dropdown
+            if (!e.target.closest('.task-menu')) hideMenus();
         });
 
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentMonth++;
-            if (currentMonth > 12) {
-                currentMonth = 1;
-                currentYear++;
-            }
-            navigateToMonth(currentYear, currentMonth);
-        });
+        // 2. Logic Pengisian Form Edit Data
+        function triggerEditModalFlow(taskId) {
+            hideMenus();
+            fetch(`/tasks/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    currentTaskIdForComments = taskId;
+                    document.getElementById('edit-comment-input').value = '';
+                    loadComments(taskId, 'edit-comments-list', 'edit-comment-count');
 
-        function navigateToMonth(year, month) {
-            window.location.href = `/schedule?year=${year}&month=${month}`;
+                    document.getElementById('edit-task-id').value = data.id;
+                    document.getElementById('edit-title').value = data.title || '';
+                    document.getElementById('edit-description').value = data.description || '';
+                    document.getElementById('edit-due-date').value = data.due_date || '';
+                    document.getElementById('edit-start-time').value = data.start_time ? data.start_time.substring(0,
+                        5) : '';
+                    document.getElementById('edit-end-time').value = data.end_time ? data.end_time.substring(0, 5) : '';
+
+                    const prSelect = document.getElementById('edit-priority');
+                    if (prSelect) prSelect.value = data.priority || 'Normal';
+
+                    window.dispatchEvent(new CustomEvent('set-edit-priority', {
+                        detail: {
+                            priority: data.priority || 'Normal'
+                        }
+                    }));
+
+                    window.editTaskFiles = new DataTransfer();
+                    document.getElementById('edit-file-list').innerHTML = '';
+                    document.getElementById('edit-file-label').textContent = 'Add New File';
+
+                    const existingWrap = document.getElementById('edit-existing-attachments-wrap');
+                    const existingContainer = document.getElementById('edit-existing-attachments');
+                    if (existingWrap && existingContainer) {
+                        const attachments = data.attachments || [];
+                        if (attachments.length) {
+                            existingWrap.classList.remove('hidden');
+                            existingContainer.innerHTML = attachments.map(att => `
+                                <div class="flex items-center justify-between p-2 bg-[#1A365D] border border-gray-600 rounded-xl">
+                                    <span class="text-gray-200 text-xs truncate max-w-[180px]">📎 ${att.original_name || att.filename}</span>
+                                    <button type="button" class="text-red-400 font-bold px-1 hover:text-red-500" onclick="
+                                        this.closest('.flex').style.display = 'none';
+                                        const input = document.createElement('input');
+                                        input.type = 'hidden';
+                                        input.name = 'remove_attachments[]';
+                                        input.value = '${att.id}';
+                                        this.parentNode.appendChild(input);
+                                    ">&times;</button>
+                                </div>
+                            `).join('');
+                        } else existingWrap.classList.add('hidden');
+                    }
+
+                    const workspaceCheckboxes = document.querySelectorAll('.edit-workspace-checkbox');
+                    workspaceCheckboxes.forEach(cb => cb.checked = false);
+                    if (data.workspaces && Array.isArray(data.workspaces)) {
+                        data.workspaces.forEach(ws => {
+                            const cb = document.querySelector(`.edit-workspace-checkbox[value="${ws.id}"]`);
+                            if (cb) cb.checked = true;
+                        });
+                    }
+
+                    document.getElementById('edit-task-modal').classList.remove('hidden');
+                }).catch(err => console.error(err));
         }
 
-        // Date selection
+        // 3. Logic Detail Task View
+        const viewedTasksThisSession = new Set();
+        window.showTaskDetails = function(taskId) {
+            if (!taskId) return;
+            hideMenus();
+            fetch(`/tasks/${taskId}`)
+                .then(response => response.json())
+                .then(task => {
+                    if (!viewedTasksThisSession.has(taskId)) {
+                        viewedTasksThisSession.add(taskId);
+                        const sidebarBadge = document.getElementById('sidebar-workspace-badge');
+                        if (sidebarBadge) {
+                            let count = parseInt(sidebarBadge.textContent);
+                            if (!isNaN(count) && count > 0) {
+                                count--;
+                                if (count === 0) {
+                                    sidebarBadge.remove();
+                                } else {
+                                    sidebarBadge.textContent = count > 99 ? '99+' : count;
+                                }
+                            }
+                        }
+                    }
+
+                    currentTaskIdForComments = taskId;
+                    document.getElementById('details-comment-input').value = '';
+                    loadComments(taskId, 'details-comments-list', 'details-comment-count');
+
+                    document.getElementById('details-title').textContent = task.title ?? '';
+                    document.getElementById('details-description').textContent = task.description ??
+                        'No description provided';
+                    document.getElementById('details-due-date').textContent = task.due_date ?? 'N/A';
+                    document.getElementById('details-created-date').textContent = formatDateTime(task.created_at);
+                    document.getElementById('details-start-time').textContent = task.start_time ? task.start_time
+                        .substring(0, 5) : '-';
+                    document.getElementById('details-end-time').textContent = task.end_time ? task.end_time
+                        .substring(0, 5) : '-';
+
+                    let compDate = task.completed_at || task.complated_at || '';
+                    document.getElementById('details-completed-at').textContent = compDate ? formatDateTime(
+                        compDate) : '-';
+                    const detailsPriority = document.getElementById('details-priority');
+                    if (detailsPriority) {
+                        const pr = task.priority ?? '';
+                        let textClass = 'text-gray-400';
+                        if (pr === 'Urgent') textClass = 'text-red-500';
+                        else if (pr === 'High') textClass = 'text-yellow-500';
+                        else if (pr === 'Normal') textClass = 'text-blue-500';
+                        else if (pr === 'Low') textClass = 'text-green-500';
+
+                        if (pr) {
+                            detailsPriority.innerHTML = `
+                                <div class="flex items-center gap-1.5">
+                                    <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
+                                    <span class="${textClass} font-semibold">${pr}</span>
+                                </div>
+                            `;
+                        } else {
+                            detailsPriority.textContent = '-';
+                        }
+                    }
+
+                    document.getElementById('details-completed').innerHTML = task.completed ?
+                        '<span class="text-green-500 font-bold">Completed</span>' :
+                        '<span class="text-red-500 font-bold">Not Completed</span>';
+
+                    // Workspaces display
+                    const detailsWorkspaces = document.getElementById('details-workspaces');
+                    if (detailsWorkspaces) {
+                        if (task.workspaces && task.workspaces.length > 0) {
+                            detailsWorkspaces.innerHTML = task.workspaces.map(ws =>
+                                `<span class="px-2 py-0.5 bg-teal-900/50 text-teal-300 border border-teal-500/30 rounded-full text-xs break-all whitespace-normal">${ws.name}</span>`
+                            ).join('');
+                        } else {
+                            detailsWorkspaces.innerHTML = '<p class="text-gray-400">No workspaces assigned</p>';
+                        }
+                    }
+
+                    // Attachments display
+                    const detailsAttachments = document.getElementById('details-attachments');
+                    if (detailsAttachments) {
+                        const attachments = Array.isArray(task.attachments) ? task.attachments : [];
+                        if (!attachments.length) {
+                            detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
+                        } else {
+                            detailsAttachments.innerHTML = attachments.map(att => {
+                                const originalName = att.original_name || att.filename || 'Attachment';
+                                const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
+                                const isImage = att.mime_type && att.mime_type.startsWith('image/') && att
+                                    .storage_path;
+                                const imgHtml = isImage ?
+                                    `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
+                                    '';
+                                return `
+                                    <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
+                                        ${imgHtml}
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
+                                            <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
+                                        </div>
+                                    </a>
+                                `;
+                            }).join('');
+                        }
+                    }
+
+                    const editDetailsBtn = document.getElementById('edit-details-btn');
+                    if (editDetailsBtn) {
+                        editDetailsBtn.dataset.taskId = String(taskId);
+                        if ((task.can_modify === true || task.can_modify === 1) && !task.completed) {
+                            editDetailsBtn.classList.remove('hidden');
+                        } else editDetailsBtn.classList.add('hidden');
+                    }
+                    document.getElementById('task-details-modal').classList.remove('hidden');
+                });
+        };
+
+        // Global listener for search details
+        window.addEventListener('open-task-details', (e) => {
+            if (typeof window.showTaskDetails === 'function') {
+                window.showTaskDetails(e.detail.taskId);
+            }
+        });
+
+        // Handle URL param open_task
+        const urlParams = new URLSearchParams(window.location.search);
+        const openTaskId = urlParams.get('open_task');
+        if (openTaskId) {
+            window.showTaskDetails(openTaskId);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Modals Action Open/Close Bindings
+        document.getElementById('add-task-btn').addEventListener('click', () => {
+            const modal = document.getElementById('add-task-modal');
+            modal.querySelector('form').reset();
+            document.getElementById('file-list').innerHTML = '';
+            window.newTaskFiles = new DataTransfer();
+            window.dispatchEvent(new CustomEvent('reset-new-task'));
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => document.getElementById('add-task-modal')
+            .classList.add('hidden'));
+        document.getElementById('close-edit-modal').addEventListener('click', () => document.getElementById(
+            'edit-task-modal').classList.add('hidden'));
+        document.getElementById('close-details-modal').addEventListener('click', () => document.getElementById(
+            'task-details-modal').classList.add('hidden'));
+
+
+        // Form Submit Edit
+        document.getElementById('edit-task-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const taskId = document.getElementById('edit-task-id').value;
+            fetch(`/tasks/${taskId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-HTTP-Method-Override': 'PATCH'
+                    },
+                    body: new FormData(this)
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateTaskArrays(taskId, data.task.completed);
+                        loadTasks(selectedDate);
+                        document.getElementById('edit-task-modal').classList.add('hidden');
+                    }
+                });
+        });
+
+        // Modal Edit details-btn redirect router
+        document.getElementById('edit-details-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const taskId = this.dataset.taskId;
+            if (!taskId) return;
+            document.getElementById('task-details-modal').classList.add('hidden');
+            triggerEditModalFlow(taskId);
+        });
+
+        // Window klik overlay terluar untuk menutup modal
+        window.addEventListener('click', (e) => {
+            const modals = ['add-task-modal', 'edit-task-modal', 'task-details-modal'];
+            modals.forEach(id => {
+                const modal = document.getElementById(id);
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+        });
+
+        function hideMenus() {
+            document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
+        }
+
+        // Calendar Grid Engine
         document.querySelectorAll('.date-cell').forEach(cell => {
             cell.addEventListener('click', () => {
                 selectedDate = cell.dataset.date;
@@ -1131,106 +1454,94 @@
             });
         });
 
-
-        // Tidak ada task filter (All/Today/Upcoming/Completed) di panel kanan.
-        // Saat user memilih tanggal di calendar, daftar tasks akan dimuat untuk tanggal tersebut.
-
-
-        // Toggle view
-        document.getElementById('toggle-view').addEventListener('click', () => {
-            const calendarView = document.getElementById('calendar-view');
-            const listView = document.getElementById('list-view');
-            const viewText = document.getElementById('view-text');
-
-            if (calendarView.classList.contains('hidden')) {
-                calendarView.classList.remove('hidden');
-                listView.classList.add('hidden');
-                viewText.textContent = 'Calendar View';
-            } else {
-                calendarView.classList.add('hidden');
-                listView.classList.remove('hidden');
-                viewText.textContent = 'List View';
-            }
-        });
-
-        // Tombol Add Task (Quick add task)
-        document.getElementById('add-task-btn').addEventListener('click', () => {
-            const modal = document.getElementById('add-task-modal');
-            const form = modal.querySelector('form');
-            form.reset();
-
-            // Reset File List
-            document.getElementById('file-list').innerHTML = '';
-            window.newTaskFiles = new DataTransfer();
-            document.getElementById('task-file-input').files = window.newTaskFiles.files;
-            document.getElementById('file-label').textContent = 'Add File';
-
-            // Reset Alpine Priority
-            window.dispatchEvent(new CustomEvent('reset-new-task'));
-
-            modal.classList.remove('hidden');
-        });
-
-        // Initialize
-        console.log('Initializing schedule page');
-        loadTasks(null);
-
-
-        const addTaskModal = document.getElementById('add-task-modal');
-        const closeModal = document.getElementById('close-modal');
-
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            const editModal = document.getElementById('edit-task-modal');
-            const detailsModal = document.getElementById('task-details-modal');
-            const deleteModal = document.getElementById('delete-confirm-modal');
-
-            if (e.target === addTaskModal) {
-                addTaskModal.classList.add('hidden');
-                document.querySelector('#add-task-modal form').reset();
-                window.newTaskFiles = new DataTransfer();
-                document.getElementById('file-list').innerHTML = '';
-                document.getElementById('file-label').textContent = 'Add File';
-                const alpineRoot = document.querySelector('#add-task-modal [x-data]');
-                if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
-                    alpineRoot.__x.$data.selected = null;
+        // =====================================================
+        // COMMENTS SYSTEM ASYNC CALLS ENGINE
+        // =====================================================
+        async function loadComments(taskId, listElId, countElId) {
+            const listEl = document.getElementById(listElId);
+            const countEl = document.getElementById(countElId);
+            if (!listEl) return;
+            try {
+                const res = await fetch(`/tasks/${taskId}/comments`);
+                const comments = await res.json();
+                if (comments.length === 0) {
+                    listEl.innerHTML = '<p class="text-sm italic text-gray-500">No comments yet</p>';
+                    if (countEl) countEl.textContent = '0';
+                } else {
+                    listEl.innerHTML = comments.map(renderCommentHtml).join('');
+                    if (countEl) countEl.textContent = comments.length;
+                    listEl.scrollTop = listEl.scrollHeight;
                 }
-            } else if (e.target === editModal) {
-                editModal.classList.add('hidden');
-                window.editTaskFiles = new DataTransfer();
-            } else if (e.target === detailsModal) {
-                detailsModal.classList.add('hidden');
-            } else if (e.target === deleteModal) {
-                deleteModal.classList.add('hidden');
+            } catch (err) {
+                console.error(err);
             }
-        });
+        }
 
-        // 1. Perbaikan Tombol Cancel/Close Modal (Add Task)
-        closeModal.addEventListener('click', () => {
-            addTaskModal.classList.add('hidden');
-            // Reset form saat ditutup
-            document.querySelector('#add-task-modal form').reset();
-            window.newTaskFiles = new DataTransfer();
-            document.getElementById('file-list').innerHTML = '';
-            document.getElementById('file-label').textContent = 'Add File';
-            // Reset Alpine.js priority selection
-            const prioritySelect = document.querySelector('#add-task-modal select[name="priority"]');
-            if (prioritySelect) {
-                prioritySelect.value = '';
-            }
-            const alpineRoot = document.querySelector('#add-task-modal [x-data]');
-            if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
-                alpineRoot.__x.$data.selected = null;
-            }
-        });
+        function renderCommentHtml(comment) {
+            const photoPath = comment.user.profile_photo_path ? `/storage/${comment.user.profile_photo_path}` : null;
+            const avatar = photoPath ? `<img src="${photoPath}" class="w-8 h-8 rounded-full object-cover">` :
+                `<div class="w-8 h-8 rounded-full bg-[#1C427A] flex items-center justify-center text-xs font-bold text-white">${comment.user.name.charAt(0).toUpperCase()}</div>`;
+            return `
+                <div class="flex items-start gap-3 py-1">
+                    ${avatar}
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs text-gray-400 flex justify-between">
+                            <span class="font-semibold text-white">${comment.user.name}</span>
+                            <span>${comment.created_at}</span>
+                        </div>
+                        <p class="text-sm text-gray-300 mt-0.5 break-words">${comment.body}</p>
+                    </div>
+                </div>
+            `;
+        }
 
-        // File upload preview
+        function setupCommentSend(sendBtnId, inputId, listElId, countElId) {
+            const sendBtn = document.getElementById(sendBtnId);
+            const input = document.getElementById(inputId);
+            if (!sendBtn || !input) return;
+
+            input.addEventListener('input', function() {
+                sendBtn.disabled = !this.value.trim();
+            });
+
+            sendBtn.addEventListener('click', async function() {
+                const body = input.value.trim();
+                if (!body || !currentTaskIdForComments) return;
+                try {
+                    const res = await fetch(`/tasks/${currentTaskIdForComments}/comments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            body: body
+                        })
+                    });
+                    if (res.ok) {
+                        input.value = '';
+                        loadComments(currentTaskIdForComments, 'details-comments-list',
+                            'details-comment-count');
+                        loadComments(currentTaskIdForComments, 'edit-comments-list', 'edit-comment-count');
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        setupCommentSend('details-comment-send-btn', 'details-comment-input', 'details-comments-list',
+            'details-comment-count');
+        setupCommentSend('edit-comment-send-btn', 'edit-comment-input', 'edit-comments-list', 'edit-comment-count');
+
+        // File upload preview handling (Synchronized with home.blade.php)
         const fileInput = document.getElementById('task-file-input');
         if (fileInput) {
             fileInput.addEventListener('change', function() {
                 const fileList = document.getElementById('file-list');
                 const label = document.getElementById('file-label');
+
+                if (!window.newTaskFiles) window.newTaskFiles = new DataTransfer();
 
                 Array.from(this.files).forEach(file => {
                     window.newTaskFiles.items.add(file);
@@ -1274,231 +1585,75 @@
             });
         }
 
-        // Handle form submission for adding new task
-        document.querySelector('#add-task-modal form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
+        // Setup Global Mention Input for all modals
+        async function setupGlobalMentionInput(inputId, dropdownId) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            if (!input || !dropdown) return;
 
-            fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Add the new task to the UI
-                        addTaskToUI(data.task);
-                        // Close the modal
-                        addTaskModal.classList.add('hidden');
-                        // Reset form
-                        this.reset();
-                        window.newTaskFiles = new DataTransfer();
-                        document.getElementById('file-list').innerHTML = '';
-                        document.getElementById('file-label').textContent = 'Add File';
-                        // Reset Alpine.js priority selection
-                        const prioritySelect = document.querySelector(
-                            '#add-task-modal select[name="priority"]');
-                        if (prioritySelect) {
-                            prioritySelect.value = '';
-                        }
-                        const alpineRoot = document.querySelector('#add-task-modal [x-data]');
-                        if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
-                            alpineRoot.__x.$data.selected = null;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        });
-
-        // Task checkbox functionality (menggunakan delegasi untuk elemen yang dimuat secara dinamis)
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('task-checkbox')) {
-                const checkbox = e.target;
-                const taskId = checkbox.dataset.id;
-                const isCompleted = checkbox.checked;
-
-                const actionText = isCompleted ? 'complete' : 'uncomplete';
-                if (!confirm(`Are you sure you want to mark this task as ${actionText}?`)) {
-                    checkbox.checked = !isCompleted; // revert
-                    return;
-                }
-
-                fetch(`/tasks/${taskId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            completed: isCompleted
-                        })
-                    }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            updateTaskArrays(taskId, isCompleted);
-                            loadTasks(selectedDate);
-                        } else {
-                            alert('You cannot update this task.');
-                            checkbox.checked = !isCompleted;
-                        }
-                    }).catch(() => {
-                        alert('Error updating task.');
-                        checkbox.checked = !isCompleted;
-                    });
+            let globalSuggestions = [];
+            try {
+                const res = await fetch('/global-mention-suggestions');
+                globalSuggestions = await res.json();
+            } catch (err) {
+                console.error('Error loading global mention suggestions:', err);
             }
-        });
 
+            input.addEventListener('input', function() {
+                const cursorPos = this.selectionStart;
+                const textBeforeCursor = this.value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
 
+                if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                    const query = textBeforeCursor.substring(atIndex + 1).toLowerCase();
+                    const filtered = globalSuggestions.filter(m => m.name.toLowerCase().includes(query));
 
-
-        // 3. Perbaikan Task menu functionality (Titik Tiga)
-        document.addEventListener('click', function(e) {
-            const taskMenuBtn = e.target.closest('.task-menu-btn');
-            const taskMenu = e.target.closest('.task-menu');
-
-            // Langkah A: Tutup SEMUA menu terlebih dahulu (Reset)
-            document.querySelectorAll('.task-menu').forEach(m => {
-                if (m !== taskMenu) {
-                    m.classList.add('hidden');
-                }
+                    if (filtered.length > 0) {
+                        dropdown.innerHTML = filtered.map(m => {
+                            const photo = m.profile_photo_path ? `/storage/${m.profile_photo_path}` :
+                                null;
+                            const avatar = photo ?
+                                `<img src="${photo}" class="flex-shrink-0 object-cover w-7 h-7 rounded-full">` :
+                                `<div class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold rounded-full bg-[#E8EEF9] text-[#1C427A]">${m.name.charAt(0).toUpperCase()}</div>`;
+                            return `<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 transition-colors mention-option" data-name="${m.name}">
+                                ${avatar}
+                                <span class="text-sm font-medium text-[#132C51]">${m.name}</span>
+                            </div>`;
+                        }).join('');
+                        dropdown.classList.remove('hidden');
+                    } else dropdown.classList.add('hidden');
+                } else dropdown.classList.add('hidden');
             });
 
-            // Langkah B: Toggle menu yang diklik
-            if (taskMenuBtn) {
-                const taskId = taskMenuBtn.dataset.task;
-                const menu = document.querySelector(`.task-menu[data-task="${taskId}"]`);
-                if (menu) {
-                    menu.classList.toggle('hidden');
-                }
-            }
-            // Langkah C: Jika klik di luar menu dan bukan tombolnya, tutup menu.
-            else if (!taskMenu) {
-                document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
-            }
-        });
+            dropdown.addEventListener('click', function(e) {
+                const option = e.target.closest('.mention-option');
+                if (!option) return;
+                const name = option.dataset.name;
+                const cursorPos = input.selectionStart;
+                const textBeforeCursor = input.value.substring(0, cursorPos);
+                const atIndex = textBeforeCursor.lastIndexOf('@');
+                const textAfterCursor = input.value.substring(cursorPos);
+                input.value = textBeforeCursor.substring(0, atIndex) + '@' + name + ' ' + textAfterCursor;
+                dropdown.classList.add('hidden');
+                input.focus();
+                const newPos = atIndex + name.length + 2;
+                input.setSelectionRange(newPos, newPos);
+                input.dispatchEvent(new Event('input')); // Trigger input event to update Send button state
+            });
+        }
 
-        // Menyembunyikan menu setelah aksi dipilih (Tambahkan ini ke setiap event handler menu)
-        const hideMenus = () => {
-            document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
-        };
+        setupGlobalMentionInput('new-task-comment-input', 'new-task-mention-dropdown');
+        setupGlobalMentionInput('details-comment-input', 'details-mention-dropdown');
+        setupGlobalMentionInput('edit-comment-input', 'edit-mention-dropdown');
 
-        // Edit button functionality
-        document.addEventListener('click', function(e) {
-            const editBtn = e.target.closest('.edit-btn');
-            if (editBtn) {
-                const taskId = editBtn.dataset.task;
-                fetch(`/tasks/${taskId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('edit-task-id').value = data.id;
-                        document.getElementById('edit-title').value = data.title || '';
-                        document.getElementById('edit-description').value = data.description || '';
-                        document.getElementById('edit-due-date').value = data.due_date || '';
-                        document.getElementById('edit-start-time').value = data.start_time ? data.start_time
-                            .substring(0, 5) : '';
-                        document.getElementById('edit-end-time').value = data.end_time ? data.end_time
-                            .substring(0, 5) : '';
-
-                        // Priority
-                        const pr = data.priority || '';
-                        const prSelect = document.getElementById('edit-priority');
-                        const prLabel = document.getElementById('edit-priority-label');
-
-                        window.dispatchEvent(new CustomEvent('set-edit-priority', {
-                            detail: {
-                                priority: pr
-                            }
-                        }));
-
-                        if (prSelect) prSelect.value = pr;
-                        if (prLabel) prLabel.textContent = pr || 'Priority';
-
-                        // Attachments
-                        window.editTaskFiles = new DataTransfer();
-                        const editFileInput = document.getElementById('edit-task-file-input');
-                        const editFileList = document.getElementById('edit-file-list');
-                        const editFileLabel = document.getElementById('edit-file-label');
-                        if (editFileInput) editFileInput.value = '';
-                        if (editFileList) editFileList.innerHTML = '';
-                        if (editFileLabel) editFileLabel.textContent = 'Add New File';
-
-                        const existingWrap = document.getElementById('edit-existing-attachments-wrap');
-                        const existingContainer = document.getElementById('edit-existing-attachments');
-                        if (existingWrap && existingContainer) {
-                            const attachments = data.attachments || [];
-                            if (attachments.length) {
-                                existingWrap.classList.remove('hidden');
-                                existingContainer.innerHTML = attachments.map(att => {
-                                    const originalName = att.original_name || att.filename ||
-                                        'Attachment';
-                                    const path = att.storage_path ? `/storage/${att.storage_path}` :
-                                    '#';
-                                    const isImage = att.mime_type && att.mime_type.startsWith(
-                                        'image/') && att.storage_path;
-                                    const imgHtml = isImage ?
-                                        `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
-                                        '';
-                                    return `
-                                        <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                            <a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 transition-opacity hover:opacity-80">
-                                                ${imgHtml}
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                    <div class="mt-1 text-xs text-gray-400">${att.mime_type || ''}</div>
-                                                </div>
-                                            </a>
-                                            <button type="button" class="flex-shrink-0 ml-2 text-xl font-bold text-red-400 hover:text-red-600" onclick="
-                                                const div = this.closest('.bg-[#1A365D]');
-                                                div.style.display = 'none';
-                                                const input = document.createElement('input');
-                                                input.type = 'hidden';
-                                                input.name = 'remove_attachments[]';
-                                                input.value = '${att.id}';
-                                                div.parentNode.appendChild(input);
-                                            ">&times;</button>
-                                        </div>
-                                    `;
-                                }).join('');
-                            } else {
-                                existingWrap.classList.add('hidden');
-                            }
-                        }
-
-                        // Workspaces: check corresponding checkboxes
-                        const workspaceCheckboxes = document.querySelectorAll('.edit-workspace-checkbox');
-                        workspaceCheckboxes.forEach(cb => cb.checked = false);
-                        if (data.workspaces && Array.isArray(data.workspaces)) {
-                            data.workspaces.forEach(ws => {
-                                const cb = document.querySelector(
-                                    `.edit-workspace-checkbox[value="${ws.id}"]`);
-                                if (cb) cb.checked = true;
-                            });
-                        }
-
-                        document.getElementById('edit-task-modal').classList.remove('hidden');
-                    });
-                // Hide the task menu
-                document.querySelectorAll('.task-menu').forEach(m => m.classList.add('hidden'));
-            }
-        });
-
-        // Edit File upload preview
-        const editFileInputEl = document.getElementById('edit-task-file-input');
-        if (editFileInputEl) {
-            editFileInputEl.addEventListener('change', function() {
+        // File upload preview handling for Edit Modal
+        const editFileInput = document.getElementById('edit-task-file-input');
+        if (editFileInput) {
+            editFileInput.addEventListener('change', function() {
                 const fileList = document.getElementById('edit-file-list');
                 const label = document.getElementById('edit-file-label');
+
+                if (!window.editTaskFiles) window.editTaskFiles = new DataTransfer();
 
                 Array.from(this.files).forEach(file => {
                     window.editTaskFiles.items.add(file);
@@ -1510,9 +1665,13 @@
                     label.textContent = this.files.length + ' file(s) selected';
                     Array.from(this.files).forEach((f, index) => {
                         const div = document.createElement('div');
-                        div.className = 'flex justify-between items-center text-sm mt-1';
+                        div.className =
+                            'flex justify-between items-center text-sm mt-1 bg-[#1A365D] p-2 rounded-lg border border-gray-600';
+
                         const nameSpan = document.createElement('span');
+                        nameSpan.className = 'truncate max-w-[180px]';
                         nameSpan.textContent = '📎 ' + f.name;
+
                         const removeBtn = document.createElement('button');
                         removeBtn.type = 'button';
                         removeBtn.innerHTML = '&times;';
@@ -1526,9 +1685,10 @@
                                 if (i !== index) dt.items.add(file);
                             });
                             window.editTaskFiles = dt;
-                            editFileInputEl.files = window.editTaskFiles.files;
-                            editFileInputEl.dispatchEvent(new Event('change'));
+                            editFileInput.files = window.editTaskFiles.files;
+                            editFileInput.dispatchEvent(new Event('change'));
                         };
+
                         div.appendChild(nameSpan);
                         div.appendChild(removeBtn);
                         fileList.appendChild(div);
@@ -1539,337 +1699,6 @@
             });
         }
 
-        // Duplicate button functionality
-        document.addEventListener('click', function(e) {
-            const duplicateBtn = e.target.closest('.duplicate-btn');
-            if (duplicateBtn) {
-                hideMenus();
-                const taskId = duplicateBtn.dataset.task;
-                fetch(`/tasks/${taskId}/duplicate`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }).then(() => {
-                    location.reload();
-                });
-            }
-        });
-
-
-
-
-        // Delete button functionality
-        document.addEventListener('click', function(e) {
-            const deleteBtn = e.target.closest('.delete-btn');
-            if (deleteBtn) {
-                hideMenus();
-                const taskId = deleteBtn.dataset.task;
-                document.getElementById('delete-confirm-modal').classList.remove('hidden');
-                document.getElementById('delete-confirm-modal').dataset.taskId = taskId;
-            }
-        });
-
-        // Reusable function to show task details
-        window.showTaskDetails = function(taskId) {
-            if (!taskId) return;
-            hideMenus();
-
-            fetch(`/tasks/${taskId}`)
-                .then(response => response.json())
-                .then(task => {
-                    const detailsTitle = document.getElementById('details-title');
-                    const detailsDescription = document.getElementById('details-description');
-                    const detailsDueDate = document.getElementById('details-due-date');
-                    const detailsCreatedDate = document.getElementById('details-created-date');
-                    const detailsCompletedAt = document.getElementById('details-completed-at');
-                    const detailsPriority = document.getElementById('details-priority');
-                    const detailsCompleted = document.getElementById('details-completed');
-                    const detailsStartTime = document.getElementById('details-start-time');
-                    const detailsEndTime = document.getElementById('details-end-time');
-                    const editDetailsBtn = document.getElementById('edit-details-btn');
-
-                    if (detailsTitle) detailsTitle.textContent = task.title ?? '';
-                    if (detailsDescription) detailsDescription.textContent = task.description ??
-                        'No description provided';
-                    if (detailsDueDate) detailsDueDate.textContent = task.due_date ?? 'N/A';
-                    if (detailsCreatedDate) detailsCreatedDate.textContent = formatDateTime(task.created_at);
-                    if (detailsStartTime) detailsStartTime.textContent = task.start_time ? task.start_time
-                        .substring(0, 5) : '-';
-                    if (detailsEndTime) detailsEndTime.textContent = task.end_time ? task.end_time.substring(0, 5) :
-                        '-';
-
-                    if (detailsCompletedAt) {
-                        let completedDate = task.completed_at || task.complated_at || '';
-                        detailsCompletedAt.textContent = completedDate ? formatDateTime(completedDate) : '-';
-                    }
-
-                    // Workspaces display
-                    const detailsWorkspaces = document.getElementById('details-workspaces');
-                    if (detailsWorkspaces) {
-                        if (task.workspaces && task.workspaces.length > 0) {
-                            detailsWorkspaces.innerHTML = task.workspaces.map(ws =>
-                                `<span class="px-2 py-0.5 bg-teal-900/50 text-teal-300 border border-teal-500/30 rounded-full text-xs break-all whitespace-normal">${ws.name}</span>`
-                            ).join('');
-                        } else {
-                            detailsWorkspaces.innerHTML = '<p class="text-gray-400">No workspaces assigned</p>';
-                        }
-                    }
-
-                    if (detailsPriority) {
-                        const pr = task.priority ?? '';
-                        let textClass = 'text-gray-400';
-                        if (pr === 'Urgent') textClass = 'text-red-500';
-                        else if (pr === 'High') textClass = 'text-yellow-500';
-                        else if (pr === 'Normal') textClass = 'text-blue-500';
-                        else if (pr === 'Low') textClass = 'text-green-500';
-
-                        if (pr) {
-                            detailsPriority.innerHTML = `
-                                <div class="flex items-center gap-1.5">
-                                    <svg class="w-5 h-5 ${textClass}" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.42 4.44994C19.3203 4.38116 19.2053 4.3379 19.085 4.32395C18.9647 4.31 18.8428 4.32579 18.73 4.36994C17.5425 4.8846 16.2857 5.22155 15 5.36994C14.1879 5.15273 13.4127 4.81569 12.7 4.36994C11.7802 3.80143 10.763 3.40813 9.7 3.20994C8.41 3.08994 5.34 4.09994 4.7 4.30994C4.55144 4.36012 4.42234 4.4556 4.33086 4.58295C4.23938 4.71031 4.19012 4.86314 4.19 5.01994V19.9999C4.19 20.1989 4.26902 20.3896 4.40967 20.5303C4.55032 20.6709 4.74109 20.7499 4.94 20.7499C5.13891 20.7499 5.32968 20.6709 5.47033 20.5303C5.61098 20.3896 5.69 20.1989 5.69 19.9999V14.1399C6.93659 13.6982 8.23315 13.4127 9.55 13.2899C10.3967 13.4978 11.2062 13.8351 11.95 14.2899C12.8201 14.8218 13.7734 15.2038 14.77 15.4199H15C16.4474 15.2326 17.8633 14.8526 19.21 14.2899C19.3506 14.2342 19.4713 14.1379 19.5568 14.0132C19.6423 13.8885 19.6887 13.7411 19.69 13.5899V5.06994C19.6975 4.95258 19.6769 4.83512 19.63 4.7273C19.583 4.61947 19.511 4.5244 19.42 4.44994Z" fill="currentColor"></path></svg>
-                                    <span class="${textClass} font-semibold">${pr}</span>
-                                </div>
-                            `;
-                        } else {
-                            detailsPriority.textContent = '-';
-                        }
-                    }
-                    if (detailsCompleted) {
-                        detailsCompleted.innerHTML = task.completed ?
-                            '<span class="font-bold text-green-500">Completed</span>' :
-                            '<span class="font-bold text-red-500">Not Completed</span>';
-                    }
-
-                    // Attachments
-                    const detailsAttachments = document.getElementById('details-attachments');
-                    if (detailsAttachments) {
-                        const attachments = Array.isArray(task.attachments) ? task.attachments : [];
-                        if (!attachments.length) {
-                            detailsAttachments.innerHTML = '<p class="col-span-2 text-gray-400">No attachments</p>';
-                        } else {
-                            detailsAttachments.innerHTML = attachments.map(att => {
-                                const originalName = att.original_name || att.filename || 'Attachment';
-                                const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                const isImage = att.mime_type && att.mime_type.startsWith('image/') && att
-                                    .storage_path;
-                                const imgHtml = isImage ?
-                                    `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
-                                    '';
-                                return `
-                                    <a href="${path}" target="_blank" class="flex items-center gap-4 p-3 bg-[#1A365D] rounded-xl border border-gray-600 shadow-sm hover:bg-[#254A7A] transition-colors group">
-                                        ${imgHtml}
-                                        <div class="flex-1 min-w-0">
-                                            <div class="font-medium text-gray-200 truncate group-hover:text-blue-400" title="${originalName}">${originalName}</div>
-                                            <div class="mt-1 text-xs text-gray-400">${att.mime_type || att.type || ''}</div>
-                                        </div>
-                                    </a>
-                                `;
-                            }).join('');
-                        }
-                    }
-
-                    document.getElementById('task-details-modal').classList.remove('hidden');
-                    if (editDetailsBtn) {
-                        editDetailsBtn.dataset.task = String(taskId);
-                        // Only show Edit button if user has permission AND task is not completed
-                        const canModify = task.can_modify === true || task.can_modify === 1;
-                        (canModify && !task.completed) ? editDetailsBtn.classList.remove('hidden'): editDetailsBtn
-                            .classList.add('hidden');
-                    }
-                });
-        };
-
-        // Global listener for search details
-        window.addEventListener('open-task-details', (e) => {
-            window.showTaskDetails(e.detail.taskId);
-        });
-
-        // Handle URL param open_task
-        const urlParams = new URLSearchParams(window.location.search);
-        const openTaskId = urlParams.get('open_task');
-        if (openTaskId) {
-            window.showTaskDetails(openTaskId);
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        // Details button functionality (Read-Only) - and Title click
-        document.addEventListener('click', function(e) {
-            const detailsBtn = e.target.closest('.details-btn') || e.target.closest('[data-task-title]');
-            if (detailsBtn) {
-                const taskId = detailsBtn.dataset.task || detailsBtn.dataset.taskTitle;
-                window.showTaskDetails(taskId);
-            }
-        });
-
-        // Edit Details button functionality (from details modal)
-        document.getElementById('edit-details-btn').addEventListener('click', function() {
-            const taskId = this.dataset.task;
-            if (!taskId) return;
-
-            // Trigger edit logic
-            fetch(`/tasks/${taskId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('edit-task-id').value = data.id;
-                    document.getElementById('edit-title').value = data.title || '';
-                    document.getElementById('edit-description').value = data.description || '';
-                    document.getElementById('edit-due-date').value = data.due_date || '';
-                    document.getElementById('edit-start-time').value = data.start_time ? data.start_time
-                        .substring(0, 5) : '';
-                    document.getElementById('edit-end-time').value = data.end_time ? data.end_time.substring(0,
-                        5) : '';
-
-                    // Priority
-                    const pr = data.priority || '';
-                    const prSelect = document.getElementById('edit-priority');
-                    const prLabel = document.getElementById('edit-priority-label');
-
-                    window.dispatchEvent(new CustomEvent('set-edit-priority', {
-                        detail: {
-                            priority: pr
-                        }
-                    }));
-
-                    if (prSelect) prSelect.value = pr;
-                    if (prLabel) prLabel.textContent = pr || 'Priority';
-
-                    // Attachments
-                    window.editTaskFiles = new DataTransfer();
-                    const editFileInput = document.getElementById('edit-task-file-input');
-                    const editFileList = document.getElementById('edit-file-list');
-                    const editFileLabel = document.getElementById('edit-file-label');
-                    if (editFileInput) editFileInput.value = '';
-                    if (editFileList) editFileList.innerHTML = '';
-                    if (editFileLabel) editFileLabel.textContent = 'Add New File';
-
-                    const existingWrap = document.getElementById('edit-existing-attachments-wrap');
-                    const existingContainer = document.getElementById('edit-existing-attachments');
-                    if (existingWrap && existingContainer) {
-                        const attachments = data.attachments || [];
-                        if (attachments.length) {
-                            existingWrap.classList.remove('hidden');
-                            existingContainer.innerHTML = attachments.map(att => {
-                                const originalName = att.original_name || att.filename || 'Attachment';
-                                const path = att.storage_path ? `/storage/${att.storage_path}` : '#';
-                                const isImage = att.mime_type && att.mime_type.startsWith('image/') &&
-                                    att.storage_path;
-                                const imgHtml = isImage ?
-                                    `<img src="${path}" class="flex-shrink-0 object-cover w-12 h-12 rounded-md">` :
-                                    '';
-                                return `
-                                    <div class="flex items-center gap-4 p-3 bg-[#1A365D] border border-gray-600 rounded-xl shadow-sm">
-                                        <a href="${path}" target="_blank" class="flex items-center flex-1 min-w-0 gap-4 transition-opacity hover:opacity-80">
-                                            ${imgHtml}
-                                            <div class="flex-1 min-w-0">
-                                                <div class="font-medium text-gray-200 truncate" title="${originalName}">${originalName}</div>
-                                                <div class="mt-1 text-xs text-gray-400">${att.mime_type || ''}</div>
-                                            </div>
-                                        </a>
-                                        <button type="button" class="flex-shrink-0 ml-2 text-xl font-bold text-red-400 hover:text-red-600" onclick="
-                                            const div = this.closest('.bg-[#1A365D]');
-                                            div.style.display = 'none';
-                                            const input = document.createElement('input');
-                                            input.type = 'hidden';
-                                            input.name = 'remove_attachments[]';
-                                            input.value = '${att.id}';
-                                            div.parentNode.appendChild(input);
-                                        ">&times;</button>
-                                    </div>
-                                `;
-                            }).join('');
-                        } else {
-                            existingWrap.classList.add('hidden');
-                        }
-                    }
-
-                    document.getElementById('task-details-modal').classList.add('hidden');
-                    document.getElementById('edit-task-modal').classList.remove('hidden');
-                });
-        });
-
-        // Close details modal
-        document.getElementById('close-details-modal').addEventListener('click', () => {
-            document.getElementById('task-details-modal').classList.add('hidden');
-        });
-
-        // Edit form submission
-        document.getElementById('edit-task-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const taskId = document.getElementById('edit-task-id').value;
-            const formData = new FormData(this);
-
-            fetch(`/tasks/${taskId}`, {
-                    method: 'POST', // Use POST with _method=PATCH in formData or via headers if supported
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-HTTP-Method-Override': 'PATCH'
-                    },
-                    body: formData
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update UI
-                        updateTaskArrays(taskId, data.task.completed);
-                        loadTasks(selectedDate);
-                        document.getElementById('edit-task-modal').classList.add('hidden');
-                        window.editTaskFiles = new DataTransfer();
-                    } else {
-                        alert('Failed to update task');
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                    alert('Error updating task');
-                });
-        });
-
-        // Close edit modal
-        document.getElementById('close-edit-modal').addEventListener('click', () => {
-            document.getElementById('edit-task-modal').classList.add('hidden');
-            window.editTaskFiles = new DataTransfer();
-        });
-
-        // Delete confirmation
-        document.getElementById('delete-yes').addEventListener('click', () => {
-            const taskId = document.getElementById('delete-confirm-modal').dataset.taskId;
-            fetch(`/tasks/${taskId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            }).then(() => {
-                // Remove from UI
-                const taskDiv = document.querySelector(`[data-task-id="${taskId}"]`);
-                if (taskDiv) {
-                    taskDiv.remove();
-                }
-                // Update arrays
-                delete allTasks[taskId];
-                delete todayTasks[taskId];
-                delete upcomingTasks[taskId];
-                delete completedTasks[taskId];
-                document.getElementById('delete-confirm-modal').classList.add('hidden');
-            });
-        });
-
-        // Cancel delete
-        document.getElementById('delete-no').addEventListener('click', () => {
-            document.getElementById('delete-confirm-modal').classList.add('hidden');
-        });
-
-        // Search functionality
-        document.getElementById('search-input').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const taskDivs = document.querySelectorAll('#task-list > div[data-task-id]');
-            taskDivs.forEach(taskDiv => {
-                const taskTitle = taskDiv.querySelector('span.translate-y-\\[\\-2px\\]')?.textContent
-                    .toLowerCase() || '';
-                if (taskTitle.includes(searchTerm)) {
-                    taskDiv.style.display = '';
-                } else {
-                    taskDiv.style.display = 'none';
-                }
-            });
-        });
+        loadTasks(null);
     </script>
 </x-app-layout>

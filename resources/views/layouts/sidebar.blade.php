@@ -52,29 +52,37 @@
         <div class="flex flex-col gap-2 border border-white w-fit bg-white/30 backdrop-blur-3xl rounded-3xl">
             {{-- ROUTE WORKSPACE --}}
             <a href="{{ route('workspace') }}" title="Workspace"
-                class="p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
+                class="relative p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
         {{ request()->routeIs('workspace')
             ? 'bg-[#0E213D] text-[#D5E2F5]'
             : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
 
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round"></rect> </g></svg>
+                
+                @php
+                    $unreadWorkspaceTasks = auth()->user()->unreadWorkspaceTasksCount();
+                @endphp
+                @if ($unreadWorkspaceTasks > 0)
+                    <span id="sidebar-workspace-badge" class="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+                        {{ $unreadWorkspaceTasks > 99 ? '99+' : $unreadWorkspaceTasks }}
+                    </span>
+                @endif
             </a>
             
             {{-- NOTIF --}}
-            <button id="notifications-btn" title="Notifications"
-                class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('notifications')
-                    ? 'bg-[#0E213D] text-[#D5E2F5]'
-                    : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path
-                            d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z">
-                        </path>
-                    </g>
-                </svg>
-            </button>
+            <div class="relative">
+                <button id="notifications-btn" title="Notifications"
+                    class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path d="M19 13.586V10c0-3.217-2.185-5.927-5.145-6.742C13.562 2.52 12.846 2 12 2s-1.562.52-1.855 1.258C7.185 4.074 5 6.783 5 10v3.586l-1.707 1.707A.996.996 0 0 0 3 16v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a.996.996 0 0 0-.293-.707L19 13.586zM19 17H5v-.586l1.707-1.707A.996.996 0 0 0 7 14v-4c0-2.757 2.243-5 5-5s5 2.243 5 5v4c0 .266.105.52.293.707L19 16.414V17zm-7 5a2.98 2.98 0 0 0 2.818-2H9.182A2.98 2.98 0 0 0 12 22z"></path>
+                        </g>
+                    </svg>
+                </button>
+                @include('layouts.notification-panel')
+            </div>
         </div>
 
         {{-- KOLOM 3 --}}
@@ -137,72 +145,4 @@
             </form>
         </div>
     </nav>
-
-    {{-- Notifications Popup --}}
-    <div id="notifications-popup" class="absolute hidden p-4 ml-4 overflow-y-auto bg-white rounded-lg shadow-lg left-full top-32 w-80 max-h-96">
-        <h3 class="mb-2 text-lg font-bold">Notifications</h3>
-        <div id="notifications-list" class="space-y-2">
-            <!-- Notifications will be populated here -->
-        </div>
-    </div>
 </aside>
-
-<script>
-    document.getElementById('notifications-btn').addEventListener('click', function() {
-        const popup = document.getElementById('notifications-popup');
-        const list = document.getElementById('notifications-list');
-        popup.classList.toggle('hidden');
-
-        // Populate notifications
-        const userId = {{ Auth::id() }};
-        const notifications = JSON.parse(localStorage.getItem('notifications_' + userId) || '[]');
-        list.innerHTML = '';
-        if (notifications.length === 0) {
-            list.innerHTML = '<p class="text-gray-500">No notifications</p>';
-        } else {
-            // Sort notifications: newest first
-            notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
-            notifications.forEach(notification => {
-                const item = document.createElement('div');
-                item.className = 'p-2 bg-gray-100 rounded';
-                item.innerHTML = `<p>${notification.message}</p><small class="text-gray-500">${new Date(notification.date).toLocaleString()}</small>`;
-                list.appendChild(item);
-            });
-        }
-
-        // Also fetch from server and merge
-        fetch('/notifications')
-            .then(response => response.json())
-            .then(serverNotifications => {
-                // Merge with localStorage notifications
-                const allNotifications = [...notifications, ...serverNotifications.map(n => ({
-                    message: n.message,
-                    date: n.created_at
-                }))];
-                // Remove duplicates and sort
-                const uniqueNotifications = allNotifications.filter((n, index, self) => self.findIndex(t => t.message === n.message && t.date === n.date) === index);
-                uniqueNotifications.sort((a, b) => new Date(b.date) - new Date(a.date));
-                list.innerHTML = '';
-                if (uniqueNotifications.length === 0) {
-                    list.innerHTML = '<p class="text-gray-500">No notifications</p>';
-                } else {
-                    uniqueNotifications.forEach(notification => {
-                        const item = document.createElement('div');
-                        item.className = 'p-2 bg-gray-100 rounded';
-                        item.innerHTML = `<p>${notification.message}</p><small class="text-gray-500">${new Date(notification.date).toLocaleString()}</small>`;
-                        list.appendChild(item);
-                    });
-                }
-            })
-            .catch(console.error);
-    });
-
-    // Close popup when clicking outside
-    document.addEventListener('click', function(event) {
-        const popup = document.getElementById('notifications-popup');
-        const btn = document.getElementById('notifications-btn');
-        if (!popup.contains(event.target) && !btn.contains(event.target)) {
-            popup.classList.add('hidden');
-        }
-    });
-</script>
