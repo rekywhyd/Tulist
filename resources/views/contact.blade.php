@@ -24,7 +24,7 @@
             tulist@gmail.com</a>
 
 
-        <h3 class="mt-12 mb-4 text-5xl font-bold">
+        <h3 class="my-4 text-5xl font-bold">
             Tulist Development Team
         </h3>
 
@@ -76,8 +76,7 @@
 
 
         <p class="mt-8 mb-4 text-xl">
-            Setiap dari kami berkontribusi dengan kemampuan terbaik untuk menghadirkan Tulist sebagai aplikasi yang
-            sederhana, fungsional, dan nyaman digunakan.
+            Each of us contributes to the best of our ability to make Tulist a simple, functional, and user-friendly application.
         </p>
     </div>
 @endsection
