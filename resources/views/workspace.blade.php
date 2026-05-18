@@ -385,13 +385,18 @@
                                 <td class="py-4 text-sm text-gray-500">{{ $member->email }}</td>
                                 <td class="py-4">
                                     @if($userRole === 'admin' && $member->id !== Auth::id())
-                                        <select class="role-select px-3 py-1.5 text-xs font-semibold border rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all
-                                            {{ $member->pivot->role === 'admin' ? 'bg-yellow-50 border-yellow-200 text-yellow-700' : 'bg-blue-50 border-blue-200 text-blue-700' }}"
-                                            data-workspace-id="{{ $selectedWorkspace->id }}"
-                                            data-user-id="{{ $member->id }}">
-                                            <option value="admin" {{ $member->pivot->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                                            <option value="member" {{ $member->pivot->role === 'member' ? 'selected' : '' }}>Member</option>
-                                        </select>
+                                        <div class="relative inline-block">
+                                            <select class="role-select appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold border rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all
+                                                {{ $member->pivot->role === 'admin' ? 'bg-yellow-50 border-yellow-200 text-yellow-700' : 'bg-blue-50 border-blue-200 text-blue-700' }}"
+                                                data-workspace-id="{{ $selectedWorkspace->id }}"
+                                                data-user-id="{{ $member->id }}">
+                                                <option value="admin" {{ $member->pivot->role === 'admin' ? 'selected' : '' }}>Admin</option>
+                                                <option value="member" {{ $member->pivot->role === 'member' ? 'selected' : '' }}>Member</option>
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 {{ $member->pivot->role === 'admin' ? 'text-yellow-700' : 'text-blue-700' }}">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                            </div>
+                                        </div>
                                     @else
                                         <span class="px-3 py-1.5 text-xs font-semibold rounded-full
                                             {{ $member->pivot->role === 'admin' ? 'bg-yellow-50 text-yellow-700' : 'bg-blue-50 text-blue-700' }}">
@@ -762,8 +767,16 @@
                         // Update styling
                         if (newRole === 'admin') {
                             this.className = this.className.replace(/bg-blue-50 border-blue-200 text-blue-700/g, 'bg-yellow-50 border-yellow-200 text-yellow-700');
+                            const iconWrapper = this.nextElementSibling;
+                            if (iconWrapper) {
+                                iconWrapper.className = iconWrapper.className.replace(/text-blue-700/g, 'text-yellow-700');
+                            }
                         } else {
                             this.className = this.className.replace(/bg-yellow-50 border-yellow-200 text-yellow-700/g, 'bg-blue-50 border-blue-200 text-blue-700');
+                            const iconWrapper = this.nextElementSibling;
+                            if (iconWrapper) {
+                                iconWrapper.className = iconWrapper.className.replace(/text-yellow-700/g, 'text-blue-700');
+                            }
                         }
                     } else {
                         alert(data.error || 'Failed to update role.');
@@ -1119,6 +1132,7 @@
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     },
                     body: JSON.stringify({ completed: isCompleted })

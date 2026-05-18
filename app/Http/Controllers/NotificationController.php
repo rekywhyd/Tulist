@@ -144,7 +144,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         $workspace = $invitation->workspace;
 
-        if (!$workspace->members()->where('user_id', $user->id)->exists()) {
+        if (!$workspace->members()->where('workspace_user.user_id', $user->id)->exists()) {
             $workspace->members()->attach($user->id, ['role' => 'member']);
         }
 

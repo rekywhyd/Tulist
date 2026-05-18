@@ -122,7 +122,37 @@ class WorkspaceController extends Controller
                 ->first();
 
             if ($existingInvitation) {
-                $errors[] = "Invitation already pending for $email.";
+                // If there's already a pending invitation, we resend it by updating the token and expiration
+                $existingInvitation->update([
+                    'invited_by' => $user->id,
+                    'token' => Str::random(64),
+                    'expires_at' => now()->addDays(7),
+                ]);
+
+                try {
+                    Mail::to($email)->send(new WorkspaceInvitationMail($workspace, $existingInvitation));
+                    $invited[] = $email;
+                } catch (\Exception $e) {
+                    $errors[] = "Failed to send email to $email.";
+                }
+
+                // Create a new in-app notification for registered users
+                $invitedUser = User::where('email', $email)->first();
+                if ($invitedUser) {
+                    Notification::create([
+                        'user_id' => $invitedUser->id,
+                        'title' => '📨 Workspace Invitation',
+                        'message' => "{$user->name} invited you to join \"{$workspace->name}\" (Resent).",
+                        'type' => 'workspace_invitation',
+                        'is_read' => false,
+                        'data' => [
+                            'workspace_id' => $workspace->id,
+                            'workspace_name' => $workspace->name,
+                            'invitation_id' => $existingInvitation->id,
+                            'invited_by' => $user->name,
+                        ],
+                    ]);
+                }
                 continue;
             }
 
@@ -203,7 +233,7 @@ class WorkspaceController extends Controller
 
         // Add user to workspace as member
         $workspace = $invitation->workspace;
-        if (!$workspace->members()->where('user_id', $user->id)->exists()) {
+        if (!$workspace->members()->where('workspace_user.user_id', $user->id)->exists()) {
             $workspace->members()->attach($user->id, ['role' => 'member']);
         }
 
@@ -234,7 +264,7 @@ class WorkspaceController extends Controller
         if ($request->role === 'member') {
             $adminCount = $workspace->admins()->count();
             $targetIsAdmin = $workspace->members()
-                ->where('user_id', $userId)
+                ->where('workspace_user.user_id', $userId)
                 ->wherePivot('role', 'admin')
                 ->exists();
 
@@ -328,7 +358,27 @@ class WorkspaceController extends Controller
         $workspace = Workspace::findOrFail($workspaceId);
 
         if ($workspace->owner_id !== $user->id) {
-            return response()->json(['error' => 'Only the workspace owner can delete it.'], 403);
+            if (request()->expectsJson() || request()->ajax() || request()->wantsJson()) {
+                return response()->json(['error' => 'Only the workspace owner can delete it.'], 403);
+            }
+            return redirect()->back()->with('error', 'Only the workspace owner can delete it.');
+        }
+
+        // Get all members of the workspace except the owner to notify
+        $membersToNotify = $workspace->members()->where('users.id', '!=', $user->id)->get();
+
+        foreach ($membersToNotify as $member) {
+            Notification::create([
+                'user_id' => $member->id,
+                'title' => '🗑️ Workspace Deleted',
+                'message' => "Workspace \"{$workspace->name}\" has been deleted by owner {$user->name}.",
+                'type' => 'workspace_deleted',
+                'is_read' => false,
+                'data' => [
+                    'workspace_name' => $workspace->name,
+                    'deleted_by' => $user->name,
+                ],
+            ]);
         }
 
         $workspace->delete();
@@ -370,7 +420,7 @@ class WorkspaceController extends Controller
         $user = Auth::user();
         $workspace = Workspace::findOrFail($workspaceId);
 
-        if (!$workspace->members()->where('user_id', $user->id)->exists()) {
+        if (!$workspace->members()->where('workspace_user.user_id', $user->id)->exists()) {
             return response()->json(['error' => 'Not a member of this workspace.'], 403);
         }
 

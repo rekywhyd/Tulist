@@ -224,8 +224,8 @@ class TaskController extends Controller
                         \App\Models\Notification::create([
                             'user_id' => $mentionedUserId,
                             'type' => 'mention_completed',
-                            'title' => 'Tugas Selesai',
-                            'message' => "Tugas \"{$task->title}\" dimana Anda disebutkan telah diselesaikan.",
+                            'title' => 'Completed task',
+                            'message' => "Task \"{$task->title}\" where you mentioned it has been completed.",
                             'is_read' => false,
                             'data' => [
                                 'task_id' => $task->id,
@@ -289,7 +289,11 @@ class TaskController extends Controller
         }
 
 
-        return response()->json(['success' => true, 'task' => $task->load(['attachments', 'workspaces'])]);
+        if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'task' => $task->load(['attachments', 'workspaces'])]);
+        }
+
+        return redirect()->back()->with('success', 'Task updated successfully');
     }
 
     /**

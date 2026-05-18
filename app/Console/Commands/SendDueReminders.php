@@ -60,14 +60,14 @@ class SendDueReminders extends Command
             if ($diffMinutes <= 1470 && $diffMinutes >= 1410) {
                 $reminderType = '1_day';
                 $title = '📅 Due Tomorrow';
-                $message = "Tugas \"{$task->title}\" mendekati tenggat waktu (besok).";
+                $message = "Task \"{$task->title}\" due tomorrow.";
             } 
             // 1 Hour Before Reminder (between 0 and 65 minutes)
             elseif ($diffMinutes <= 65 && $diffMinutes > 0) {
                 $reminderType = '1_hour';
                 $timeLabel = $task->end_time ? $task->end_time->format('H:i') : '23:59';
                 $title = '⏰ Due in 1 Hour';
-                $message = "Tugas \"{$task->title}\" akan segera berakhir pada {$timeLabel} (kurang dari 1 Jam).";
+                $message = "Task \"{$task->title}\" is due soon at {$timeLabel} (in less than 1 hour).";
             }
 
             if ($reminderType) {

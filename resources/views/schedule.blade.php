@@ -1201,6 +1201,7 @@
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
@@ -1451,7 +1452,8 @@
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-HTTP-Method-Override': 'PATCH'
+                        'X-HTTP-Method-Override': 'PATCH',
+                        'Accept': 'application/json'
                     },
                     body: new FormData(this)
                 }).then(response => response.json())
