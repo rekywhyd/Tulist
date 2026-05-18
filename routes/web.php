@@ -6,6 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\TaskCommentController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Task;
@@ -13,6 +14,9 @@ use App\Models\Task;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 
 // Workspace routes (accessible to all authenticated users)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -140,7 +144,6 @@ Route::middleware('auth', 'verified')->group(function () {
     })->name('clear.alert');
 });
 
-Route::get('/auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('/auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
+
 
 require __DIR__ . '/auth.php';

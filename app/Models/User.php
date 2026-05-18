@@ -24,8 +24,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'google_id',
+        'provider',
         'profile_photo_path',
         'role',
+        'role_name',
+        'avatar',
+        'status',
+        'join_date',
+        'last_login',
+        'user_id',
+        'phone_number',
+        'position',
+        'department',
+        'line_manager',
+        'seconde_line_manager',
     ];
 
     /**
@@ -69,12 +81,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role_name === 'admin';
     }
 
     public function hasRole(string $role): bool
     {
-        return $this->role === $role;
+        return $this->role_name === $role;
     }
 
     /**

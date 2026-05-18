@@ -55,7 +55,7 @@
         <div class="flex items-center justify-between mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="text-black border-gray-500 transition-transform ml-4 duration-200 hover:hover:scale-110 rounded shadow-sm"
+                    class="ml-4 text-black transition-transform duration-200 border-gray-500 rounded shadow-sm hover:hover:scale-110"
                     name="remember">
                 <span class="pl-2 text-sm text-black font-poppins ms-2">{{ __('Remember me') }}</span>
             </label>

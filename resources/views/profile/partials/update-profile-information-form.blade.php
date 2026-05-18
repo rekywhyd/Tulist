@@ -64,11 +64,23 @@
                     </header>
 
                     <div>
-                        <x-input-label class="block text-sm font-medium text-gray-600" for="current_password"
-                            :value="__('Current Password')" />
+                        <div class="flex items-center gap-2 mb-1">
+                            <x-input-label class="block text-sm font-medium text-gray-600" for="current_password"
+                                :value="__('Current Password')" />
+                            @if(Auth::user()->provider === 'google')
+                                <span class="text-[10px] bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full font-semibold">
+                                    Optional (Google Login)
+                                </span>
+                            @endif
+                        </div>
                         <x-text-input id="current_password" name="current_password" type="password"
-                            class="block py-2 mb-2 px-4 mt-1 text-black bg-[#F2F6FF] border border-gray-400 w-full rounded-lg"
+                            class="block py-2 mb-1 px-4 text-black bg-[#F2F6FF] border border-gray-400 w-full rounded-lg"
                             autocomplete="current-password" />
+                        @if(Auth::user()->provider === 'google')
+                            <p class="text-[11px] text-blue-600 mb-2 leading-relaxed">
+                                Leave blank if you logged in via Google and want to set a password for the first time.
+                            </p>
+                        @endif
                         <x-input-error :messages="$errors->get('current_password')" class="mt-2" />
                     </div>
 
