@@ -49,6 +49,7 @@ Route::get('/home', function () {
                       $q->whereIn('workspaces.id', $user->workspaces->pluck('id'));
                   });
         })
+        ->orderedHierarchy()
         ->get()->each(function($t) use ($user) {
             $t->can_modify = $t->canUserModify($user);
         });

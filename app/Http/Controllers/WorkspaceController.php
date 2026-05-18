@@ -36,7 +36,7 @@ class WorkspaceController extends Controller
         if ($selectedWorkspace) {
             $members = $selectedWorkspace->members()->orderBy('name')->get();
             $userRole = $user->workspaceRole($selectedWorkspace->id);
-            $tasks = $selectedWorkspace->tasks()->orderBy('tasks.created_at', 'desc')->get()->map(function($task) use ($user) {
+            $tasks = $selectedWorkspace->tasks()->orderedHierarchy()->get()->map(function($task) use ($user) {
                 $task->can_modify = $task->canUserModify($user);
                 return $task;
             });

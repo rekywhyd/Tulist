@@ -26,7 +26,8 @@ class TaskController extends Controller
                   ->orWhereHas('workspaces', function($qw) use ($user) {
                       $qw->whereIn('workspaces.id', $user->workspaces->pluck('id'));
                   });
-            });
+            })
+            ->orderedHierarchy();
 
         if ($request->has('date')) {
             $tasks = $query->where('due_date', $request->date)->get()->map(function($task) use ($user) {
@@ -369,22 +370,24 @@ class TaskController extends Controller
         // Separate queries for better performance - exclude completed tasks from allTasks
         $allTasks = (clone $baseQuery)
             ->where('completed', false)
-            ->orderBy('due_date', 'asc')
-            ->orderByRaw("CASE priority WHEN 'Urgent' THEN 1 WHEN 'High' THEN 2 WHEN 'Normal' THEN 3 WHEN 'Low' THEN 4 END")
+            ->orderedHierarchy()
             ->get();
 
         $todayTasks = (clone $baseQuery)
             ->where('due_date', now()->toDateString())
             ->where('completed', false)
+            ->orderedHierarchy()
             ->get();
 
         $upcomingTasks = (clone $baseQuery)
             ->where('due_date', '>', now()->toDateString())
             ->where('completed', false)
+            ->orderedHierarchy()
             ->get();
 
         $completedTasks = (clone $baseQuery)
             ->where('completed', true)
+            ->orderedHierarchy()
             ->get();
 
         // Add can_modify to all collections
@@ -446,6 +449,7 @@ class TaskController extends Controller
                 $q->where('title', 'LIKE', "%{$query}%")
                   ->orWhere('description', 'LIKE', "%{$query}%");
             })
+            ->orderedHierarchy()
             ->limit(8)
             ->get()
             ->map(function($task) use ($user) {

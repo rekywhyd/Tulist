@@ -70,4 +70,35 @@ class Task extends Model
               ->where('workspace_user.role', 'admin');
         })->exists();
     }
+
+    /**
+     * Scope a query to order tasks by the specified hierarchy:
+     * 1. Status: Completed first, then Not Completed (completed DESC)
+     * 2. Deadline & Urgency: due_date (present first, then ASC), start_time (present first, then ASC), end_time (present first, then ASC)
+     * 3. Classification / Importance: Priority (Urgent -> High -> Normal -> Low)
+     */
+    public function scopeOrderedHierarchy($query)
+    {
+        return $query
+            // Level 1: Status (Not Completed first, Completed at the bottom)
+            ->orderBy('completed', 'asc')
+            
+            // Level 2: Deadline & Urgency
+            ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderBy('due_date', 'asc')
+            ->orderByRaw('CASE WHEN start_time IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderBy('start_time', 'asc')
+            ->orderByRaw('CASE WHEN end_time IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderBy('end_time', 'asc')
+            
+            // Level 3: Priority / Importance
+            ->orderByRaw("CASE priority 
+                WHEN 'Urgent' THEN 1 
+                WHEN 'High' THEN 2 
+                WHEN 'Normal' THEN 3 
+                WHEN 'Low' THEN 4 
+                ELSE 5 
+            END ASC");
+    }
 }
+

@@ -979,7 +979,50 @@
                 'Normal': 3,
                 'Low': 4
             };
-            tasks.sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
+            tasks.sort((a, b) => {
+                // 1. Level 1: Status (Not Completed first, Completed at the bottom)
+                const aComp = a.completed ? 1 : 0;
+                const bComp = b.completed ? 1 : 0;
+                if (aComp !== bComp) {
+                    return aComp - bComp;
+                }
+
+                // 2. Level 2: Deadline & Urgency
+                // Due date presence & comparison
+                const aHasDue = a.due_date ? 1 : 0;
+                const bHasDue = b.due_date ? 1 : 0;
+                if (aHasDue !== bHasDue) {
+                    return bHasDue - aHasDue;
+                }
+                if (a.due_date && b.due_date && a.due_date !== b.due_date) {
+                    return a.due_date.localeCompare(b.due_date);
+                }
+
+                // Start time presence & comparison
+                const aHasStart = a.start_time ? 1 : 0;
+                const bHasStart = b.start_time ? 1 : 0;
+                if (aHasStart !== bHasStart) {
+                    return bHasStart - aHasStart;
+                }
+                if (a.start_time && b.start_time && a.start_time !== b.start_time) {
+                    return a.start_time.localeCompare(b.start_time);
+                }
+
+                // End time presence & comparison
+                const aHasEnd = a.end_time ? 1 : 0;
+                const bHasEnd = b.end_time ? 1 : 0;
+                if (aHasEnd !== bHasEnd) {
+                    return bHasEnd - aHasEnd;
+                }
+                if (a.end_time && b.end_time && a.end_time !== b.end_time) {
+                    return a.end_time.localeCompare(b.end_time);
+                }
+
+                // 3. Level 3: Classification / Priority
+                const aPri = priorityOrder[a.priority] || 99;
+                const bPri = priorityOrder[b.priority] || 99;
+                return aPri - bPri;
+            });
 
             tasks.forEach(task => {
                 const taskDiv = document.createElement('div');
