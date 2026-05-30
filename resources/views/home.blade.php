@@ -7,7 +7,7 @@
             <div class="flex justify-center gap-8">
 
                 <!-- Left Side: All My Task -->
-                <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
+                <div id="tour-task-list" class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl text-[#1C427A] font-bold">All My Task</h3>
                         <button type="button" id="add-task-btn"
@@ -26,7 +26,7 @@
                     </div>
 
                     <!-- Today Section -->
-                    <div class="mb-6">
+                    <div class="mb-6" id="tour-today-section">
                         <button
                             class="flex items-center justify-between w-full mb-2 text-[#2F6ECB] font-bold text-xl category-toggle"
                             data-category="today">
@@ -524,10 +524,10 @@
                 </div>
 
                 <!-- Right Side: History -->
-                <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
+                <div id="tour-history" class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="flex items-center justify-between mb-10">
                         <h3 class="text-3xl font-bold text-[#132C51]">History</h3>
-                        <a href="{{ route('history.report') }}" target="_blank"
+                        <a href="{{ route('history.report') }}" target="_blank" id="tour-generate-report"
                             class="flex items-center gap-2 px-6 py-2 text-sm font-bold font-poppins text-white bg-[#0E213D] shadow-md rounded-3xl focus:outline-none transition-transform duration-200 hover:scale-110">
                             <svg fill="#ffffff" viewBox="0 0 32 32" id="icon"
                                 xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
@@ -1194,7 +1194,7 @@
     <!-- Add Task Modal -->
     <div id="add-task-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-600 bg-opacity-80 font-poppins">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
+            <div id="tour-add-task-modal" class="relative p-5 shadow-xl rounded-xl w-[850px] bg-[#132C51] max-w-full my-8">
                 <div>
                     <h3 class="mb-3 text-2xl font-semibold text-white">New Task</h3>
                     <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data"
@@ -1258,7 +1258,8 @@
                                     <label class="font-semibold text-gray-100">Start Time</label>
                                 </div>
                                 <input type="time" name="start_time"
-                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required>
                             </div>
 
                             <div class="flex flex-col justify-end">
@@ -1271,7 +1272,8 @@
                                     <label class="font-semibold text-gray-100">End Time</label>
                                 </div>
                                 <input type="time" name="end_time"
-                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required>
                             </div>
 
                             <!-- Priority Selection -->
@@ -1357,7 +1359,7 @@
                                     </div>
 
 
-                                    <select name="priority" x-model="selected" class="hidden">
+                                    <select name="priority" x-model="selected" class="opacity-0 absolute w-0 h-0" required>
                                         <option value="">Priority</option>
                                         <option value="Urgent">Urgent</option>
                                         <option value="High">High</option>
@@ -1445,7 +1447,7 @@
 
                         <!-- Row 5: Buttons -->
                         <div class="flex justify-center col-span-12 gap-6 mt-4 font-medium">
-                            <button type="submit"
+                            <button type="submit" id="tour-save-task"
                                 class="transition-transform duration-200 hover:scale-110 px-5 py-1 text-white bg-[#1C427A] rounded-3xl">Save</button>
                             <button type="button" id="close-modal"
                                 class="px-5 py-1 text-white transition-transform duration-200 bg-gray-500 rounded-3xl hover:scale-95">Cancel</button>

@@ -55,6 +55,7 @@ class GoogleAuthController extends Controller
                     'role_name' => 'User',
                     'status'    => 'Active',
                     'join_date' => now(),
+                    'needs_onboarding' => true,
                 ]);
                 $user->markEmailAsVerified();
             } else {

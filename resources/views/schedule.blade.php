@@ -4,7 +4,7 @@
 
         <div class="mx-auto max-w-7xl">
             <!-- Header Section -->
-            <div class="px-8 py-4 my-4 bg-white shadow-xl rounded-xl font-poppins">
+            <div id="tour-schedule-header" class="px-8 py-4 my-4 bg-white shadow-xl rounded-xl font-poppins">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-6">
                         <h1 class="text-2xl font-bold text-[#1C427A]">
@@ -100,7 +100,7 @@
                 </div>
 
                 <!-- Task List Panel -->
-                <div class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
+                <div id="tour-task-panel" class="flex-1 min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     <div class="mb-4">
                         <h2 id="task-in-date-title" class="mb-4 text-xl font-bold text-[#1C427A]">
                             Task in <span id="task-in-date-pill"
@@ -182,7 +182,8 @@
                                     <label class="font-semibold text-gray-100">Start Time</label>
                                 </div>
                                 <input type="time" name="start_time"
-                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required>
                             </div>
 
                             <div class="flex flex-col justify-end">
@@ -195,7 +196,8 @@
                                     <label class="font-semibold text-gray-100">End Time</label>
                                 </div>
                                 <input type="time" name="end_time"
-                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                    class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                    required>
                             </div>
 
                             <!-- Priority Selection -->
@@ -279,7 +281,7 @@
                                         </div>
                                     </div>
 
-                                    <select name="priority" x-model="selected" class="hidden">
+                                    <select name="priority" x-model="selected" class="opacity-0 absolute w-0 h-0" required>
                                         <option value="">Priority</option>
                                         <option value="Urgent">Urgent</option>
                                         <option value="High">High</option>

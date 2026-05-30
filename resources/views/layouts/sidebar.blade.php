@@ -5,7 +5,7 @@
         {{-- KOLOM 1 --}}
         <div class="flex flex-col gap-2 border border-white w-fit bg-white/30 backdrop-blur-3xl rounded-3xl">
             {{-- ROUTE HOME --}}
-            <a href="{{ route('home') }}" title="Home"
+            <a href="{{ route('home') }}" title="Home" id="tour-sidebar-home"
                 class="p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
           {{ request()->routeIs('home')
               ? 'bg-[#0E213D] text-[#D5E2F5]'
@@ -30,7 +30,7 @@
             </a>
 
             {{-- ROUTE SCHEDULE --}}
-            <a href="{{ route('schedule') }}" title="Schedule"
+            <a href="{{ route('schedule') }}" title="Schedule" id="tour-sidebar-schedule"
                 class="p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
           {{ request()->routeIs('schedule')
               ? 'bg-[#0E213D] text-[#D5E2F5]'
@@ -51,7 +51,7 @@
         {{-- KOLOM 2 --}}
         <div class="flex flex-col gap-2 border border-white w-fit bg-white/30 backdrop-blur-3xl rounded-3xl">
             {{-- ROUTE WORKSPACE --}}
-            <a href="{{ route('workspace') }}" title="Workspace"
+            <a href="{{ route('workspace') }}" title="Workspace" id="tour-sidebar-workspace"
                 class="relative p-3 transition-colors rounded-full nav-button duration-200 hover:hover:scale-110
         {{ request()->routeIs('workspace')
             ? 'bg-[#0E213D] text-[#D5E2F5]'
@@ -88,7 +88,7 @@
         {{-- KOLOM 3 --}}
         <div class="flex flex-col gap-2 border border-white bg-white/30 backdrop-blur-3xl w-fit rounded-3xl">
             {{-- PRIVACY --}}
-            <a href="{{ route('privacy') }}" title="Privacy"
+            <a href="{{ route('privacy') }}" title="Privacy" id="tour-sidebar-privacy"
                 class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('privacy')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
@@ -97,7 +97,7 @@
             </a>
 
             {{-- HELP --}}
-            <a href="{{ route('help') }}" title="Help"
+            <a href="{{ route('help') }}" title="Help" id="tour-sidebar-help"
                 class="p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('help')
                     ? 'bg-[#0E213D] text-[#D5E2F5]'
                     : 'text-[#717C8F] hover:bg-[#0E213D] hover:text-[#D5E2F5]' }}">
@@ -129,7 +129,7 @@
             {{-- LOGOUT --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <a href="{{ route('logout') }}" title="Log Out"
+                <a href="{{ route('logout') }}" title="Log Out" id="tour-sidebar-logout"
                     onclick="event.preventDefault(); if(confirm('Are you sure you want to logout?')) this.closest('form').submit();"
                     class="block p-3 transition-colors rounded-full duration-200 hover:hover:scale-110 {{ request()->routeIs('logout') ? 'bg-red-600 text-white' : 'text-[#717C8F] hover:bg-red-600 hover:text-white' }}">
                     <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

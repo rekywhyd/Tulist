@@ -39,6 +39,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'department',
         'line_manager',
         'seconde_line_manager',
+        'onboarding_completed',
+        'needs_onboarding',
     ];
 
     /**
@@ -61,6 +63,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'onboarding_completed' => 'array',
+            'needs_onboarding' => 'boolean',
         ];
     }
 

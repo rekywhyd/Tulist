@@ -38,7 +38,7 @@
             <div class="pt-2 pl-6 text-xl font-bold text-gray-500">{{ \Carbon\Carbon::now()->format('d M Y') }}</div>
 
             <div class="flex items-center gap-8 pt-4 mr-8">
-                <div x-data="searchComponent()" class="relative">
+                <div x-data="searchComponent()" class="relative" id="tour-header-search">
                     <div class="relative transition-transform duration-200 hover:hover:scale-105">
                         <input type="text" 
                             x-model="query"
@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('profile.edit') }}" title="Profile">
+                <a href="{{ route('profile.edit') }}" title="Profile" id="tour-header-profile">
                     @if (Auth::user()->profile_photo_path)
                         <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" alt="Profile Photo"
                             class="object-cover w-12 h-12 transition-all duration-200 rounded-full cursor-pointer hover:hover:scale-110">
@@ -176,6 +176,27 @@
             </div>
         </div>
     </div>
+
+    {{-- Onboarding Tour --}}
+    @if(Auth::check() && Auth::user()->needs_onboarding)
+        @php
+            $tourPage = '';
+            if(request()->routeIs('home')) $tourPage = 'home';
+            elseif(request()->routeIs('schedule')) $tourPage = 'schedule';
+            elseif(request()->routeIs('workspace')) {
+                $tourPage = request()->has('workspace_id') ? 'workspace_selected' : 'workspace';
+            }
+            elseif(request()->routeIs('profile.edit')) $tourPage = 'profile';
+            elseif(request()->routeIs('help')) $tourPage = 'help';
+            elseif(request()->routeIs('privacy')) $tourPage = 'privacy';
+            
+            $completedPages = Auth::user()->onboarding_completed ?? [];
+            if(!is_array($completedPages)) $completedPages = [];
+        @endphp
+        @if($tourPage && !in_array($tourPage, $completedPages))
+            <x-onboarding-tour :page="$tourPage" />
+        @endif
+    @endif
 
     <!-- Floating Session Notification Toast -->
     @if (session('success') || session('error') || session('info'))

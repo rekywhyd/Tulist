@@ -6,6 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\TaskCommentController;
+use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -143,6 +144,9 @@ Route::middleware('auth', 'verified')->group(function () {
         session()->forget('show_alert');
         return response()->json(['success' => true]);
     })->name('clear.alert');
+
+    // Onboarding Tour
+    Route::post('/onboarding/complete', [OnboardingController::class, 'complete'])->name('onboarding.complete');
 });
 
 

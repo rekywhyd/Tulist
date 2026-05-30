@@ -6,7 +6,7 @@
         <div class="pt-4 pl-10 pr-10 mx-auto max-w-7xl font-poppins">
             <div class="flex justify-center gap-8">
                 {{-- LEFT SIDE: Workspace List --}}
-                <div class="flex-1 min-w-0 p-6 bg-white shadow-xl rounded-3xl" style="max-width: 340px;">
+                <div id="tour-workspace-list" class="flex-1 min-w-0 p-6 bg-white shadow-xl rounded-3xl" style="max-width: 340px;">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl text-[#1C427A] font-bold">My Workspaces</h3>
                         <button type="button" id="create-workspace-btn"
@@ -52,7 +52,7 @@
                 </div>
 
                 {{-- RIGHT SIDE: Workspace Content --}}
-                <div class="flex-[2] min-w-0 p-8 bg-white shadow-xl rounded-3xl">
+                <div id="tour-workspace-content" class="flex-[2] min-w-0 p-8 bg-white shadow-xl rounded-3xl">
                     @if($selectedWorkspace)
                         {{-- Header --}}
                         <div class="flex items-center justify-between gap-4 mb-4">
@@ -63,13 +63,13 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 {{-- Workspace Options Dropdown --}}
-                                <div class="relative" x-data="{ open: false }">
-                                    <button @click="open = !open" @click.away="open = false" type="button"
+                                <div class="relative" x-data="{ open: false }" id="tour-workspace-dropdown-container" @open-dropdown.window="open = true" @close-dropdown.window="open = false">
+                                    <button @click="open = !open" @click.away="open = false" type="button" id="tour-workspace-options-btn"
                                         class="flex items-center justify-center w-10 h-10 transition-all duration-200 rounded-full hover:bg-gray-100 text-[#717C8F]">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 256 256"><path d="M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM128,72a16,16,0,1,0-16-16A16,16,0,0,0,128,72Zm0,112a16,16,0,1,0,16,16A16,16,0,0,0,128,184Z"></path></svg>
                                     </button>
 
-                                    <div x-show="open" 
+                                    <div x-show="open" id="tour-workspace-options-menu"
                                          x-transition:enter="transition ease-out duration-100"
                                          x-transition:enter-start="transform opacity-0 scale-95"
                                          x-transition:enter-end="transform opacity-100 scale-100"
@@ -1560,7 +1560,8 @@
                                 <label class="font-semibold text-gray-100">Start Time</label>
                             </div>
                             <input type="time" name="start_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                required>
                         </div>
 
                         <div class="flex flex-col justify-end">
@@ -1569,7 +1570,8 @@
                                 <label class="font-semibold text-gray-100">End Time</label>
                             </div>
                             <input type="time" name="end_time"
-                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]">
+                                class="w-full text-white bg-[#0C1F3B] border-gray-600 px-3 py-2 border rounded-lg [color-scheme:dark]"
+                                required>
                         </div>
 
                         <!-- Priority Selection -->
@@ -1625,7 +1627,7 @@
                                 </div>
 
 
-                                <select name="priority" x-model="selected" class="hidden">
+                                <select name="priority" x-model="selected" class="opacity-0 absolute w-0 h-0" required>
                                     <option value="">Priority</option>
                                     <option value="Urgent">Urgent</option>
                                     <option value="High">High</option>
