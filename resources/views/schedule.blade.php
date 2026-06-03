@@ -899,6 +899,32 @@
         document.addEventListener('DOMContentLoaded', () => {
             window.newTaskFiles = new DataTransfer();
             window.editTaskFiles = new DataTransfer();
+
+            const prevMonthBtn = document.getElementById('prev-month');
+            if (prevMonthBtn) {
+                prevMonthBtn.addEventListener('click', () => {
+                    let m = currentMonth - 1;
+                    let y = currentYear;
+                    if (m < 1) {
+                        m = 12;
+                        y--;
+                    }
+                    window.location.href = `/schedule?month=${m}&year=${y}`;
+                });
+            }
+
+            const nextMonthBtn = document.getElementById('next-month');
+            if (nextMonthBtn) {
+                nextMonthBtn.addEventListener('click', () => {
+                    let m = currentMonth + 1;
+                    let y = currentYear;
+                    if (m > 12) {
+                        m = 1;
+                        y++;
+                    }
+                    window.location.href = `/schedule?month=${m}&year=${y}`;
+                });
+            }
         });
 
         let currentMonth = {{ $month }};
