@@ -5,12 +5,16 @@ Tulist adalah aplikasi web berbasis Laravel untuk manajemen tugas harian. Aplika
 ## Deskripsi Proyek
 
 Aplikasi ini dibangun menggunakan framework Laravel 12 dengan frontend yang menggunakan Tailwind CSS, Alpine.js, dan Vite. Fitur utama meliputi:
-- Manajemen tugas dengan prioritas dan tanggal jatuh tempo
-- Subtugas untuk setiap tugas
-- Kategorisasi tugas (Hari Ini, Besok, Mendatang, Riwayat)
-- Autentikasi pengguna dengan Laravel Breeze
-- Login melalui Google OAuth
-- Dashboard responsif
+- **Manajemen Tugas Lanjutan**: Prioritas, tanggal jatuh tempo, subtugas, dan kategorisasi (Hari Ini, Besok, Mendatang, Riwayat, Overdue).
+- **Workspace & Kolaborasi**: Buat ruang kerja (workspace), undang anggota, dan kelola peran (Admin/Member) dengan kontrol akses yang aman (RBAC).
+- **Komentar Tugas & @Mentions**: Berdiskusi langsung pada tugas dan gunakan tag @mention untuk memanggil anggota lain.
+- **Tampilan Jadwal (Schedule)**: Visualisasi tugas berbasis kalender/jadwal untuk mempermudah perencanaan.
+- **Sistem Notifikasi**: Pemberitahuan untuk undangan workspace, tag mention, dan aktivitas lainnya.
+- **Manajemen Profil**: Personalisasi akun dengan fitur unggah foto profil.
+- **Laporan Riwayat**: Rekapitulasi laporan tugas yang telah selesai.
+- **Onboarding Tour**: Panduan interaktif bagi pengguna baru.
+- **Autentikasi & Keamanan**: Login email/password standar dan integrasi Google OAuth (Laravel Breeze).
+- **Dashboard Responsif**: Desain UI modern yang berjalan lancar di desktop dan mobile.
 
 ## Persyaratan Sistem
 
@@ -211,13 +215,19 @@ Pastikan untuk build assets dan konfigurasikan web server (Apache/Nginx) untuk m
 4. Tambahkan subtugas jika diperlukan
 5. Tugas akan muncul di kategori yang sesuai (Today, Tomorrow, Upcoming)
 
-### Fitur Lain
-- **Details**: Lihat detail tugas
-- **Rename**: Ubah nama tugas
-- **Duplicate**: Duplikasi tugas
-- **Add Subtask**: Tambahkan subtugas
-- **Delete**: Hapus tugas
-- **Complete**: Tandai tugas selesai
+### Fitur Workspaces & Kolaborasi
+1. Akses halaman **Workspace** (`/workspace`) untuk membuat ruang kerja baru
+2. Undang anggota ke workspace menggunakan alamat email mereka
+3. Atur *Role* (peran) anggota sebagai **Admin** (memiliki kontrol penuh terhadap workspace) atau **Member** (akses terbatas sesuai tugas)
+4. Tugas yang dibuat di dalam workspace dapat dilihat, diubah (sesuai role), dan didiskusikan bersama
+
+### Fitur Tambahan & Kolaborasi
+- **Tampilan Schedule**: Akses menu **Schedule** (`/schedule`) untuk melihat penyebaran tugas dalam format waktu/kalender
+- **Komentar & Mentions**: Buka detail tugas untuk menambahkan komentar. Gunakan simbol `@` untuk melakukan *mention* ke anggota workspace
+- **Notifikasi**: Cek ikon bel notifikasi di pojok kanan atas untuk menerima undangan workspace atau *mention*
+- **Laporan Riwayat**: Hasilkan dan unduh laporan aktivitas tugas di halaman riwayat
+- **Manajemen Profil**: Kunjungi halaman profil untuk mengganti foto profil dan mengatur preferensi akun
+- **Manajemen Tugas Cepat**: Fitur duplikasi tugas, tambah subtugas, ubah penamaan, hingga tandai selesai dengan mudah
 
 ## Struktur Proyek
 
