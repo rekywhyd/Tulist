@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex flex-col items-center font-serif">
+    <div class="flex flex-col items-center font-poppins">
         <h1 class="my-2 text-4xl font-bold text-gray-900">Forget Password?</h1>
         <div class="mb-4 text-xs font-semibold text-gray-500 font-poppins">
             {{ __('Enter your email, and we will send you a password reset link') }}

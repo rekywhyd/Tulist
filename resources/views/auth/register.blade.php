@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
     <!-- Scripts -->
@@ -33,7 +33,7 @@
                 src="{{ Vite::asset('resources/images/time-management.png') }}" alt="time management">
 
             <div class="w-[570px] ml-[540px] px-[90px] py-8 my-6 bg-white shadow-2xl rounded-[50px]">
-                <div class="flex flex-col items-center font-serif">
+                <div class="flex flex-col items-center font-poppins">
                     {{-- Judul Formulir --}}
                     <h2 class="my-2 text-4xl font-bold text-gray-900">Sign Up</h2>
                     <p class="mb-6 text-sm font-semibold text-gray-500">Create an account, it's free</p>

@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex flex-col items-center font-serif">
+    <div class="flex flex-col items-center font-poppins">
         <h1 class="mt-2 mb-4 text-4xl font-bold text-gray-900">Verify your email</h1>
         <div class="text-xs font-semibold text-gray-500 font-poppins">
             {{ __('Please verify your email via the link we just sent. If you didn\'t receive it, we can resend it.') }}

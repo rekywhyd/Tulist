@@ -13,13 +13,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="antialiased bg-[#E8EEF9]">
+<body class="antialiased bg-[#E8EEF9] font-poppins">
 
     <div class="flex flex-col min-h-screen">
         <header class="flex font-poppins items-center fixed justify-between w-full bg-[#E8EEF9] z-50">
@@ -121,7 +121,7 @@
                         </div>
                         
                         <div x-show="results.length > 0" class="px-5 py-2 text-[10px] text-center text-gray-400 bg-gray-50/50 border-t border-gray-50">
-                            Press <kbd class="px-1.5 py-0.5 bg-white border rounded shadow-sm font-sans">Esc</kbd> to close
+                            Press <kbd class="px-1.5 py-0.5 bg-white border rounded shadow-sm font-poppins">Esc</kbd> to close
                         </div>
                     </div>
                 </div>

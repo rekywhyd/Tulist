@@ -1,7 +1,7 @@
 <x-guest-layout>
 
     <!-- Judul Form -->
-    <div class="flex flex-col items-center font-serif">
+    <div class="flex flex-col items-center font-poppins">
         <h1 class="my-2 text-4xl font-bold text-gray-900">Welcome Back</h1>
         <p class="mb-6 text-xs font-semibold text-gray-500">Welcome Back! Please enter your details</p>
     </div>

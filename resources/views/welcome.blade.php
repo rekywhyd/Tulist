@@ -6,7 +6,7 @@
         <!-- hero section -->
         <section class="flex flex-row items-center justify-between w-full gap-6 mx-auto sm:gap-10">
             <div class="w-1/2 mb-10 text-left lg:mb-0 lg:ml-8">
-                <h1 class="font-serif text-2xl font-bold text-gray-900 sm:text-3xl sm:leading-tight lg:text-7xl">
+                <h1 class="font-poppins text-2xl font-bold text-gray-900 sm:text-3xl sm:leading-tight lg:text-7xl">
 
                     Working,<br>
                     Finish it
@@ -40,12 +40,12 @@
         <!-- hero section -->
 
         <section class="pt-16 mt-6">
-            <h2 class="pl-0 font-serif text-3xl font-bold text-left text-gray-900 sm:pl-16 sm:text-4xl lg:text-5xl" data-aos="fade">
+            <h2 class="pl-0 font-poppins text-3xl font-bold text-left text-gray-900 sm:pl-16 sm:text-4xl lg:text-5xl" data-aos="fade">
 
                 Features
             </h2>
 
-            <div class="flex flex-col items-center gap-6 mt-6 font-serif">
+            <div class="flex flex-col items-center gap-6 mt-6 font-poppins">
 
                 <!-- feature 1 -->
                 <div
