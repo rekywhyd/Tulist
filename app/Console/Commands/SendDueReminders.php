@@ -5,8 +5,11 @@ namespace App\Console\Commands;
 use App\Models\Task;
 use App\Models\Notification;
 use App\Models\User;
+use App\Mail\TaskDueReminderMail;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendDueReminders extends Command
 {
@@ -22,7 +25,7 @@ class SendDueReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Send in-app notifications for tasks approaching their due date (1 day before and 1 hour before)';
+    protected $description = 'Send in-app notifications and emails for tasks approaching their due date (1 day before and 1 hour before)';
 
     /**
      * Execute the console command.
@@ -31,10 +34,11 @@ class SendDueReminders extends Command
     {
         $now = Carbon::now();
         $sentCount = 0;
+        $emailSentCount = 0;
 
         // Fetch tasks that are uncompleted and have a due date >= today
         // We only care about tasks due within the next ~25 hours
-        $tasks = Task::with(['workspaces.members'])
+        $tasks = Task::with(['user', 'workspaces.members'])
             ->where('completed', false)
             ->whereNotNull('due_date')
             ->whereDate('due_date', '>=', $now->toDateString())
@@ -71,8 +75,9 @@ class SendDueReminders extends Command
             }
 
             if ($reminderType) {
-                $recipientIds = $this->getRecipientIds($task);
-                foreach ($recipientIds as $userId) {
+                $recipients = $this->getRecipients($task);
+                foreach ($recipients as $user) {
+                    $userId = $user->id;
                     $exists = Notification::where('user_id', $userId)
                         ->where('type', 'due_reminder')
                         ->where('data->task_id', $task->id)
@@ -94,29 +99,45 @@ class SendDueReminders extends Command
                             ],
                         ]);
                         $sentCount++;
+
+                        // Send task due reminder email if user has a valid email address
+                        if (!empty($user->email)) {
+                            try {
+                                Mail::to($user->email)
+                                    ->send(new TaskDueReminderMail($user, $task, $reminderType));
+                                $emailSentCount++;
+                            } catch (\Throwable $e) {
+                                Log::error("Failed to send due reminder email to {$user->email} for task {$task->id}: " . $e->getMessage());
+                            }
+                        }
                     }
                 }
             }
         }
 
-        $this->info("Sent {$sentCount} due-date reminder notification(s).");
+        $this->info("Sent {$sentCount} due-date reminder notification(s) and {$emailSentCount} email(s).");
         return Command::SUCCESS;
     }
 
     /**
-     * Get all user IDs who should receive a reminder for this task.
+     * Get all users who should receive a reminder for this task.
      * Includes the task creator and all workspace members.
+     *
+     * @return \Illuminate\Support\Collection<int, User>
      */
-    private function getRecipientIds(Task $task): array
+    private function getRecipients(Task $task)
     {
-        $ids = collect([$task->user_id]);
+        $users = collect();
+        if ($task->user) {
+            $users->push($task->user);
+        }
 
         foreach ($task->workspaces as $workspace) {
             foreach ($workspace->members as $member) {
-                $ids->push($member->id);
+                $users->push($member);
             }
         }
 
-        return $ids->unique()->values()->all();
+        return $users->unique('id')->values();
     }
 }
